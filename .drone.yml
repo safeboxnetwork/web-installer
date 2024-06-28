@@ -15,7 +15,7 @@ environment:
 
 steps:
   - name: build image
-    image: plugins/docker-buildx
+    image: thegeeklab/drone-docker-buildx
     commands:
       - cd /drone/src/
       - docker buildx build --platform linux/amd64,linux/arm64 -t $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME} -f Dockerfile .
