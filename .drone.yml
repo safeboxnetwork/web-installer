@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 trigger:
   branch:
-    - master
+    - main
   event:
     - push
 workspace:
