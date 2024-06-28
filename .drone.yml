@@ -18,7 +18,7 @@ steps:
     image: plugins/docker
     commands:
       - cd /drone/src/
-      - docker build --platform linux/amd64,linux/arm64 -t $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME} -f Dockerfile .
+      - docker build --platform linux/arm64 -t $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME} -f Dockerfile .
       - docker push $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME}
     when:
       branch:
