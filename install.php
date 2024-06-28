@@ -17,8 +17,6 @@ else {
 	putenv('LOCAL_PROXY=no');
 }
 
-
-
 // TODO - js warning
 //if [ "$SMARTHOST_PROXY" == "no" ]; then
 //	echo "Warning! Local proxy will not work without smarthost proxy service.";
@@ -41,5 +39,9 @@ putenv('CRON='.$_POST["cron"]);
 putenv('DISCOVERY='.$_POST["discovery"]);
 
 putenv('ADDITIONAL='.$_POST["additional"]);
+
+// check ENV variables
+$output = shell_exec("set");
+echo $output;
 
 ?>
