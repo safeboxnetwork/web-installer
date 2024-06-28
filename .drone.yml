@@ -1,0 +1,33 @@
+kind: pipeline
+name: default
+trigger:
+  branch:
+    - master
+  event:
+    - push
+workspace:
+  path: /drone/src
+
+environment:
+  REPO_NAME: web-installer
+  IMAGE_NAME: web-installer
+  REGISTRY_SERVER_NAME: registry.format.hu
+
+steps:
+  - name: build image
+    image: plugins/docker
+    commands:
+      - cd /drone/src/
+      - docker build -t $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME} -f Dockerfile .
+      - docker push $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME}
+    when:
+      branch:
+        - master
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+ 
+volumes:
+  - name: docker
+    host:
+      path: /var/run/docker.sock
