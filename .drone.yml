@@ -15,7 +15,7 @@ environment:
 
 steps:
   - name: build image
-    image: plugin/docker
+    image: plugins/docker
     commands:
       - cd /drone/src/
       - docker build --platform linux/amd64 -t $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME}:amd64 -f Dockerfile .
