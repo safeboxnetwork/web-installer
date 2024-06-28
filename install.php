@@ -18,6 +18,7 @@ else {
 }
 
 
+
 // TODO - js warning
 //if [ "$SMARTHOST_PROXY" == "no" ]; then
 //	echo "Warning! Local proxy will not work without smarthost proxy service.";
