@@ -22,7 +22,7 @@ steps:
       - docker push $${REGISTRY_SERVER_NAME}/$${IMAGE_NAME}
     when:
       branch:
-        - master
+        - main
     volumes:
       - name: docker
         path: /var/run/docker.sock
