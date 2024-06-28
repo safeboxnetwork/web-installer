@@ -1,98 +1,3 @@
-
-DOCKER_REGISTRY_URL=$_POST["registry"];
-
-if ($_POST["smarthost"]=="Y") {
-	SMARTHOST_PROXY="yes";
-	DOMAIN=$_POST["domain"];
-}
-else {
-	SMARTHOST_PROXY="no";
-}
-if ($_POST["smarthost"]=="Y") {
-	LOCAL_PROXY="yes";
-}
-else {
-	LOCAL_PROXY="no";
-}
-
-
-if [ "$SMARTHOST_PROXY" == "no" ]; then
-	echo "Warning! Local proxy will not work without smarthost proxy service.";
-fi;
-
-if ($_POST["vpn"]=="Y") {
-	VPN_PROXY="yes";
-}
-else {
-	VPN_PROXY="no";
-}
-
-
-
-			echo "Please add domain url to download the VPN hash from (default: https://demo.format.hu): ";
-			read -r VPN_DOMAIN;
-			if [ "$VPN_DOMAIN" == "" ]; then
-				VPN_DOMAIN="https://demo.format.hu";
-			fi;
-
-			VPN_KEY="";
-			echo "Please type in the generated VPN passkey (8 digits):";
-			while read -r VPN_PASS; do
-				if [ "$VPN_PASS" != "" ]; then
-					VPN_DATE=$(date +"%Y%m%d" -d "$dateFromServer");
-					VPN_HASH=$(echo -n $(( $VPN_PASS * $VPN_DATE )) | sha256sum | cut -d " " -f1);
-					VPN_URL="$VPN_DOMAIN/$VPN_HASH/secret";
-					echo "DEBUG: $VPN_DATE";
-					echo "DEBUG: $VPN_URL";
-					HTTP_CODE=$(curl -s -I -w "%{http_code}" $VPN_URL -o /dev/null);
-					break;
-				fi;
-			done
-
-			echo "DEBUG: $HTTP_CODE";
-			if [ "$HTTP_CODE" == "200" ]; then
-				# download VPN key
-				VPN_KEY=$(curl -s $VPN_URL);
-				echo $VPN_KEY;
-
-				$SUDO_CMD mkdir -p /etc/user/secret/vpn-proxy;
-				echo $VPN_KEY | base64 -d > /tmp/wg0.conf;
-				$SUDO_CMD mv /tmp/wg0.conf /etc/user/secret/vpn-proxy/;
-				break;
-			else
-				echo "Download of VPN KEY was unsuccessful from URL: $VPN_URL";
-
-				echo "Do you want to retry? (Y/n)";
-				read -r VPN_RETRY;
-				if [ "$VPN_RETRY" == "n" ] || [ "$VPN_RETRY" == "N" ]; then
-					VPN_PROXY="no";
-					echo "VPN proxy was skipped.";
-					break;
-				fi
-			fi;
-
-		if [ "$VPN_PROXY" == "yes" ]; then
-			echo "Please add the letsencrypt mail address:";
-			while read -r LETSENCRYPT_MAIL; do
-				if [ "$LETSENCRYPT_MAIL" != "" ]; then
-					if [ "$(echo "$LETSENCRYPT_MAIL" | grep '@')" != "" ]; then
-						if [ "$(echo "$LETSENCRYPT_MAIL" | grep '\.')" != "" ]; then
-							break;
-						fi;
-					fi;
-				fi;
-				echo "Invalid email address.";
-			done
-
-			echo "Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):";
-			read -r LETSENCRYPT_SERVERNAME;
-			if [ "$LETSENCRYPT_SERVERNAME" = "" ]; then
-				LETSENCRYPT_SERVERNAME="letsencrypt";
-			fi;
-		fi;
-
-
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -156,8 +61,84 @@ else {
 		</select>
     </div>
 </div>
+<div class="row">
+    <div class="mb-3">
+		<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
+		<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
+		<div class="invalid-feedback">
+		Please enter a valid domain.
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
+		<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="https://demo.format.hu">
+    </div>
+</div>
+<div class="row"><!--VPN-->
+    <div class="mb-3">
+		<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+		<input type="text" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="" required>
+		<div class="invalid-feedback">
+		Please enter a valid email.
+		</div>
+    </div>
+</div>
+<div class="row"><!--VPN-->
+    <div class="mb-3">
+		<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+		<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt" required>
+    </div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="cron">Cron?</label>
+		<select class="custom-select d-block w-100" name="cron" id="cron" required>
+		<option value=""></option>
+		<option value="Y">Yes</option>
+		<option value="N">No</option>
+		</select>
+    </div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="discovery">Would you like to discover services?</label>
+		<select class="custom-select d-block w-100" name="discovery" id="discovery" required>
+		<option value=""></option>
+		<option value="Y">Yes</option>
+		<option value="N">No</option>
+		</select>
+    </div>
+</div>
+<div class="row"><!--DISC-->
+    <div class="mb-3">
+		<label for="dicovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
+		<input type="text" class="form-control" name="dicovery_dir" id="dicovery_dir" value="/usr/local/bin/">
+    </div>
+</div>
+<div class="row"><!--DISC-->
+    <div class="mb-3">
+		<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
+		<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
+    </div>
+</div>
 
-<button class="btn btn-lg btn-primary btn-block" type="submit">Install</button>
+
+<div class="row">
+    <div class="mb-3">
+		<label for="additional">Would you like to install additional applications?</label>
+		<select class="custom-select d-block w-100" name="additional" id="additional" required>
+		<option value=""></option>
+		<option value="Y">Yes</option>
+		<option value="N">No</option>
+		</select>
+    </div>
+</div>
+
+
+
+<button class="btn btn-lg btn-primary btn-block" type="submit">Start install</button>
 </form>
 
 <!-- Optional JavaScript -->
