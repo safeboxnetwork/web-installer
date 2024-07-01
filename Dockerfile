@@ -1,10 +1,11 @@
 FROM alpine:latest
 
 ENV NGINX_VERSION=1.25.4
+ARG PHP_VERSION="8.2.20"
 
 RUN \
   build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" && \
-  runtime_pkgs="ca-certificates openssl pcre zlib tzdata git" && \
+  runtime_pkgs="ca-certificates openssl pcre zlib tzdata " && \
   apk --no-cache add ${build_pkgs} ${runtime_pkgs} && \
   cd /tmp && \
   wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
@@ -55,6 +56,9 @@ RUN \
   rm -rf /tmp/* && \
   apk del ${build_pkgs} && \
   rm -rf /var/cache/apk/*
+
+RUN apk --no-cache add php8=${PHP_VERSION} \
+    php8-curl
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
