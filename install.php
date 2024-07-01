@@ -1,5 +1,7 @@
 <?php
 
+putenv('WEBINSTALL=true');
+
 putenv('DOCKER_REGISTRY_URL='.$_POST["registry"]);
 
 if ($_POST["smarthost"]=="Y") {
