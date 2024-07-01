@@ -57,8 +57,11 @@ RUN \
   apk del ${build_pkgs} && \
   rm -rf /var/cache/apk/*
 
-RUN apk --no-cache add php83 \
-    php83-curl
+ARG PHP_VERSION="83"
+
+RUN apk --no-cache add php${PHP_VERSION} \
+    php${PHP_VERSION}-fpm \
+    php${PHP_VERSION}-curl
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
