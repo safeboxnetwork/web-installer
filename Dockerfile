@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 ENV NGINX_VERSION=1.25.4
-ARG PHP_VERSION="8.2.20"
+ARG PHP_VERSION="8.2"
 
 RUN \
   build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" && \
