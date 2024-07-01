@@ -58,7 +58,7 @@ RUN \
   rm -rf /var/cache/apk/*
 
 RUN apk --no-cache add php8=${PHP_VERSION} \
-    php8-curl
+    php${PHP_VERSION}-curl
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
