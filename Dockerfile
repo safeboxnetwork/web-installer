@@ -74,4 +74,4 @@ VOLUME ["/var/cache/nginx"]
 
 EXPOSE 80
 
-CMD php & nginx
+CMD php-fpm83 & nginx
