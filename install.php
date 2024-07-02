@@ -2,6 +2,10 @@
 
 putenv('WEBINSTALL=true');
 
+// TEMP
+putenv('HOME=/home/hael');
+putenv('USER=hael');
+
 putenv('DOCKER_REGISTRY_URL='.$_POST["registry"]);
 
 if ($_POST["smarthost"]=="Y") {
@@ -44,6 +48,9 @@ putenv('ADDITIONAL='.$_POST["additional"]);
 
 // check ENV variables
 $output = shell_exec("set");
+echo "<pre>".$output."</pre>";
+
+$output = shell_exec("sh install.sh");
 echo $output;
 
 ?>

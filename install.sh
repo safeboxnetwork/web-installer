@@ -647,15 +647,17 @@ else
 	ACTION="install";
 fi;
 
-if [ "$USER" != "root" ] ; then
-	echo "You are not logged in as root."
-	echo "Do you want to continue and run $ACTION script as "$USER" user using sudo? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-		echo "Bye."
-		exit;
-	else
-		SUDO_CMD="sudo ";
+if [ "$WEBINSTALL" == "" ]; then
+	if [ "$USER" != "root" ] ; then
+		echo "You are not logged in as root."
+		echo "Do you want to continue and run $ACTION script as "$USER" user using sudo? (Y/n)";
+		read -r ANSWER;
+		if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+			echo "Bye."
+			exit;
+		else
+			SUDO_CMD="sudo ";
+		fi;
 	fi;
 fi;
 
