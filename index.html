@@ -15,6 +15,8 @@
 <div class="col-md-12">
 <form class="form-install" action="install.php" method="post">
 
+<fieldset>
+<legend>Base settings</legend>
 <div class="row">
     <div class="mb-3">
 		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
@@ -27,116 +29,141 @@
 <div class="row">
     <div class="mb-3">
 		<label for="smarthost">Smarthost proxy?</label>
-		<select class="custom-select d-block w-100" name="smarthost" id="smarthost" required>
-		<option value=""></option>
-		<option value="Y">Yes</option>
+		<select class="custom-select d-block w-100" name="smarthost" id="smarthost">
+		<option value="Y" selected>Yes</option>
 		<option value="N">No</option>
 		</select>
     </div>
 </div>
-<div class="row">
-    <div class="mb-3">
-		<label for="domain">Please fill in the domain name</label>
-		<input type="domain" class="form-control" name="domain" id="domain" value="localhost" required>
-		<div class="invalid-feedback">
-		Please enter a valid domain.
-		</div>
-    </div>
+<div id="div_smarthost">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="domain">Please fill in the domain name</label>
+			<input type="domain" class="form-control" name="domain" id="domain" value="localhost">
+			<div class="invalid-feedback">
+			Please enter a valid domain.
+			</div>
+	    </div>
+	</div>
 </div>
 <div class="row">
     <div class="mb-3">
 		<label for="localproxy">Local proxy?</label>
-		<select class="custom-select d-block w-100" name="localproxy" id="localproxy" required>
-		<option value=""></option>
+		<select class="custom-select d-block w-100" name="localproxy" id="localproxy">
 		<option value="Y">Yes</option>
-		<option value="N">No</option>
+		<option value="N" selected>No</option>
 		</select>
     </div>
 </div>
 <div class="row">
     <div class="mb-3">
 		<label for="vpn">VPN proxy?</label>
-		<select class="custom-select d-block w-100" name="vpn" id="vpn" required>
-		<option value=""></option>
+		<select class="custom-select d-block w-100" name="vpn" id="vpn">
 		<option value="Y">Yes</option>
-		<option value="N">No</option>
+		<option value="N" selected>No</option>
 		</select>
     </div>
 </div>
-<div class="row">
-    <div class="mb-3">
-		<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
-		<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
-		<div class="invalid-feedback">
-		Please enter a valid domain.
-		</div>
-    </div>
-</div>
-<div class="row">
-    <div class="mb-3">
-		<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
-		<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="https://demo.format.hu">
-    </div>
-</div>
-<div class="row"><!--VPN-->
-    <div class="mb-3">
-		<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
-		<input type="text" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="" required>
-		<div class="invalid-feedback">
-		Please enter a valid email.
-		</div>
-    </div>
-</div>
-<div class="row"><!--VPN-->
-    <div class="mb-3">
-		<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-		<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt" required>
-    </div>
+<div id="div_vpn" class="hidden">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
+			<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
+			<div class="invalid-feedback">
+			Please enter a valid domain.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
+			<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="" maxlength="8" size="10">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+			<input type="text" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="">
+			<div class="invalid-feedback">
+			Please enter a valid email.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+			<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt">
+	    </div>
+	</div>
 </div>
 <div class="row">
     <div class="mb-3">
 		<label for="cron">Cron?</label>
-		<select class="custom-select d-block w-100" name="cron" id="cron" required>
-		<option value=""></option>
+		<select class="custom-select d-block w-100" name="cron" id="cron">
 		<option value="Y">Yes</option>
 		<option value="N">No</option>
 		</select>
     </div>
 </div>
+</fieldset>
+
+<fieldset>
+<legend>Discover services</legend>
 <div class="row">
     <div class="mb-3">
 		<label for="discovery">Would you like to discover services?</label>
-		<select class="custom-select d-block w-100" name="discovery" id="discovery" required>
-		<option value=""></option>
-		<option value="Y">Yes</option>
+		<select class="custom-select d-block w-100" name="discovery" id="discovery">
+		<option value="Y" selected>Yes</option>
 		<option value="N">No</option>
 		</select>
     </div>
 </div>
-<div class="row"><!--DISC-->
-    <div class="mb-3">
-		<label for="dicovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
-		<input type="text" class="form-control" name="dicovery_dir" id="dicovery_dir" value="/usr/local/bin/">
-    </div>
+<div id="div_discover">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="discovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
+			<input type="text" class="form-control" name="discovery_dir" id="discovery_dir" value="/usr/local/bin/">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
+			<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
+	    </div>
+	</div>
 </div>
-<div class="row"><!--DISC-->
-    <div class="mb-3">
-		<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
-		<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
-    </div>
-</div>
+</fieldset>
 
+<fieldset>
+<legend>Additionals</legend>
 <div class="row">
     <div class="mb-3">
 		<label for="additional">Would you like to install additional applications?</label>
-		<select class="custom-select d-block w-100" name="additional" id="additional" required>
-		<option value=""></option>
+		<select class="custom-select d-block w-100" name="additional" id="additional">
 		<option value="Y">Yes</option>
-		<option value="N">No</option>
+		<option value="N" selected>No</option>
 		</select>
     </div>
 </div>
-
+<div id="div_additionals">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="service_dir">Please add directory path of service files: (/etc/user/config/services/)</label>
+			<input type="text" class="form-control" name="service_dir" id="service_dir" value="/etc/user/config/services">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="nextcloud">Do you want to install Nextcloud?</label>
+			<select class="custom-select d-block w-100" name="nextcloud" id="nextcloud">
+			<option value="Y">Yes</option>
+			<option value="N" selected>No</option>
+			</select>
+	    </div>
+	</div>
+</div>
+</fieldset>
+<br>
 <button class="btn btn-lg btn-primary btn-block" type="submit">Start install</button>
 </form>
 </div>
