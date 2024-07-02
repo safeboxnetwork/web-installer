@@ -68,6 +68,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /usr/share/nginx/html
 COPY  index.html /usr/share/nginx/html
 COPY install.php /usr/share/nginx/html
+COPY  install.sh /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
 VOLUME ["/var/cache/nginx"]
