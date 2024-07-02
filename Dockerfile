@@ -75,7 +75,6 @@ COPY installer.css /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
 VOLUME ["/var/cache/nginx"]
-VOLUME ["/var/run/docker.sock"]
 
 EXPOSE 80
 
