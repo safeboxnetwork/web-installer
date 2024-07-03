@@ -63,7 +63,9 @@ RUN apk --no-cache add php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-curl \
     sudo \
-    docker
+    curl \
+    jq \
+    docker-cli
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
