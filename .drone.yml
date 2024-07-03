@@ -12,6 +12,7 @@ environment:
   REPO_NAME: web-installer
   IMAGE_NAME: web-installer
   REGISTRY_SERVER_NAME: registry.format.hu
+  DOCKER_REGISTRY_URL: registry.format.hu
 
 steps:
   - name: build image
