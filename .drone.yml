@@ -20,7 +20,7 @@ steps:
       - cd /drone/src/
       - export DOCKER_CLI_EXPERIMENTAL=enabled
       - docker build --platform linux/amd64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/linux/amd64 -f Dockerfile .
-      - docker build --platform linux/arm64/v8 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/linux/arm64 -f Dockerfile .
+      - docker build --platform linux/arm64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/linux/arm64 -f Dockerfile .
       - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/linux/amd64 
       - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/linux/arm64
       - |
