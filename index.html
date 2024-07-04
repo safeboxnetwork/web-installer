@@ -8,7 +8,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <!-- Custom styles for this template -->
-<link href="installer.css?t=2" rel="stylesheet">
+<link href="installer.css?t=3" rel="stylesheet">
 </head>
 <body id="installer" class="text-center">
 <div class="container-fluid">
@@ -161,7 +161,8 @@
 			</select>
 	    </div>
 	</div>
-	<div id="div_nextcloud" class="hidden">
+	<fieldset id="div_nextcloud" class="sub_block hidden">
+		<legend>Nextcloud</legend>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_domain">Please add Nextcloud domain: </label>
@@ -180,7 +181,7 @@
 				<input type="text" class="form-control" name="nextcloud_password" id="nextcloud_password" value="">
 		    </div>
 		</div>
-	</div>
+	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="bitwarden">Do you want to install Bitwarden?</label>
@@ -190,7 +191,8 @@
 			</select>
 	    </div>
 	</div>
-	<div id="div_bitwarden" class="hidden">
+	<fieldset id="div_bitwarden" class="sub_block hidden">
+		<legend>Bitwarden</legend>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="bitwarden_domain">Please add Bitwarden domain: </label>
@@ -251,8 +253,7 @@
 			<input type="text" class="form-control" name="bitwarden_domains_whitelist" id="bitwarden_domains_whitelist" value="">
 		    </div>
 		</div>
-	</div>
-
+	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="guacamole">Do you want to install Guacamole?</label>
@@ -262,6 +263,43 @@
 			</select>
 	    </div>
 	</div>
+	<fieldset id="div_guacamole" class="sub_block hidden">
+		<legend>Guacamole</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_domain">Please add Guacamole domain: </label>
+				<input type="text" class="form-control" name="guacamole_domain" id="guacamole_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_username">Please add Guacamole admin username: </label>
+				<input type="text" class="form-control" name="guacamole_username" id="guacamole_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_password">Please add Guacamole admin password: </label>
+				<input type="text" class="form-control" name="guacamole_password" id="guacamole_password" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="guacemole_totp">Do you want TOTP via login? </label>
+			<select class="custom-select d-block w-100" name="guacemole_totp" id="guacemole_totp">
+			<option value="Y" selected>Yes</option>
+			<option value="N">No</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="guacamole_ban_duration">Do you want limitation in case invalid login or password? Please add a number how many minutes for deny retry. If you add 0 means it will disabled.";
+			</label>
+			<input type="text" class="form-control" name="guacamole_ban_duration" id="guacamole_ban_duration" value="5">
+		    </div>
+		</div>
+	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="smtp_server">Do you want to install SMTP server?</label>
@@ -273,12 +311,51 @@
 	</div>
 	<div class="row">
 	    <div class="mb-3">
-			<label for="roundcube">Do you want to install roundcube? (Y/n)</label>
+			<label for="roundcube">Do you want to install roundcube?</label>
 			<select class="custom-select d-block w-100" name="roundcube" id="roundcube">
 			<option value="Y">Yes</option>
 			<option value="N" selected>No</option>
 			</select>
 	    </div>
+	</div>
+	<fieldset id="div_roundcube" class="sub_block hidden">
+		<legend>Roundcube</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_imap_host">Please add IMAP HOST: &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="roundcube_imap_host" id="roundcube_imap_host" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_imap_port">Please add IMAP PORT (default: 143): </label>
+				<input type="text" class="form-control" name="roundcube_imap_port" id="roundcube_imap_port" value="143">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="roundcube_smtp_host" id="roundcube_smtp_host" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_smtp_port">Please add SMTP PORT (587, 465, 25, etc., default: 25): </label>
+				<input type="text" class="form-control" name="roundcube_smtp_port" id="roundcube_smtp_port" value="25">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_upload">Please add UPLOAD_MAX_FILESIZE (default: 50M): </label>
+				<input type="text" class="form-control" name="roundcube_upload" id="roundcube_upload" value="50M">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_domain">Please add Roundcube DOMAIN: </label>
+				<input type="text" class="form-control" name="roundcube_domain" id="roundcube_domain" value="">
+		    </div>
+		</div>
 	</div>
 </div>
 </fieldset>
