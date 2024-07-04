@@ -46,6 +46,22 @@ putenv('DISCOVERY='.$_POST["discovery"]);
 
 putenv('ADDITIONAL='.$_POST["additional"]);
 
+
+
+		# $NEXTCLOUD_DOMAIN" != "" ]; then
+		# $NEXTCLOUD_USERNAME" != "" ]; then
+		# $NEXTCLOUD_PASSWORD" != "" ]; then
+		# $BITWARDEN_DOMAIN" != "" ]; then
+		# $SMTP_SERVER" != "" ]; then
+		# $SMTP HOST
+		# $SMTP_PORT" != "" ]; then
+		# $SMTP_SECURITY" != "" ]; then
+		# $SMTP_FROM" != "" ]; then
+		# $SMTP_USERNAME" != "" ]; then
+		# $SMTP_PASSWORD" != "" ]; then
+		# $DOMAINS_WHITELIST" != "" ]; then
+
+
 // check ENV variables
 $output = shell_exec("set");
 echo "<pre>".$output."</pre>";
