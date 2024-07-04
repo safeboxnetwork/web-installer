@@ -34,7 +34,7 @@ if ($_POST["vpn"]=="yes") {
 if ($_POST["discovery"]=="yes") {
 	if ($_POST["DISCOVERY_DIR"] == "" ) $_POST["DISCOVERY_DIR"]="/usr/local/bin/";
 	if (substr($_POST["DISCOVERY_DIR"],0,1)!="/") {
-		echo "The path must be absolute, for example /usr/local/bin/. Please type it again."
+		echo "The path must be absolute, for example /usr/local/bin/. Please type it again.";
 		exit;
 	}
 	if ($_POST["DISCOVERY_CONFIG_FILE"] == "" ) $_POST["DISCOVERY_CONFIG_FILE"]="discovery.conf";
