@@ -178,6 +178,14 @@
 <script>
 jQuery(document).ready(function(){
 
+	jQuery('select#smarthost').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_smarthost').show();
+		else jQuery('#div_smarthost').hide();
+
+		if (jQuery("#smarthost").val()=='N' && jQuery("#localproxy").val()=='Y') {
+			alert("Warning! Local proxy will not work without smarthost proxy service.");
+		}
+	});
 	jQuery('select#vpn').click(function() {
 		if (jQuery(this).val()=='Y') jQuery('#div_vpn').show();
 		else jQuery('#div_vpn').hide();

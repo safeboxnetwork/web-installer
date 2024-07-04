@@ -2,36 +2,17 @@
 
 ask_envs() {
 
-	echo "Smarthost proxy? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-		SMARTHOST_PROXY="no";
-	else
-		SMARTHOST_PROXY="yes";
-		echo "Please fill in the domain name: (localhost)";
-		read -r DOMAIN;
-		if [ "$DOMAIN" == "" ]; then
-			DOMAIN="localhost";
-		fi
-		A=$(echo $DOMAIN | cut -d '.' -f1)
-		B=$(echo $DOMAIN | cut -d '.' -f2)
-		# if not FQDN
-		if [ "$A" == "$B" ]; then
-			echo "Warning! It seems it's not a FQDN. Self-signed certificate will be created only.";
-			SELF_SIGNED_CERTIFICATE="true";
-		fi;
+	if [ "$DOMAIN" == "" ]; then
+		DOMAIN="localhost";
 	fi
+	A=$(echo $DOMAIN | cut -d '.' -f1)
+	B=$(echo $DOMAIN | cut -d '.' -f2)
+	# if not FQDN
+	if [ "$A" == "$B" ]; then
+		echo "Warning! It seems it's not a FQDN. Self-signed certificate will be created only.";
+		SELF_SIGNED_CERTIFICATE="true";
+	fi;
 
-	echo "Local proxy? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-		LOCAL_PROXY="no";
-	else
-		LOCAL_PROXY="yes";
-		if [ "$SMARTHOST_PROXY" == "no" ]; then
-			echo "Warning! Local proxy will not work without smarthost proxy service.";
-		fi;
-	fi
 
 	echo "VPN proxy? (Y/n)";
 	read -r ANSWER;
@@ -40,28 +21,17 @@ ask_envs() {
 	else
 		VPN_PROXY="yes";
 
-		while true; do
 
-			echo "Please add domain url to download the VPN hash from (default: https://demo.format.hu): ";
-			read -r VPN_DOMAIN;
-			if [ "$VPN_DOMAIN" == "" ]; then
-				VPN_DOMAIN="https://demo.format.hu";
+			if [ "$VPN_PASS" != "" ]; then
+				dateFromServer=$(curl -v --silent https://demo.format.hu/ 2>&1 | grep -i '< date' | sed -e 's/< date: //gi')
+				VPN_DATE=$(date +"%Y%m%d" -d "$dateFromServer");
+				VPN_HASH=$(echo -n $(( $VPN_PASS * $VPN_DATE )) | sha256sum | cut -d " " -f1);
+				VPN_URL="$VPN_DOMAIN/$VPN_HASH/secret";
+				echo "DEBUG: $VPN_DATE";
+				echo "DEBUG: $VPN_URL";
+				HTTP_CODE=$(curl -s -I -w "%{http_code}" $VPN_URL -o /dev/null);
+				break;
 			fi;
-
-			VPN_KEY="";
-			echo "Please type in the generated VPN passkey (8 digits):";
-			while read -r VPN_PASS; do
-				if [ "$VPN_PASS" != "" ]; then
-					dateFromServer=$(curl -v --silent https://demo.format.hu/ 2>&1 | grep -i '< date' | sed -e 's/< date: //gi')
-					VPN_DATE=$(date +"%Y%m%d" -d "$dateFromServer");
-					VPN_HASH=$(echo -n $(( $VPN_PASS * $VPN_DATE )) | sha256sum | cut -d " " -f1);
-					VPN_URL="$VPN_DOMAIN/$VPN_HASH/secret";
-					echo "DEBUG: $VPN_DATE";
-					echo "DEBUG: $VPN_URL";
-					HTTP_CODE=$(curl -s -I -w "%{http_code}" $VPN_URL -o /dev/null);
-					break;
-				fi;
-			done
 
 			echo "DEBUG: $HTTP_CODE";
 			if [ "$HTTP_CODE" == "200" ]; then
@@ -84,37 +54,13 @@ ask_envs() {
 					break;
 				fi
 			fi;
-		done;
 
 		if [ "$VPN_PROXY" == "yes" ]; then
-			echo "Please add the letsencrypt mail address:";
-			while read -r LETSENCRYPT_MAIL; do
-				if [ "$LETSENCRYPT_MAIL" != "" ]; then
-					if [ "$(echo "$LETSENCRYPT_MAIL" | grep '@')" != "" ]; then
-						if [ "$(echo "$LETSENCRYPT_MAIL" | grep '\.')" != "" ]; then
-							break;
-						fi;
-					fi;
-				fi;
-				echo "Invalid email address.";
-			done
-
-			echo "Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):";
-			read -r LETSENCRYPT_SERVERNAME;
 			if [ "$LETSENCRYPT_SERVERNAME" = "" ]; then
 				LETSENCRYPT_SERVERNAME="letsencrypt";
 			fi;
 		fi;
 	fi
-
-	echo "Cron? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-		CRON="no";
-	else
-		CRON="yes";
-	fi
-
 }
 
 discover_services() {
