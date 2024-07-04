@@ -345,17 +345,10 @@ install_docker_deb() {
 
 ask_additionals() {
 
-	echo "Please add directory path of service files: (/etc/user/config/services/)";
-	read -r SERVICE_DIR;
+	# TODO
+	# echo "The path must be absolute, for example /etc/user/config/services/. Please type it again."
 	if [ "$SERVICE_DIR" == "" ] ; then
 		SERVICE_DIR="/etc/user/config/services";
-	else
-		# while not an absolute path
-		while [ ${SERVICE_DIR:0:1} != "/" ]; do
-			echo "The path must be absolute, for example /etc/user/config/services/. Please type it again."
-			read -r SERVICE_DIR;
-		done
-
 	fi
 
 	echo "Do you want to install Nextcloud? (Y/n)";
@@ -497,13 +490,7 @@ ask_additionals() {
 		fi;
 	fi
 
-	echo "Do you want to install SMTP server? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ]; then
-		SMTP="yes";
-
-
-	fi;
+#		SMTP="yes";
 
 	echo "Do you want to install roundcube? (Y/n)";
 	read -r ANSWER;

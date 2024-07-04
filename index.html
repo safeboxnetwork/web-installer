@@ -161,6 +161,42 @@
 			</select>
 	    </div>
 	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="bitwarden">Do you want to install Bitwarden?</label>
+			<select class="custom-select d-block w-100" name="bitwarden" id="bitwarden">
+			<option value="Y">Yes</option>
+			<option value="N" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="guacamole">Do you want to install Guacamole?</label>
+			<select class="custom-select d-block w-100" name="guacamole" id="guacamole">
+			<option value="Y">Yes</option>
+			<option value="N" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="smtp">Do you want to install SMTP server?</label>
+			<select class="custom-select d-block w-100" name="smtp" id="smtp">
+			<option value="Y">Yes</option>
+			<option value="N" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="roundcube">Do you want to install roundcube? (Y/n)</label>
+			<select class="custom-select d-block w-100" name="roundcube" id="roundcube">
+			<option value="Y">Yes</option>
+			<option value="N" selected>No</option>
+			</select>
+	    </div>
+	</div>
 </div>
 </fieldset>
 <br>
@@ -189,6 +225,10 @@ jQuery(document).ready(function(){
 	jQuery('select#vpn').click(function() {
 		if (jQuery(this).val()=='Y') jQuery('#div_vpn').show();
 		else jQuery('#div_vpn').hide();
+	});
+	jQuery('select#discovery').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_discover').show();
+		else jQuery('#div_discover').hide();
 	});
 	jQuery('select#additional').click(function() {
 		if (jQuery(this).val()=='Y') jQuery('#div_additionals').show();
