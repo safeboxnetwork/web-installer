@@ -1,19 +1,6 @@
 #!/bin/bash
 
 ask_envs() {
-
-	if [ "$DOMAIN" == "" ]; then
-		DOMAIN="localhost";
-	fi
-	A=$(echo $DOMAIN | cut -d '.' -f1)
-	B=$(echo $DOMAIN | cut -d '.' -f2)
-	# if not FQDN
-	if [ "$A" == "$B" ]; then
-		echo "Warning! It seems it's not a FQDN. Self-signed certificate will be created only.";
-		SELF_SIGNED_CERTIFICATE="true";
-	fi;
-
-
 	echo "VPN proxy? (Y/n)";
 	read -r ANSWER;
 	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
@@ -64,28 +51,8 @@ ask_envs() {
 }
 
 discover_services() {
-	echo "Would you like to discover services? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-		DISCOVERY="no";
-	else
-		DISCOVERY="yes";
-		echo "Path of service discovery scripts: (/usr/local/bin/)";
-		read -r DISCOVERY_DIR;
-		if [ "$DISCOVERY_DIR" == "" ] ; then
-			DISCOVERY_DIR="/usr/local/bin/"
-		else
-			# while not an absolute path
-			while [ "${DISCOVERY_DIR:0:1}" != "/" ]; do
-				echo "The path must be absolute, for example /usr/local/bin/. Please type it again."
-				read -r DISCOVERY_DIR;
-			done
-
-		fi
-
-		echo "Path of the discovery config file: (discovery.conf)";
-		read -r DISCOVERY_CONFIG_FILE;
-		if [ "$DISCOVERY_CONFIG_FILE" == "" ] ; then
+	if [ "$DISCOVERY" == "yes" ]; then
+		if [ "$DISCOVERY_CONFIG_FILE" == "discovery.conf" ] ; then
 			DISCOVERY_CONFIG_FILE=$PWD"/discovery.conf";
 			if [ ! -f $DISCOVERY_CONFIG_FILE ]; then
 				USE_SUDO=$(whoami);
@@ -108,9 +75,9 @@ discover_services() {
 			fi
 		fi
 		DISCOVERY_CONFIG_DIR=$(dirname $DISCOVERY_CONFIG_FILE)
-		 if [ "$DISCOVERY_CONFIG_DIR" == "/root" ]; then
-		 	DISCOVERY_CONFIG_DIR="";
-		 fi
+		if [ "$DISCOVERY_CONFIG_DIR" == "/root" ]; then
+			DISCOVERY_CONFIG_DIR="";
+		fi
 		 	
 	fi
 }
@@ -206,269 +173,60 @@ check_running() {
 		DEBIAN="true";
 	else
 		echo "systemctl was not found";
-		if [ "$WEBINSTALL" == "" ]; then # TODO?
-			echo "Do you want to continue? (Y/n)";
-			read -r ANSWER;
-			if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ] ; then
-				# Custom gentoo docker status check
-				DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
-				if [ "$DOCKERD_STATUS" == "0" ]; then
-					$SUDO_CMD /etc/init.d/docker start
-					sleep 5;
-					DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
-					if [ "$DOCKERD_STATUS" == "0" ]; then 
-						echo "Docker daemon not running, please check and execute again the install script";
-						exit;
-					fi
-				fi;
-				GENTOO="true";
-			else
-				exit;
-			fi;
-		else
-			exit; # webinstall
-		fi;
-	fi
-
-	if [ "$WEBINSTALL" == "" ]; then # TODO?
-		# bridge check
-		BRIDGE_NUM=$($SUDO_CMD docker network ls | grep bridge | awk '{print $2":"$3}' | sort | uniq | wc -l);
-
-		CONTAINER_NUM=$($SUDO_CMD docker ps -a | wc -l);
-
-		if [ "$BRIDGE_NUM" != "1" ] && [ "$CONTAINER_NUM" != "1" ]; then
-
-			echo "There are existing containers and/or networks.";
-			echo "Please select from the following options (1/2/3):";
-
-			echo "1 - Delete all existing containers and networks before installation";
-			echo "2 - Stop the installation process";
-			echo "3 - Just continue on my own risk";
-			
-			read -r ANSWER;
-
-			if [ "$ANSWER" == "1" ]; then
-				echo "1 - Removing exising containers and networks";
-				# delete and continue
-				$SUDO_CMD docker stop $($SUDO_CMD docker ps |grep Up | awk '{print $1}')
-				$SUDO_CMD docker system prune -a
-
-			elif [ "$ANSWER" == "3" ]; then
-				echo "3 - You have chosen to continue installation process."
-
-			else # default: 2 - stop installastion
-				echo "2 - Installation process was stopped";
-				exit;
-			fi;
-
-		fi;
-	fi;
-}
-
-
-install_docker_apt() {
-	#echo exit 101 > /usr/sbin/policy-rc.d
-	echo exit 101 > /tmp/p-rc; $SUDO_CMD mv /tmp/p-rc /usr/sbin/policy-rc.d
-	$SUDO_CMD chmod +x /usr/sbin/policy-rc.d
-
-	$SUDO_CMD apt-get update -y
-	$SUDO_CMD apt-get install ca-certificates curl gnupg -y
-	$SUDO_CMD install -m 0755 -d /etc/apt/keyrings
-	$SUDO_CMD curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO_CMD gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-	$SUDO_CMD chmod a+r /etc/apt/keyrings/docker.gpg
-
-	. /etc/os-release; # set variable VERSION_CODENAME
-
-	DOCKER_SOURCE=$($SUDO_CMD cat /etc/apt/sources.list.d/docker.list | grep 'bullseye stable' | wc -l)
-	if [ "$DOCKER_SOURCE" == "0" ]; then 
-		# add docker source to the source list
-		$SUDO_CMD echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$VERSION_CODENAME" stable" | $SUDO_CMD tee /etc/apt/sources.list.d/docker.list > /dev/null
-		$SUDO_CMD apt-get update -y
-	fi
-
-	$SUDO_CMD apt-get install --no-install-recommends docker-ce docker-ce-cli containerd.io -y
-}
-
-install_docker_deb() {
-
-	# set variables to install docker from debian packages
-	DOCKER_URL="https://download.docker.com/linux/debian/dists/bullseye/pool/stable/amd64/";
-	CONTAINERD_VERSION="1.6.20-1";
-	DOCKER_VERSION="23.0.5-1~debian.11~bullseye";
-	DOCKER_ARCH="amd64";
-	PKG_DIR="/tmp"
-
-	# set package names
-	CONTAINERD="containerd.io_"$CONTAINERD_VERSION"_"$DOCKER_ARCH".deb";
-	DOCKER_CE="docker-ce_"$DOCKER_VERSION"_"$DOCKER_ARCH".deb";
-	DOCKER_CE_CLI="docker-ce-cli_"$DOCKER_VERSION"_"$DOCKER_ARCH".deb";
-	#DOCKER_BUILDX="docker-buildx-plugin_"$DOCKER_VERSION"_"$DOCKER_ARCH".deb";
-	#DOCKER_COMPOSE="docker-compose-plugin_"$DOCKER_VERSION"_"$DOCKER_ARCH".deb";
-
-	CONTAINERD_INSTALLED=$(dpkg -s containerd.io | wc -l);
-	if [ "$CONTAINERD_INSTALLED" == "0" ]; then
-		# Download debian package
-		echo "Download package from: " $DOCKER_URL$CONTAINERD;
-		wget -O $PKG_DIR/$CONTAINERD $DOCKER_URL$CONTAINERD;
-
-		# Install package
-		dpkg -i $PKG_DIR/$CONTAINERD;
-	fi;
-
-	DOCKERCE_INSTALLED=$(dpkg -s docker-ce | wc -l);
-	if [ "$DOCKERCE_INSTALLED" == "0" ]; then
-		# Download debian package
-		echo "Download package from: " $DOCKER_URL$DOCKER_CE;
-		wget -O $PKG_DIR/$DOCKER_CE $DOCKER_URL$DOCKER_CE;
-
-		# Install package
-		dpkg -i $PKG_DIR/$DOCKER_CE;
-	fi;
-
-	DOCKERCECLI_INSTALLED=$(dpkg -s docker-ce-cli | wc -l);
-	if [ "$DOCKERCECLI_INSTALLED" == "0" ]; then
-		# Download debian package
-		echo "Download package from: " $DOCKER_URL$DOCKER_CE_CLI;
-		wget -O $PKG_DIR/$DOCKER_CE_CLI $DOCKER_URL$DOCKER_CE_CLI;
-
-		# Install package
-		dpkg -i $PKG_DIR/$DOCKER_CE_CLI;
-	fi;
-
-	# verify ???
-	systemctl start docker
-
-	# remove downloaded packages ???
-	# rm $PKG_DIR/$CONTAINERD $PKG_DIR/$DOCKER_CE $PKG_DIR/$DOCKER_CE_CLI $PKG_DIR/$DOCKER_BUILDX $PKG_DIR/$DOCKER_COMPOSE
-
-}
-
-ask_additionals() {
-
-	# TODO
-	# echo "The path must be absolute, for example /etc/user/config/services/. Please type it again."
-	if [ "$SERVICE_DIR" == "" ] ; then
-		SERVICE_DIR="/etc/user/config/services";
-	fi
-
-	NEXTCLOUD="yes";
-	BITWARDEN="yes";
-	GUACAMOLE="yes";
-	SMTP="yes";
-	ROUNDCUBE="yes";
-
-
-}
-
-uninstall() {
-
-	sed '/service-debian/d' $HOME/.bash_aliases
-
-	#$SUDO_CMD rm -rf /etc/user;
-	#$SUDO_CMD rm -rf /etc/system;
-
-	# $SUDO_CMD docker stop $($SUDO_CMD docker ps |grep Up | awk '{print $1}')
-	# $SUDO_CMD docker system prune -a
-	# $SUDO_CMD docker containers prune --force
-	$SUDO_CMD docker ps -a
-
-	# $SUDO_CMD /sbin/iptables -D DOCKER-USER -F
-
-	if [ "$APT" == "1" ]; then
-		echo "Would you like to remove docker? (Y/n)";
+		echo "Do you want to continue? (Y/n)";
 		read -r ANSWER;
-		if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-			#$SUDO_CMD apt-get purge -y docker-ce docker-ce-cli containerd.io docker-engine docker docker.io docker-compose-plugin
-			#$SUDO_CMD rm -rf /var/lib/docker /etc/docker
-			#$SUDO_CMD rm /etc/apparmor.d/docker
-			#$SUDO_CMD groupdel docker
-			#$SUDO_CMD rm -rf /var/run/docker.sock
+		if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ] ; then
+			# Custom gentoo docker status check
+			DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
+			if [ "$DOCKERD_STATUS" == "0" ]; then
+				$SUDO_CMD /etc/init.d/docker start
+				sleep 5;
+				DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
+				if [ "$DOCKERD_STATUS" == "0" ]; then 
+					echo "Docker daemon not running, please check and execute again the install script";
+					exit;
+				fi
+			fi;
+			GENTOO="true";
+		else
+			exit;
+		fi;
+	fi
 
-			echo "x";
-		fi
+	# bridge check
+	BRIDGE_NUM=$($SUDO_CMD docker network ls | grep bridge | awk '{print $2":"$3}' | sort | uniq | wc -l);
+
+	CONTAINER_NUM=$($SUDO_CMD docker ps -a | wc -l);
+
+	if [ "$BRIDGE_NUM" != "1" ] && [ "$CONTAINER_NUM" != "1" ]; then
+
+		echo "There are existing containers and/or networks.";
+		echo "Please select from the following options (1/2/3):";
+
+		echo "1 - Delete all existing containers and networks before installation";
+		echo "2 - Stop the installation process";
+		echo "3 - Just continue on my own risk";
+		
+		read -r ANSWER;
+
+		if [ "$ANSWER" == "1" ]; then
+			echo "1 - Removing exising containers and networks";
+			# delete and continue
+			$SUDO_CMD docker stop $($SUDO_CMD docker ps |grep Up | awk '{print $1}')
+			$SUDO_CMD docker system prune -a
+
+		elif [ "$ANSWER" == "3" ]; then
+			echo "3 - You have chosen to continue installation process."
+
+		else # default: 2 - stop installastion
+			echo "2 - Installation process was stopped";
+			exit;
+		fi;
+
 	fi;
-
-	echo "x";
 }
 
 SUDO_CMD="";
-APT=$($SUDO_CMD type apt 2>/dev/null | grep 'apt is' | wc -l);
-
-if [ "$1" == "remove" ]; then
-	ACTION="uninstall";
-else
-	ACTION="install";
-fi;
-
-if [ "$WEBINSTALL" == "" ]; then
-	if [ "$USER" != "root" ] ; then
-		echo "You are not logged in as root."
-		echo "Do you want to continue and run $ACTION script as "$USER" user using sudo? (Y/n)";
-		read -r ANSWER;
-		if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-			echo "Bye."
-			exit;
-		else
-			SUDO_CMD="sudo ";
-		fi;
-	fi;
-fi;
-
-if [ "$1" == "remove" ]; then
-#	uninstall;
-	exit;
-fi; # else run install
-
-
-# running on WSL
-if [ -n "$WSL_DISTRO_NAME" ]; then
-	if [ ! -f /etc/wsl.conf ]; then
-		$SUDO_CMD touch /etc/wsl.conf;
-	fi
-		
-	#SYSTEM_SETTINGS="$(grep -Pzow '\[boot\]\nsystemd\=true' /etc/wsl.conf 2> /dev/null)";
-	SYSTEM_SETTINGS=$(grep -w "systemd=true" /etc/wsl.conf);
-	if [ "$SYSTEM_SETTINGS" == "" ]; then
-		echo -e "[boot]\nsystemd=true" | $SUDO_CMD tee -a /etc/wsl.conf;
-		echo "Not a corresponding wsl configuration has found, conf was modified and need a WSL system restart from Windows terminal";
-
-		echo "Do you want to restart the $WSL_DISTRO_NAME system now? (Y/n)";
-		read -r ANSWER;
-		if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER"  == "" ] ; then
-			echo "Exiting. Please join again using wsl command."
-			$SUDO_CMD poweroff -f;
-		else
-			echo "Bye.";
-		fi;
-		exit;
-	fi
-fi;
-
-if [ "$APT" == "1" ]; then
-	echo "Would you like to install/update docker? (y/N)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-
-		if [ -f "/etc/apt/keyrings/docker.gpg" ]; then
-			rm -f /etc/apt/keyrings/docker.gpg
-		fi;
-
-		#install_docker_deb;
-		# install docker using apt-get
-		install_docker_apt
-
-		echo "Wait..."
-		sleep 5
-	fi
-fi;
-
-if [ "$WEBINSTALL" == "" ]; then
-	echo "Please fill in registry url (registry.format.hu): ";
-	read -r DOCKER_REGISTRY_URL;
-	if [ "$DOCKER_REGISTRY_URL" == "" ]; then
-		DOCKER_REGISTRY_URL="registry.format.hu";
-	fi
-fi;
 
 # first install
 if [ ! -f "/etc/user/config/system.json" ]; then
@@ -479,11 +237,9 @@ if [ ! -f "/etc/user/config/system.json" ]; then
 
 	check_dirs_and_files;
 
-	ask_envs;
-
 	discover_services;
 
-	# Validating previously created vaiables
+	# base variables
 
 	if [ "$DOCKER_REGISTRY_URL" != "" ]; then
 		VAR_DOCKER_REGISTRY_URL="--env DOCKER_REGISTRY_URL=$DOCKER_REGISTRY_URL";
@@ -509,6 +265,8 @@ if [ ! -f "/etc/user/config/system.json" ]; then
 		VAR_CRON="--env CRON=$CRON";
 	fi
 
+	# discovery
+
 	if [ "$DISCOVERY" != "" ]; then
 		VAR_DISCOVERY="--env DISCOVERY=$DISCOVERY";
 	fi
@@ -524,7 +282,6 @@ if [ ! -f "/etc/user/config/system.json" ]; then
 			VAR_DISCOVERY_CONFIG_DIRECTORY="--volume $DISCOVERY_CONFIG_DIR/:$DISCOVERY_CONFIG_DIR/";
 		fi
 	fi
-
 
 	# Run installer tool
 
@@ -608,11 +365,7 @@ if [ "$INIT" == "true" ]; then
 fi;
 
 # install additionals - run installer-tool again but additional_install.sh instead of deploy.sh
-echo "Would you like to install additional applications? (Y/n)";
-read -r ANSWER;
-if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ]; then
-
-	ask_additionals;
+if [ "$ADDITIONALS" == "yes" ]; then
 
 	ADDITIONAL_SERVICES="";
 
@@ -717,27 +470,6 @@ if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ]; then
 	--volume /etc/system/:/etc/system/ \
 	$DOCKER_REGISTRY_URL/installer-tool
 fi
-
-WSL_DISTRO_NAME=""; # disable WSL systemd support installation - not working correctly
-# running on WSL
-if [ -n "$WSL_DISTRO_NAME" ]; then
-	# enable systemd support on current images
-	echo "Would you like to install and enable systemd support? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ] ; then
-
-		# Run installer tool
-		$SUDO_CMD docker run \
-		--env WSL_DISTRO_NAME=$WSL_DISTRO_NAME \
-		--volume $HOME/.ssh/installer:/root/.ssh/id_rsa \
-		--volume /etc/user/:/etc/user/ \
-		--volume /etc/system/:/etc/system/ \
-		--volume /usr/local/bin/:/usr/local/bin/ \
-		$DOCKER_REGISTRY_URL/installer-tool
-
-		/usr/local/bin/wsl2-systemd-script.sh
-	fi;
-fi;
 
 shopt -s expand_aliases
 source $HOME/.bash_aliases
