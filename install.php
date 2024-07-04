@@ -60,7 +60,26 @@ putenv('ADDITIONAL='.$_POST["additional"]);
 		# $SMTP_USERNAME" != "" ]; then
 		# $SMTP_PASSWORD" != "" ]; then
 		# $DOMAINS_WHITELIST" != "" ]; then
+/*
+			if [ "$GUACAMOLE_DOMAIN" != "" ]; then
+			if [ "$GUACAMOLE_ADMIN_NAME" != "" ]; then
+			if [ "$GUACAMOLE_ADMIN_PASSWORD" != "" ]; then
+                	TOTP_USE="true"; # if yes
+			BAN_DURATION="5";
 
+		$ROUNDCUBE_IMAP_HOST" != "" ]; then
+		if [ "$ROUNDCUBE_IMAP_PORT" == "" ]; then
+			ROUNDCUBE_IMAP_PORT="143";
+		fi;
+		if [ "$ROUNDCUBE_SMTP_HOST" != "" ]; then
+		if [ "$ROUNDCUBE_SMTP_PORT" == "" ]; then
+			ROUNDCUBE_SMTP_PORT="25";
+		fi;
+		if [ "$ROUNDCUBE_UPLOAD_MAX_FILESIZE" == "" ]; then
+			ROUNDCUBE_UPLOAD_MAX_FILESIZE="50M";
+		fi;
+		$ROUNDCUBE_DOMAIN
+ */
 
 // check ENV variables
 $output = shell_exec("set");

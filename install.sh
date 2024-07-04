@@ -353,93 +353,10 @@ ask_additionals() {
 
 	NEXTCLOUD="yes";
 	BITWARDEN="yes";
+	GUACAMOLE="yes";
+	SMTP="yes";
+	ROUNDCUBE="yes";
 
-	echo "Do you want to install Guacamole? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ]; then
-		GUACAMOLE="yes";
-
-		echo "Please add Guacamole domain: ";
-		while read -r GUACAMOLE_DOMAIN; do
-			if [ "$GUACAMOLE_DOMAIN" != "" ]; then
-				break;
-			fi;
-		done
-
-		echo "Please add Guacamole admin username: ";
-		while read -r GUACAMOLE_ADMIN_NAME; do
-			if [ "$GUACAMOLE_ADMIN_NAME" != "" ]; then
-				break;
-			fi;
-		done
-
-		echo "Please add Guacamole admin password: ";
-		while read -r -s GUACAMOLE_ADMIN_PASSWORD; do
-			if [ "$GUACAMOLE_ADMIN_PASSWORD" != "" ]; then
-				break;
-			fi;
-		done
-
-		echo "Do you want TOTP via login? (Y/n)";
-		read -r TOTP_USE;
-		if [ "$TOTP_USE" == "" ] || [ "$TOTP_USE" == "y" ] || [ "$TOTP_USE" == "Y" ] ; then
-                	TOTP_USE="true";
-        	fi;
-
-		echo "Do you want limitation in case invalid login or password? Please add a number how many minutes for deny retry. If you add 0 means it will disabled. If just press enter means limitation will be set 5 minutes by default";
-		read -r BAN_DURATION;
-		if [ "$BAN_DURATION" == "" ] ; then
-			BAN_DURATION="5";
-		fi;
-	fi
-
-#		SMTP="yes";
-
-	echo "Do you want to install roundcube? (Y/n)";
-	read -r ANSWER;
-	if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ]; then
-		ROUNDCUBE="yes";
-
-		echo "Please add IMAP HOST: ";
-		while read -r ROUNDCUBE_IMAP_HOST; do
-			if [ "$ROUNDCUBE_IMAP_HOST" != "" ]; then
-				break;
-			fi;
-		done
-
-		echo "Please add IMAP PORT (default: 143): ";
-		read -r ROUNDCUBE_IMAP_PORT;
-		if [ "$ROUNDCUBE_IMAP_PORT" == "" ]; then
-			ROUNDCUBE_IMAP_PORT="143";
-		fi;
-
-		echo "Please add SMTP HOST: ";
-		while read -r ROUNDCUBE_SMTP_HOST; do
-			if [ "$ROUNDCUBE_SMTP_HOST" != "" ]; then
-				break;
-			fi;
-		done
-
-		echo "Please add SMTP PORT (587, 465, 25, etc., default: 25): ";
-		read -r ROUNDCUBE_SMTP_PORT;
-		if [ "$ROUNDCUBE_SMTP_PORT" == "" ]; then
-			ROUNDCUBE_SMTP_PORT="25";
-		fi;
-
-		echo "Please add UPLOAD_MAX_FILESIZE (default: 50M): ";
-		read -r ROUNDCUBE_UPLOAD_MAX_FILESIZE;
-		if [ "$ROUNDCUBE_UPLOAD_MAX_FILESIZE" == "" ]; then
-			ROUNDCUBE_UPLOAD_MAX_FILESIZE="50M";
-		fi;
-
-		echo "Please add Roundcube DOMAIN: ";
-		while read -r ROUNDCUBE_DOMAIN; do
-			if [ "$ROUNDCUBE_DOMAIN" != "" ]; then
-				break;
-			fi;
-		done
-
-	fi;
 
 }
 
