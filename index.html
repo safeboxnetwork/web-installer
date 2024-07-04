@@ -30,8 +30,8 @@
     <div class="mb-3">
 		<label for="smarthost">Smarthost proxy?</label>
 		<select class="custom-select d-block w-100" name="smarthost" id="smarthost">
-		<option value="Y" selected>Yes</option>
-		<option value="N">No</option>
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
 		</select>
     </div>
 </div>
@@ -50,8 +50,8 @@
     <div class="mb-3">
 		<label for="localproxy">Local proxy?</label>
 		<select class="custom-select d-block w-100" name="localproxy" id="localproxy">
-		<option value="Y" selected>Yes</option>
-		<option value="N">No</option>
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
 		</select>
     </div>
 </div>
@@ -59,8 +59,8 @@
     <div class="mb-3">
 		<label for="vpn">VPN proxy?</label>
 		<select class="custom-select d-block w-100" name="vpn" id="vpn">
-		<option value="Y">Yes</option>
-		<option value="N" selected>No</option>
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
 		</select>
     </div>
 </div>
@@ -100,8 +100,8 @@
     <div class="mb-3">
 		<label for="cron">Cron?</label>
 		<select class="custom-select d-block w-100" name="cron" id="cron">
-		<option value="Y">Yes</option>
-		<option value="N">No</option>
+		<option value="yes">Yes</option>
+		<option value="no">No</option>
 		</select>
     </div>
 </div>
@@ -113,8 +113,8 @@
     <div class="mb-3">
 		<label for="discovery">Would you like to discover services?</label>
 		<select class="custom-select d-block w-100" name="discovery" id="discovery">
-		<option value="Y" selected>Yes</option>
-		<option value="N">No</option>
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
 		</select>
     </div>
 </div>
@@ -138,10 +138,10 @@
 <legend>Additionals</legend>
 <div class="row">
     <div class="mb-3">
-		<label for="additional">Would you like to install additional applications?</label>
-		<select class="custom-select d-block w-100" name="additional" id="additional">
-		<option value="Y">Yes</option>
-		<option value="N" selected>No</option>
+		<label for="additionals">Would you like to install additional applications?</label>
+		<select class="custom-select d-block w-100" name="additionals" id="additionals">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
 		</select>
     </div>
 </div>
@@ -287,8 +287,8 @@
 		    <div class="mb-3">
 			<label for="guacemole_totp">Do you want TOTP via login? </label>
 			<select class="custom-select d-block w-100" name="guacemole_totp" id="guacemole_totp">
-			<option value="Y" selected>Yes</option>
-			<option value="N">No</option>
+			<option value="yes" selected>Yes</option>
+			<option value="no">No</option>
 			</select>
 		    </div>
 		</div>
@@ -375,23 +375,23 @@
 jQuery(document).ready(function(){
 
 	jQuery('select#smarthost').click(function() {
-		if (jQuery(this).val()=='Y') jQuery('#div_smarthost').show();
+		if (jQuery(this).val()=='yes') jQuery('#div_smarthost').show();
 		else jQuery('#div_smarthost').hide();
 
-		if (jQuery("#smarthost").val()=='N' && jQuery("#localproxy").val()=='Y') {
+		if (jQuery("#smarthost").val()=='no' && jQuery("#localproxy").val()=='yes') {
 			alert("Warning! Local proxy will not work without smarthost proxy service.");
 		}
 	});
 	jQuery('select#vpn').click(function() {
-		if (jQuery(this).val()=='Y') jQuery('#div_vpn').show();
+		if (jQuery(this).val()=='yes') jQuery('#div_vpn').show();
 		else jQuery('#div_vpn').hide();
 	});
 	jQuery('select#discovery').click(function() {
-		if (jQuery(this).val()=='Y') jQuery('#div_discover').show();
+		if (jQuery(this).val()=='yes') jQuery('#div_discover').show();
 		else jQuery('#div_discover').hide();
 	});
-	jQuery('select#additional').click(function() {
-		if (jQuery(this).val()=='Y') jQuery('#div_additionals').show();
+	jQuery('select#additionals').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_additionals').show();
 		else jQuery('#div_additionals').hide();
 	});
 	jQuery('select#nextcloud').click(function() {
