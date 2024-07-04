@@ -8,7 +8,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <!-- Custom styles for this template -->
-<link href="installer.css?t=1" rel="stylesheet">
+<link href="installer.css?t=2" rel="stylesheet">
 </head>
 <body id="installer" class="text-center">
 <div class="container-fluid">
@@ -161,6 +161,26 @@
 			</select>
 	    </div>
 	</div>
+	<div id="div_nextcloud" class="hidden">
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_domain">Please add Nextcloud domain: </label>
+				<input type="text" class="form-control" name="nextcloud_domain" id="nextcloud_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_username">Please add Nextcloud username: </label>
+				<input type="text" class="form-control" name="nextcloud_username" id="nextcloud_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_password">Please add Nextcloud password: </label>
+				<input type="text" class="form-control" name="nextcloud_password" id="nextcloud_password" value="">
+		    </div>
+		</div>
+	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="bitwarden">Do you want to install Bitwarden?</label>
@@ -170,6 +190,69 @@
 			</select>
 	    </div>
 	</div>
+	<div id="div_bitwarden" class="hidden">
+		<div class="row">
+		    <div class="mb-3">
+				<label for="bitwarden_domain">Please add Bitwarden domain: </label>
+				<input type="text" class="form-control" name="bitwarden_domain" id="bitwarden_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp">Please choose an SMTP server: &nbsp; &nbsp;</label>
+			<select class="custom-select d-block w-100" name="bitwarden_smtp" id="bitwarden_smtp">
+			<option value="1" selected>Gmail</option>
+			<option value="2">Microsoft Outlook/Hotmail</option>
+			<option value="3">Other</option>
+			</select>
+		    </div>
+		</div>
+		<div id="div_bitwarden_smtp" class="hidden">
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_host" id="bitwarden_smtp_host" value="">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_port">Please add SMTP PORT (587, 465, 25, etc.): </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_port" id="bitwarden_smtp_port" value="">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_security">Please add SMTP SECURITY (starttls, force_tls, off, etc.): </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_security" id="bitwarden_smtp_security" value="">
+			    </div>
+			</div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_host">Please add SMTP FROM (mail address from): </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_from" id="bitwarden_smtp_from" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_username">Please add SMTP USERNAME: </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_username" id="bitwarden_smtp_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_password">Please add SMTP PASSWORD: </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_password" id="bitwarden_smtp_password" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_domains_whitelist">Please add Domains Whitelist (list of domains): </label>
+			<input type="text" class="form-control" name="bitwarden_domains_whitelist" id="bitwarden_domains_whitelist" value="">
+		    </div>
+		</div>
+	</div>
+
 	<div class="row">
 	    <div class="mb-3">
 			<label for="guacamole">Do you want to install Guacamole?</label>
@@ -181,8 +264,8 @@
 	</div>
 	<div class="row">
 	    <div class="mb-3">
-			<label for="smtp">Do you want to install SMTP server?</label>
-			<select class="custom-select d-block w-100" name="smtp" id="smtp">
+			<label for="smtp_server">Do you want to install SMTP server?</label>
+			<select class="custom-select d-block w-100" name="smtp_server" id="smtp_server">
 			<option value="Y">Yes</option>
 			<option value="N" selected>No</option>
 			</select>
@@ -233,6 +316,30 @@ jQuery(document).ready(function(){
 	jQuery('select#additional').click(function() {
 		if (jQuery(this).val()=='Y') jQuery('#div_additionals').show();
 		else jQuery('#div_additionals').hide();
+	});
+	jQuery('select#nextcloud').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_nextcloud').show();
+		else jQuery('#div_nextcloud').hide();
+	});
+	jQuery('select#bitwarden').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_bitwarden').show();
+		else jQuery('#div_bitwarden').hide();
+	});
+	jQuery('select#bitwarden_smtp').click(function() {
+		if (jQuery(this).val()=='3') jQuery('#div_bitwarden_smtp').show();
+		else jQuery('#div_bitwarden_smtp').hide();
+	});
+	jQuery('select#guacamole').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_guacamole').show();
+		else jQuery('#div_guacamole').hide();
+	});
+	jQuery('select#smtp_server').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_smtp_server').show();
+		else jQuery('#div_smtp_server').hide();
+	});
+	jQuery('select#roundcube').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_roundcube').show();
+		else jQuery('#div_roundcube').hide();
 	});
 });
 </script>
