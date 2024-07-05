@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>INSTALLER TOOL</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<!-- Custom styles for this template -->
+<link href="installer.css?t=3" rel="stylesheet">
+</head>
+<body id="installer" class="text-center">
+<div class="container-fluid">
+<div class="col-md-12">
+<form class="form-install" action="install.php" method="post">
+
+<h1>No any previous deployed environment found</h1>
+
+<fieldset>
+<legend>Base settings</legend>
+<div class="row">
+    <div class="mb-3">
+		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
+		<input type="registry" class="form-control" name="registry" id="registry" value="registry.format.hu" required>
+		<div class="invalid-feedback">
+		Please enter a valid registry url.
+		</div>
+    </div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="smarthost">Smarthost proxy?</label>
+		<select class="custom-select d-block w-100" name="smarthost" id="smarthost">
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
+		</select>
+    </div>
+</div>
+<div id="div_smarthost">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="domain">Please fill in the domain name</label>
+			<input type="domain" class="form-control" name="domain" id="domain" value="localhost">
+			<div class="invalid-feedback">
+			Please enter a valid domain.
+			</div>
+	    </div>
+	</div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="localproxy">Local proxy?</label>
+		<select class="custom-select d-block w-100" name="localproxy" id="localproxy">
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
+		</select>
+    </div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="vpn">VPN proxy?</label>
+		<select class="custom-select d-block w-100" name="vpn" id="vpn">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
+		</select>
+    </div>
+</div>
+<div id="div_vpn" class="hidden">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
+			<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
+			<div class="invalid-feedback">
+			Please enter a valid domain.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
+			<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="" maxlength="8" size="10">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+			<input type="email" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="">
+			<div class="invalid-feedback">
+			Please enter a valid email.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+			<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt">
+	    </div>
+	</div>
+</div>
+<div class="row">
+    <div class="mb-3">
+		<label for="cron">Cron?</label>
+		<select class="custom-select d-block w-100" name="cron" id="cron">
+		<option value="yes">Yes</option>
+		<option value="no">No</option>
+		</select>
+    </div>
+</div>
+</fieldset>
+
+<fieldset>
+<legend>Discover services</legend>
+<div class="row">
+    <div class="mb-3">
+		<label for="discovery">Would you like to discover services?</label>
+		<select class="custom-select d-block w-100" name="discovery" id="discovery">
+		<option value="yes" selected>Yes</option>
+		<option value="no">No</option>
+		</select>
+    </div>
+</div>
+<div id="div_discover">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="discovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
+			<input type="text" class="form-control" name="discovery_dir" id="discovery_dir" value="/usr/local/bin/">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
+			<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
+	    </div>
+	</div>
+</div>
+</fieldset>
+
+<fieldset>
+<legend>Additionals</legend>
+<div class="row">
+    <div class="mb-3">
+		<label for="additionals">Would you like to install additional applications?</label>
+		<select class="custom-select d-block w-100" name="additionals" id="additionals">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
+		</select>
+    </div>
+</div>
+<div id="div_additionals" class="hidden">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="service_dir">Please add directory path of service files: (/etc/user/config/services/)</label>
+			<input type="text" class="form-control" name="service_dir" id="service_dir" value="/etc/user/config/services">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="nextcloud">Do you want to install Nextcloud?</label>
+			<select class="custom-select d-block w-100" name="nextcloud" id="nextcloud">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<fieldset id="div_nextcloud" class="sub_block hidden">
+		<legend>Nextcloud</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_domain">Please add Nextcloud domain: </label>
+				<input type="text" class="form-control" name="nextcloud_domain" id="nextcloud_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_username">Please add Nextcloud username: </label>
+				<input type="text" class="form-control" name="nextcloud_username" id="nextcloud_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="nextcloud_password">Please add Nextcloud password: </label>
+				<input type="text" class="form-control" name="nextcloud_password" id="nextcloud_password" value="">
+		    </div>
+		</div>
+	</fieldset>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="bitwarden">Do you want to install Bitwarden?</label>
+			<select class="custom-select d-block w-100" name="bitwarden" id="bitwarden">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<fieldset id="div_bitwarden" class="sub_block hidden">
+		<legend>Bitwarden</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="bitwarden_domain">Please add Bitwarden domain: </label>
+				<input type="text" class="form-control" name="bitwarden_domain" id="bitwarden_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp">Please choose an SMTP server: &nbsp; &nbsp;</label>
+			<select class="custom-select d-block w-100" name="bitwarden_smtp" id="bitwarden_smtp">
+			<option value="1" selected>Gmail</option>
+			<option value="2">Microsoft Outlook/Hotmail</option>
+			<option value="3">Other</option>
+			</select>
+		    </div>
+		</div>
+		<div id="div_bitwarden_smtp" class="hidden">
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_host" id="bitwarden_smtp_host" value="">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_port">Please add SMTP PORT (587, 465, 25, etc.): </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_port" id="bitwarden_smtp_port" value="">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="mb-3">
+				<label for="bitwarden_smtp_security">Please add SMTP SECURITY (starttls, force_tls, off, etc.): </label>
+				<input type="text" class="form-control" name="bitwarden_smtp_security" id="bitwarden_smtp_security" value="">
+			    </div>
+			</div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_host">Please add SMTP FROM (mail address from): </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_from" id="bitwarden_smtp_from" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_username">Please add SMTP USERNAME: </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_username" id="bitwarden_smtp_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_smtp_password">Please add SMTP PASSWORD: </label>
+			<input type="text" class="form-control" name="bitwarden_smtp_password" id="bitwarden_smtp_password" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="bitwarden_domains_whitelist">Please add Domains Whitelist (list of domains): </label>
+			<input type="text" class="form-control" name="bitwarden_domains_whitelist" id="bitwarden_domains_whitelist" value="">
+		    </div>
+		</div>
+	</fieldset>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="guacamole">Do you want to install Guacamole?</label>
+			<select class="custom-select d-block w-100" name="guacamole" id="guacamole">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<fieldset id="div_guacamole" class="sub_block hidden">
+		<legend>Guacamole</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_domain">Please add Guacamole domain: </label>
+				<input type="text" class="form-control" name="guacamole_domain" id="guacamole_domain" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_username">Please add Guacamole admin username: </label>
+				<input type="text" class="form-control" name="guacamole_username" id="guacamole_username" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="guacamole_password">Please add Guacamole admin password: </label>
+				<input type="text" class="form-control" name="guacamole_password" id="guacamole_password" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="guacemole_totp">Do you want TOTP via login? </label>
+			<select class="custom-select d-block w-100" name="guacemole_totp" id="guacemole_totp">
+			<option value="yes" selected>Yes</option>
+			<option value="no">No</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+			<label for="guacamole_ban_duration">Do you want limitation in case invalid login or password? Please add a number how many minutes for deny retry. If you add 0 means it will disabled.";
+			</label>
+			<input type="text" class="form-control" name="guacamole_ban_duration" id="guacamole_ban_duration" value="5">
+		    </div>
+		</div>
+	</fieldset>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="smtp_server">Do you want to install SMTP server?</label>
+			<select class="custom-select d-block w-100" name="smtp_server" id="smtp_server">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="roundcube">Do you want to install roundcube?</label>
+			<select class="custom-select d-block w-100" name="roundcube" id="roundcube">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+	    </div>
+	</div>
+	<fieldset id="div_roundcube" class="sub_block hidden">
+		<legend>Roundcube</legend>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_imap_host">Please add IMAP HOST: &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="roundcube_imap_host" id="roundcube_imap_host" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_imap_port">Please add IMAP PORT (default: 143): </label>
+				<input type="text" class="form-control" name="roundcube_imap_port" id="roundcube_imap_port" value="143">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
+				<input type="text" class="form-control" name="roundcube_smtp_host" id="roundcube_smtp_host" value="">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_smtp_port">Please add SMTP PORT (587, 465, 25, etc., default: 25): </label>
+				<input type="text" class="form-control" name="roundcube_smtp_port" id="roundcube_smtp_port" value="25">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_upload">Please add UPLOAD_MAX_FILESIZE (default: 50M): </label>
+				<input type="text" class="form-control" name="roundcube_upload" id="roundcube_upload" value="50M">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="roundcube_domain">Please add Roundcube DOMAIN: </label>
+				<input type="text" class="form-control" name="roundcube_domain" id="roundcube_domain" value="">
+		    </div>
+		</div>
+	</div>
+</div>
+</fieldset>
+<br>
+<button class="btn btn-lg btn-primary btn-block" type="submit">Start install</button>
+</form>
+</div>
+</div>
+<br>
+<br>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script>
+jQuery(document).ready(function(){
+
+	jQuery('select#smarthost').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_smarthost').show();
+		else jQuery('#div_smarthost').hide();
+
+		if (jQuery("#smarthost").val()=='no' && jQuery("#localproxy").val()=='yes') {
+			alert("Warning! Local proxy will not work without smarthost proxy service.");
+		}
+	});
+	jQuery('select#vpn').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_vpn').show();
+		else jQuery('#div_vpn').hide();
+	});
+	jQuery('select#discovery').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_discover').show();
+		else jQuery('#div_discover').hide();
+	});
+	jQuery('select#additionals').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_additionals').show();
+		else jQuery('#div_additionals').hide();
+	});
+	jQuery('select#nextcloud').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_nextcloud').show();
+		else jQuery('#div_nextcloud').hide();
+	});
+	jQuery('select#bitwarden').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_bitwarden').show();
+		else jQuery('#div_bitwarden').hide();
+	});
+	jQuery('select#bitwarden_smtp').click(function() {
+		if (jQuery(this).val()=='3') jQuery('#div_bitwarden_smtp').show();
+		else jQuery('#div_bitwarden_smtp').hide();
+	});
+	jQuery('select#guacamole').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_guacamole').show();
+		else jQuery('#div_guacamole').hide();
+	});
+	jQuery('select#smtp_server').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_smtp_server').show();
+		else jQuery('#div_smtp_server').hide();
+	});
+	jQuery('select#roundcube').click(function() {
+		if (jQuery(this).val()=='Y') jQuery('#div_roundcube').show();
+		else jQuery('#div_roundcube').hide();
+	});
+});
+</script>
+</body>
+</html>
