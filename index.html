@@ -36,6 +36,8 @@
 <script>
 $(function() {
 
+  setTimeout(redirectToPage, 10000);
+
   $(".progress").each(function() {
 
     var value = $(this).attr('data-value');
@@ -93,6 +95,9 @@ $(function() {
 	    return angle;
 	}
 
+        function redirectToPage() {
+            window.location.href = 'manage.html';
+        }
 });
 </script>
 </body>
