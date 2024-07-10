@@ -41,19 +41,19 @@ Sub Window_OnLoad
 	Next
 	window.moveTo (intHorizontal - X) / 2, (intVertical - Y) / 2
 		' centre it
-	txtName.value=objNetwork.UserName
+	'txtName.value=objNetwork.UserName
 	txtHost.focus
 
 	wcRegPath = "HKLM\SYSTEM\CurrentControlSet\Services\WebClient\Parameters\"
 
 	'WriteToRegistry wcRegPath & "BasicAuthLevel", 1, "REG_DWORD"
-	WriteToRegistry wcRegPath & "FileAttributesLimitInBytes", 10000000, "REG_DWORD"
-	WriteToRegistry wcRegPath & "FileSizeLimitInBytes", 512000000, "REG_DWORD"
-	WriteToRegistry wcRegPath & "InternetServerTimeoutInSec", 600, "REG_DWORD"
-	WriteToRegistry wcRegPath & "LocalServerTimeoutInSec", 600, "REG_DWORD"
-	WriteToRegistry wcRegPath & "SendReceiveTimeoutInSec", 600, "REG_DWORD"
-	WriteToRegistry wcRegPath & "ServerNotFoundCacheLifeTimeInSec", 0, "REG_DWORD"
-	WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "FileAttributesLimitInBytes", 10000000, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "FileSizeLimitInBytes", 512000000, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "InternetServerTimeoutInSec", 600, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "LocalServerTimeoutInSec", 600, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "SendReceiveTimeoutInSec", 600, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "ServerNotFoundCacheLifeTimeInSec", 0, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
 
 End Sub
 
@@ -71,31 +71,13 @@ Sub btnConfigure_OnClick
 		txtPort.focus
 		Exit Sub
 	End If
-	If txtName.value="" Then
-		MsgBox "Please enter your name",16,"ERROR"
-		txtName.focus
-		Exit Sub
-	End If
-	If txtPassword.value="" Then
-		MsgBox "Please enter your password",16,"ERROR"
-		txtPassword.focus
-		Exit Sub
-	End If	
-	If txtDrive.value="" Then
-		MsgBox "Please enter drive letter",16,"ERROR"
-		txtDrive.focus
-		Exit Sub
-	Else 
-		'AddHost txtHost.value
-		MapDrive txtDrive.value & ":","\\" & txtHost.value & "@SSL@" & txtPort.value & "\webdav\"
-	End If	
 
-	MsgBox "Network resources have been mapped",64,"DONE"
+	MsgBox "TEST STARTED",64,"DONE"
 End Sub
 
 Sub StartWSL()
 	
-	WSL = "wsl.exe"
+	WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
 	intReturn = objShell.Run(WSL, 0, True)
 
 End Sub
@@ -203,7 +185,7 @@ End Sub
 	<td><input type="text" name="txtPort" value="80" maxlength="5" size="6" /></td>
 </tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td><input type="button" value="TART" id=btnConfigure /></td></tr>
+<tr><td>&nbsp;</td><td><input type="button" value="START" id=btnConfigure /></td></tr>
 </table>
 </body>
 </html>
