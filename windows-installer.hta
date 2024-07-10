@@ -1,0 +1,219 @@
+<html>
+<head>
+<title>WebOffice WebDAV</title>
+<HTA:APPLICATION 
+     APPLICATIONNAME="weboffice webdav"
+     SCROLL="no"
+     SINGLEINSTANCE="yes"
+     WINDOWSTATE="normal"
+>
+<STYLE>
+body {
+	padding-top:20px;
+	text-align:center;
+}
+td,input	{
+	font-family:Verdana;
+	font-size:12pt;
+}
+a	{
+	font-size:9pt;
+	font-family:Verdana;
+}
+</STYLE>
+<SCRIPT LANGUAGE=VBScript>
+Set objNetwork = CreateObject("Wscript.Network")
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+Set objShell = CreateObject("WScript.Shell")
+
+Sub Window_OnLoad
+	Dim X, Y, strComputer, objWMIService, colItems, objItem, intHorizontal, strYear, wcRegPath
+	X=500
+	Y=420
+	window.resizeTo X,Y
+		' resize the HTA
+	strComputer = "."
+	Set objWMIService = GetObject("Winmgmts:\\" & strComputer & "\root\cimv2")
+	Set colItems = objWMIService.ExecQuery("Select * From Win32_DesktopMonitor")
+	For Each objItem in colItems
+		intHorizontal = objItem.ScreenWidth
+		intVertical = objItem.ScreenHeight
+	Next
+	window.moveTo (intHorizontal - X) / 2, (intVertical - Y) / 2
+		' centre it
+	txtName.value=objNetwork.UserName
+	txtHost.focus
+
+	wcRegPath = "HKLM\SYSTEM\CurrentControlSet\Services\WebClient\Parameters\"
+
+	#WriteToRegistry wcRegPath & "BasicAuthLevel", 1, "REG_DWORD"
+	WriteToRegistry wcRegPath & "FileAttributesLimitInBytes", 10000000, "REG_DWORD"
+	WriteToRegistry wcRegPath & "FileSizeLimitInBytes", 512000000, "REG_DWORD"
+	WriteToRegistry wcRegPath & "InternetServerTimeoutInSec", 600, "REG_DWORD"
+	WriteToRegistry wcRegPath & "LocalServerTimeoutInSec", 600, "REG_DWORD"
+	WriteToRegistry wcRegPath & "SendReceiveTimeoutInSec", 600, "REG_DWORD"
+	WriteToRegistry wcRegPath & "ServerNotFoundCacheLifeTimeInSec", 0, "REG_DWORD"
+	WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
+
+End Sub
+
+Sub btnConfigure_OnClick
+
+	DeleteCredential txtHost.value
+
+	If txtHost.value="" Then
+		MsgBox "Please enter hostname",16,"ERROR"
+		txtHost.focus
+		Exit Sub
+	End If
+	If txtPort.value="" Then
+		MsgBox "Please enter port number",16,"ERROR"
+		txtPort.focus
+		Exit Sub
+	End If
+	If txtName.value="" Then
+		MsgBox "Please enter your name",16,"ERROR"
+		txtName.focus
+		Exit Sub
+	End If
+	If txtPassword.value="" Then
+		MsgBox "Please enter your password",16,"ERROR"
+		txtPassword.focus
+		Exit Sub
+	End If	
+	If txtDrive.value="" Then
+		MsgBox "Please enter drive letter",16,"ERROR"
+		txtDrive.focus
+		Exit Sub
+	Else 
+		'AddHost txtHost.value
+		MapDrive txtDrive.value & ":","\\" & txtHost.value & "@SSL@" & txtPort.value & "\webdav\"
+	End If	
+
+	MsgBox "Network resources have been mapped",64,"DONE"
+End Sub
+
+Sub MapDrive(DriveLetter,DrivePath)
+	If objFSO.DriveExists(DriveLetter) Then
+		objNetwork.RemoveNetworkDrive DriveLetter,true
+	End If
+	objNetwork.MapNetworkDrive DriveLetter, DrivePath, false, txtName.value,txtPassword.value
+End Sub
+
+Sub DeleteCredential(Target)
+	
+	CredentialDelete = "cmdkey.exe /delete:" & Target
+	intReturn = objShell.Run(CredentialDelete, 0, True)
+
+End Sub
+
+Sub AddHost(Host)
+
+	Dim Exists, NewRow, HostsPath, fileREAD, fileAPPEND, TextLine
+
+	Exists = false
+	NewRow = "192.168.0.1 " & Host
+	HostsPath = "C:\Windows\System32\drivers\etc\hosts"
+
+	'Set oHosts = objFSO.GetFile(HostsPath)
+	'MsgBox oHosts.attributes
+
+	'1-read, 2-write, 8-append
+	Set fileREAD = objFSO.OpenTextFile(HostsPath, 1)
+
+	Do While fileREAD.AtEndOfStream <> True
+	    TextLine = Trim(fileREAD.ReadLine)
+		If TextLine=NewRow Then
+			Exists = true
+		Else
+			Exists = false
+		End If
+	Loop
+
+	'MsgBox Exists
+
+	If Not Exists Then
+		Set fileAPPEND = objFSO.OpenTextFile(HostsPath, 8)
+		fileAPPEND.Write(vbCrLf & NewRow)
+		fileAPPEND.Close()
+		Set fileAPPEND = Nothing
+	End If
+End Sub
+
+Sub WriteToRegistry(path,value,vtype)
+
+	str1 = ReadFromRegistry(path)
+
+    strModify = objShell.RegWrite(path, value, vtype)
+    If Err.number <> 0 then
+        MsgBox Err.Number & vbcr & Err.Description,vbCritical,Title
+    End If
+
+	'str2 = ReadFromRegistry(path)
+	'If str2<>"" Then
+	'	MsgBox path & ": " & str1 & "->" & str2
+	'End If
+
+End Sub
+
+Function ReadFromRegistry(strRegistryKey)
+    Dim value
+
+    On Error Resume Next
+    value = objShell.RegRead( strRegistryKey )
+    if Err.number <> 0 then
+        MsgBox Err.Number & vbcr & Err.Description,vbCritical,Title
+        ReadFromRegistry = ""
+    else
+        ReadFromRegistry = value
+    end if
+
+End Function
+
+Sub InstallCert(CertPath)
+
+	objShell.run "certmgr.exe -add -c """ & CertPath & """ -s -r localMachine root", 0, False
+	objShell.run "certmgr.exe -add """ & CertPath & """ -s -r localMachine trustedpublisher",0 ,False
+
+	If Err.Number <> 0 Then
+		MsgBox (Err.number & "-" & err.Description)
+	else
+		MsgBox "Certificate Install completed"
+	End If 
+
+End Sub
+
+</SCRIPT>
+</head>
+<body>
+<div align="center"><img src="data:image/png;base64,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" alt=""/><br><br></div>
+<table>
+<tr>
+	<td>host</td>
+	<td><input type="text" name="txtHost" value="www.drkerenyi.hu"/></td>
+</tr>
+<tr>
+	<td>port</td>
+	<td><input type="text" name="txtPort" value="443" maxlength="5" size="6" /></td>
+</tr>
+<tr>
+	<td>user</td>
+	<td><input type="text" name="txtName" /></td>
+</tr>
+<tr>
+	<td>password</td>
+	<td><input type="password" name="txtPassword" /></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td></td>
+</tr>
+<tr>
+	<td>drive</td>
+	<td><input type="text" name="txtDrive" value="Z" maxlength="1" size="2"/></td>
+</tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td><input type="button" value="connect" id=btnConfigure /></td></tr>
+</table>
+</body>
+</html>
