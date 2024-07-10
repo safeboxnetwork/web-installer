@@ -146,53 +146,7 @@ check_running() {
 
 	DOCKERD_STATUS="0";
 
-	which systemctl 2> /dev/null;
-
-	if [ "$?" == "0" ]; then
-		DOCKERD_STATUS=$($SUDO_CMD systemctl status docker | grep running | wc -l)
-		if [ "$DOCKERD_STATUS" == "0" ]; then
-			$SUDO_CMD systemctl start docker
-
-			# wait for docker start, check in every seconds, run for max. 60 sec
-			WAIT_COUNT=0;
-			while [ "$DOCKERD_STATUS" == "0" ]; do
-				sleep 1;
-				WAIT_COUNT=$((WAIT_COUNT+1))
-				DOCKERD_STATUS=$($SUDO_CMD systemctl status docker | grep running | wc -l)
-
-				if [ $WAIT_COUNT -gt 60 ]; then
-					break; # docker hasn't started in 60 seconds
-				fi;
-			done;
-
-			if [ "$DOCKERD_STATUS" == "0" ]; then 
-				echo "Docker daemon not running, please check and execute again the install script";
-				exit;
-			fi
-		fi
-		DEBIAN="true";
-	else
-		echo "systemctl was not found";
-		echo "Do you want to continue? (Y/n)";
-		read -r ANSWER;
-		if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ] || [ "$ANSWER" == "" ] ; then
-			# Custom gentoo docker status check
-			DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
-			if [ "$DOCKERD_STATUS" == "0" ]; then
-				$SUDO_CMD /etc/init.d/docker start
-				sleep 5;
-				DOCKERD_STATUS=$($SUDO_CMD rc-status 2>/dev/null | grep docker | grep started | wc -l);
-				if [ "$DOCKERD_STATUS" == "0" ]; then 
-					echo "Docker daemon not running, please check and execute again the install script";
-					exit;
-				fi
-			fi;
-			GENTOO="true";
-		else
-			exit;
-		fi;
-	fi
-
+	### From Redis
 	# bridge check
 	BRIDGE_NUM=$($SUDO_CMD docker network ls | grep bridge | awk '{print $2":"$3}' | sort | uniq | wc -l);
 
@@ -224,6 +178,7 @@ check_running() {
 		fi;
 
 	fi;
+	# visszairni redis - ha redisbol minden 1, akkor manager mode
 }
 
 SUDO_CMD="";
