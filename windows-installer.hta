@@ -1,8 +1,8 @@
 <html>
 <head>
-<title>WebOffice WebDAV</title>
+<title>Webinstaller</title>
 <HTA:APPLICATION 
-     APPLICATIONNAME="weboffice webdav"
+     APPLICATIONNAME="webinstaller"
      SCROLL="no"
      SINGLEINSTANCE="yes"
      WINDOWSTATE="normal"
@@ -59,7 +59,7 @@ End Sub
 
 Sub btnConfigure_OnClick
 
-	DeleteCredential txtHost.value
+	StartWSL
 
 	If txtHost.value="" Then
 		MsgBox "Please enter hostname",16,"ERROR"
@@ -91,6 +91,13 @@ Sub btnConfigure_OnClick
 	End If	
 
 	MsgBox "Network resources have been mapped",64,"DONE"
+End Sub
+
+Sub StartWSL()
+	
+	WSL = "wsl.exe"
+	intReturn = objShell.Run(WSL, 0, True)
+
 End Sub
 
 Sub MapDrive(DriveLetter,DrivePath)
