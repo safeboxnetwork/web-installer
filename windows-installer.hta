@@ -46,7 +46,7 @@ Sub Window_OnLoad
 
 	wcRegPath = "HKLM\SYSTEM\CurrentControlSet\Services\WebClient\Parameters\"
 
-	#WriteToRegistry wcRegPath & "BasicAuthLevel", 1, "REG_DWORD"
+	'WriteToRegistry wcRegPath & "BasicAuthLevel", 1, "REG_DWORD"
 	WriteToRegistry wcRegPath & "FileAttributesLimitInBytes", 10000000, "REG_DWORD"
 	WriteToRegistry wcRegPath & "FileSizeLimitInBytes", 512000000, "REG_DWORD"
 	WriteToRegistry wcRegPath & "InternetServerTimeoutInSec", 600, "REG_DWORD"
