@@ -20,22 +20,24 @@ steps:
     commands:
       - cd /drone/src/
       - export DOCKER_CLI_EXPERIMENTAL=enabled
-      - docker build --platform linux/aarch64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/aarch64 -f Dockerfile .
-      - docker build --platform linux/amd64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 -f Dockerfile .
-      - docker build --platform linux/arm64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64 -f Dockerfile .
 
-      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/aarch64
+      - docker build --platform linux/amd64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 -f Dockerfile .
+      - docker build --platform linux/arm64/v7 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v7 -f Dockerfile .
+      - docker build --platform linux/arm64/v8 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v8 -f Dockerfile .
+
       - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 
-      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64
+      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v7
+      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v8
 
       - |
         docker manifest create $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} \
         $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 \
-        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64 \
-        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/aarch64
-      - docker manifest annotate --arch arm64 --variant v8 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64
+        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v7 \
+        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v8 
+ 
+      - docker manifest annotate --arch arm64 --variant v8 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v8
+      - docker manifest annotate --arch arm64 --variant v7 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64/v7
       - docker manifest annotate --arch amd64 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64
-      - docker manifest annotate --arch aarch64 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/aarch64
       - docker manifest push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}
 
     when:
