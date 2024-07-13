@@ -1,4 +1,5 @@
-FROM alpine:latest
+ARG BUILDPLATFORM
+FROM --platform=$BUILDPLATFORM alpine:latest
 
 ENV NGINX_VERSION=1.25.4
 ARG PHP_VERSION="83"
