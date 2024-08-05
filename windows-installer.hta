@@ -20,6 +20,9 @@ a	{
 	font-size:9pt;
 	font-family:Verdana;
 }
+div#output {
+	text-align:left;
+}
 </STYLE>
 <SCRIPT LANGUAGE=VBScript>
 Set objNetwork = CreateObject("Wscript.Network")
@@ -77,16 +80,38 @@ End Sub
 
 Sub StartWSL()
 	
-	WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
-	intReturn = objShell.Run(WSL, 0, True)
-	
-	If Err.Number <> 0 Then
-		MsgBox (Err.number & "-" & err.Description)
-	else
-		MsgBox "Docker ps OK"
-	End If 
+	'WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
+	'intReturn = objShell.Run(WSL, 0, True)
 
-	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
+	WSL = "wsl.exe --user root --exec docker ps -a"
+	Set objExec = objShell.Exec(WSL)
+	outputLine = ""
+	
+	exitCode = objExec.ExitCode
+	If exitCode = 0 Then
+		' Read the output line by line
+		Do While Not objExec.StdOut.AtEndOfStream
+			outputLine = outputLine & objExec.StdOut.ReadLine() & vbCrLf
+		Loop
+
+		'WScript.Echo "Command executed successfully:" & vbCrLf & outputLine
+
+		MsgBox "Docker ps OK"
+	Else
+		Dim errorLine
+		errorLine = ""
+		Do While Not objExec.StdErr.AtEndOfStream
+		    errorLine = errorLine & objExec.StdErr.ReadLine() & vbCrLf
+		Loop
+
+		'WScript.Echo "Command failed with exit code: " & exitCode & vbCrLf & "Error Output:" & vbCrLf & errorLine
+	End If
+
+	' Call JS function to display output because Echo doesn't work in hta
+	Call UpdateOutput(outputLine, errorLine)
+
+	'WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
+	WSL = "wsl.exe --user root --exec ls"
 	intReturn = objShell.Run(WSL, 0, True)
 
 	If Err.Number <> 0 Then
@@ -187,6 +212,19 @@ Sub InstallCert(CertPath)
 End Sub
 
 </SCRIPT>
+    <script language="JavaScript">
+        function UpdateOutput(output, errorOutput) {
+            var outputElement = document.getElementById('output');
+
+            if (output !== '') {
+                outputElement.innerText = output;
+            } else if (errorOutput !== '') {
+                outputElement.innerText = errorOutput;
+            } else {
+                outputElement.innerText = '...';
+            }
+        }
+    </script>
 </head>
 <body>
 <table>
@@ -201,5 +239,6 @@ End Sub
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="button" value="START" id=btnConfigure /></td></tr>
 </table>
+<div id="output"></div>
 </body>
 </html>
