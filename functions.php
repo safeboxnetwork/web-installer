@@ -1,6 +1,6 @@
 <?php
 
-$REDIS_HOST='redis';
+$REDIS_HOST='redis-server';
 
 function ping_redis() {
 
