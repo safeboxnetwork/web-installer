@@ -91,7 +91,7 @@ function redis_remove($key) {
 }
 
 // not in use
-put_install_envs() {
+function put_install_envs() {
 
 	// TEMP
 	putenv('HOME=/home/hael');
