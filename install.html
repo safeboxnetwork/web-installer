@@ -22,7 +22,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
-		<input type="registry" class="form-control" name="registry" id="registry" value="registry.format.hu" required>
+		<input type="registry" class="form-control" name="DOCKER_REGISTRY_URL" id="registry" value="registry.format.hu" required>
 		<div class="invalid-feedback">
 		Please enter a valid registry url.
 		</div>
@@ -31,7 +31,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="smarthost">Smarthost proxy?</label>
-		<select class="custom-select d-block w-100" name="smarthost" id="smarthost">
+		<select class="custom-select d-block w-100" name="SMARTHOST_PROXY" id="smarthost">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -41,7 +41,7 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="domain">Please fill in the domain name</label>
-			<input type="domain" class="form-control" name="domain" id="domain" value="localhost">
+			<input type="domain" class="form-control" name="DOMAIN" id="domain" value="localhost">
 			<div class="invalid-feedback">
 			Please enter a valid domain.
 			</div>
@@ -51,7 +51,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="localproxy">Local proxy?</label>
-		<select class="custom-select d-block w-100" name="localproxy" id="localproxy">
+		<select class="custom-select d-block w-100" name="LOCAL_PROXY" id="localproxy">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -60,7 +60,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="vpn">VPN proxy?</label>
-		<select class="custom-select d-block w-100" name="vpn" id="vpn">
+		<select class="custom-select d-block w-100" name="VPN_PROXY" id="vpn">
 		<option value="yes">Yes</option>
 		<option value="no" selected>No</option>
 		</select>
@@ -70,7 +70,7 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
-			<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
+			<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://demo.format.hu">
 			<div class="invalid-feedback">
 			Please enter a valid domain.
 			</div>
@@ -79,13 +79,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
-			<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="" maxlength="8" size="10">
+			<input type="text" class="form-control" name="VPN_KEY" id="vpn_key" value="" maxlength="8" size="10">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
-			<input type="email" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="">
+			<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
 			<div class="invalid-feedback">
 			Please enter a valid email.
 			</div>
@@ -94,14 +94,14 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-			<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt">
+			<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
 	    </div>
 	</div>
 </div>
 <div class="row">
     <div class="mb-3">
 		<label for="cron">Cron?</label>
-		<select class="custom-select d-block w-100" name="cron" id="cron">
+		<select class="custom-select d-block w-100" name="CRON" id="cron">
 		<option value="yes">Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -114,7 +114,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="discovery">Would you like to discover services?</label>
-		<select class="custom-select d-block w-100" name="discovery" id="discovery">
+		<select class="custom-select d-block w-100" name="DISCOVERY" id="discovery">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -124,13 +124,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="discovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
-			<input type="text" class="form-control" name="discovery_dir" id="discovery_dir" value="/usr/local/bin/">
+			<input type="text" class="form-control" name="DISCOVERY_DIR" id="discovery_dir" value="/usr/local/bin/">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
-			<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
+			<input type="text" class="form-control" name="DISCOVERY_CONFIG_FILE" id="dicovery_config_file" value="discovery.conf">
 	    </div>
 	</div>
 </div>
@@ -141,7 +141,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="additionals">Would you like to install additional applications?</label>
-		<select class="custom-select d-block w-100" name="additionals" id="additionals">
+		<select class="custom-select d-block w-100" name="ADDITIONALS" id="additionals">
 		<option value="yes">Yes</option>
 		<option value="no" selected>No</option>
 		</select>
@@ -151,13 +151,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="service_dir">Please add directory path of service files: (/etc/user/config/services/)</label>
-			<input type="text" class="form-control" name="service_dir" id="service_dir" value="/etc/user/config/services">
+			<input type="text" class="form-control" name="service_dir" id="SERVICE_DIR" value="/etc/user/config/services">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="nextcloud">Do you want to install Nextcloud?</label>
-			<select class="custom-select d-block w-100" name="nextcloud" id="nextcloud">
+			<select class="custom-select d-block w-100" name="NEXTCLOUD" id="nextcloud">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -168,26 +168,26 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_domain">Please add Nextcloud domain: </label>
-				<input type="text" class="form-control" name="nextcloud_domain" id="nextcloud_domain" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_DOMAIN" id="nextcloud_domain" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_username">Please add Nextcloud username: </label>
-				<input type="text" class="form-control" name="nextcloud_username" id="nextcloud_username" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_USERNAME" id="nextcloud_username" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_password">Please add Nextcloud password: </label>
-				<input type="text" class="form-control" name="nextcloud_password" id="nextcloud_password" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_PASSWORD" id="nextcloud_password" value="">
 		    </div>
 		</div>
 	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="bitwarden">Do you want to install Bitwarden?</label>
-			<select class="custom-select d-block w-100" name="bitwarden" id="bitwarden">
+			<select class="custom-select d-block w-100" name="BITWARDEN" id="bitwarden">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -198,7 +198,7 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="bitwarden_domain">Please add Bitwarden domain: </label>
-				<input type="text" class="form-control" name="bitwarden_domain" id="bitwarden_domain" value="">
+				<input type="text" class="form-control" name="BITWARDEN_DOMAIN" id="bitwarden_domain" value="">
 		    </div>
 		</div>
 		<div class="row">
