@@ -90,6 +90,139 @@ function redis_remove($key) {
 	}
 }
 
+function create_install_json($data) {
+
+
+
+echo '{
+	"DOCKER_REGISTRY_URL": '.$data["registry"].',
+	"SMARTHOST_PROXY": '.$data["smarthost"].',
+	"DOMAIN": '.$data["domain"].',
+	"SELF_SIGNED_CERTIFICATE": '.$data["self_signed"].',
+	"LOCAL_PROXY": '.$data["localproxy"].',
+
+
+  "containers": [
+    {
+      "IMAGE": "redis:'$REDIS_VERSION'",
+      "NAME": "'$REDIS_SERVER'",
+      "UPDATE": "true",
+      "MEMORY": "64M",
+      "NETWORK": "'$FRAMEWORK_SCHEDULER_NETWORK'",
+      '$ADDITIONAL',
+      "PORTS":[
+        { "SOURCE": "null",
+          "DEST": "6379",
+          "TYPE": "tcp"
+        }
+            ],
+      "POST_START": []
+    },
+    {
+      "IMAGE": "'$DOCKER_REGISTRY_URL'/'$FRAMEWORK_SCHEDULER_IMAGE':'$FRAMEWORK_SCHEDULER_VERSION'",
+      "NAME": "'$FRAMEWORK_SCHEDULER_NAME'",
+      "UPDATE": "true",
+      "MEMORY": "256M",
+      "NETWORK": "'$FRAMEWORK_SCHEDULER_NETWORK'",
+      '$ADDITIONAL',
+      "POST_START": []
+    },
+	{
+      "IMAGE": "'$DOCKER_REGISTRY_URL'/'$WEB_IMAGE':'$WEBSERVER_VERSION'",
+      "NAME": "'$WEB_SERVER'",
+      "UPDATE": "true",
+      "MEMORY": "128M",
+      "NETWORK": "'$FRAMEWORK_SCHEDULER_NETWORK'",
+      '$ADDITIONAL',
+      "PORTS":[
+        { "SOURCE": "'$WEBSERVER_PORT'",
+          "DEST": "80",
+          "TYPE": "tcp"
+        }
+            ],
+      "POST_START": []
+    }
+  ]
+}
+  ' | jq -r . >/etc/user/config/services/service-framework.json
+
+
+
+putenv('HOME=/home/hael');
+putenv('USER=hael');
+
+putenv('LETSENCRYPT_MAIL='.$_POST["letsencrypt_mail"]);
+putenv('LETSENCRYPT_SERVERNAME='.$_POST["letsencrypt_servername"]);
+putenv('VPN_PROXY='.$_POST["vpn"]);
+if ($_POST["vpn"]=="yes") {
+	putenv('VPN_DOMAIN='.$_POST["vpn_domain"]);
+	putenv('VPN_KEY='.$_POST["vpn_key"]);
+
+	putenv('LETSENCRYPT_MAIL='.$_POST["letsencrypt_mail"]);
+	putenv('LETSENCRYPT_SERVERNAME='.$_POST["letsencrypt_servername"]);
+}
+
+if ($_POST["discovery"]=="yes") {
+	if ($_POST["DISCOVERY_DIR"] == "" ) $_POST["DISCOVERY_DIR"]="/usr/local/bin/";
+	if (substr($_POST["DISCOVERY_DIR"],0,1)!="/") {
+		echo "The path must be absolute, for example /usr/local/bin/. Please type it again.";
+		exit;
+	}
+	if ($_POST["DISCOVERY_CONFIG_FILE"] == "" ) $_POST["DISCOVERY_CONFIG_FILE"]="discovery.conf";
+	putenv('DISCOVERY_DIR='.$_POST["discovery_dir"]);
+	putenv('DISCOVERY_CONFIG_FILE='.$_POST["discovery_config_file"]);
+}
+
+
+putenv('ADDITIONALS='.$_POST["additionals"]);
+if ($_POST["additionals"]=="yes") {
+      if ($_POST["SERVICE_DIR"] == "" ) $_POST["SERVICE_DIR"]="/etc/user/config/services";
+      putenv('SERVICE_DIR='.$_POST["service_dir"]);
+
+      putenv('NEXTCLOUD='.$_POST["nextcloud"]);
+      putenv('BITWARDEN='.$_POST["bitwarden"]);
+      putenv('GUACAMOLE='.$_POST["guacamole"]);
+      putenv('SMTP='.$_POST["smtp_server"]);
+      putenv('ROUNDCUBE='.$_POST["roundcube"]);
+
+      if ($_POST["nextcloud"]=="yes") {
+              putenv('NEXTCLOUD_DOMAIN='.$_POST["nextcloud_domain"]);
+              putenv('NEXTCLOUD_USERNAME='.$_POST["nextcloud_username"]);
+              putenv('NEXTCLOUD_PASSWORD='.$_POST["nextcloud_password"]);
+      }
+      if ($_POST["bitwarden"]=="yes") {
+              putenv('BITWARDEN_DOMAIN='.$_POST["bitwarden_domain"]);
+              putenv('SMTP_SERVER='.$_POST["bitwarden_smtp_server"]);
+              putenv('SMTP_HOST='.$_POST["bitwarden_smtp_host"]);
+              putenv('SMTP_PORT='.$_POST["bitwarden_smtp_port"]);
+              putenv('SMTP_SECURITY='.$_POST["bitwarden_smtp_security"]);
+              putenv('SMTP_FROM='.$_POST["bitwarden_smtp_from"]);
+              putenv('SMTP_USERNAME='.$_POST["bitwarden_smtp_username"]);
+              putenv('SMTP_PASSWORD='.$_POST["bitwarden_smtp_password"]);
+              putenv('DOMAINS_WHITELIST='.$_POST["bitwarden_domains_whitelist"]);
+      }
+      if ($_POST["guacamole"]=="yes") {
+              putenv('GUACAMOLE_DOMAIN='.$_POST["bitwarden_domain"]);
+              putenv('GUACAMOLE_ADMIN_NAME='.$_POST["bitwarden_smtp_username"]);
+              putenv('GUACAMOLE_ADMIN_PASSWORD='.$_POST["bitwarden_smtp_password"]);
+              if ($_POST["bitwarden_totp"]=="yes") putenv('TOTP_USE=true');
+              if ($_POST["bitwarden_ban_duration"]=="") $_POST["bitwarden_ban_duration"]="5";
+              putenv('BAN_DURATION='.$_POST["bitwarden_ban_duration"]);
+      }
+      if ($_POST["roundcube"]=="yes") {
+              if ($_POST["roundcube_imap_port"]=="") $_POST["roundcube_imap_port"]="143";
+              if ($_POST["roundcube_smtp_port"]=="") $_POST["roundcube_smtp_port"]="25";
+              if ($_POST["roundcube_upload"]=="") $_POST["roundcube_smtp_port"]="50M";
+              putenv('ROUNDCUBE_IMAP_HOST='.$_POST["roundcube_imap_host"]);
+              putenv('ROUNDCUBE_IMAP_PORT='.$_POST["roundcube_imap_port"]);
+              putenv('ROUNDCUBE_SMTP_HOST='.$_POST["roundcube_smtp_host"]);
+              putenv('ROUNDCUBE_SMTP_PORT='.$_POST["roundcube_smtp_port"]);
+              putenv('ROUNDCUBE_UPLOAD_MAX_FILESIZE='.$_POST["roundcube_upload"]);
+              putenv('ROUNDCUBE_DOMAIN='.$_POST["roundcube_domain"]);
+      }
+}
+
+}
 
 // not in use
 put_install_envs() {
