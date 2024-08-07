@@ -31,8 +31,8 @@ Set objShell = CreateObject("WScript.Shell")
 
 Sub Window_OnLoad
 	Dim X, Y, strComputer, objWMIService, colItems, objItem, intHorizontal, strYear, wcRegPath
-	X=500
-	Y=420
+	X=1024
+	Y=768
 	window.resizeTo X,Y
 		' resize the HTA
 	strComputer = "."
@@ -70,7 +70,7 @@ Sub btnConfigure_OnClick
 		Exit Sub
 	End If
 	If txtPort.value="" Then
-		MsgBox "Please enter port number",16,"ERROR"
+		MsgBox "Please enter webserver port number",16,"ERROR"
 		txtPort.focus
 		Exit Sub
 	End If
@@ -229,16 +229,17 @@ End Sub
 <body>
 <table>
 <tr>
-	<td>host</td>
-	<td><input type="text" name="txtHost" value="localhost"/></td>
+	<td>Hostname:</td>
+	<td><input type="text" name="txtHost" value="localhost" disabled="disabled"/></td>
 </tr>
 <tr>
-	<td>port</td>
-	<td><input type="text" name="txtPort" value="80" maxlength="5" size="6" /></td>
+	<td>Webserver port:</td>
+	<td><input type="text" name="txtPort" value="8080" maxlength="5" size="6" /></td>
 </tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td><input type="button" value="START" id=btnConfigure /></td></tr>
+<tr><td>&nbsp;</td><td><input type="button" value="START INSTALL" id=btnConfigure /></td></tr>
 </table>
+<br><br>
 <div id="output"></div>
 </body>
 </html>
