@@ -1,4 +1,5 @@
 <?php
+include "functions.php";
 
 if ($_POST["SMARTHOST_PROXY"]=="Y") {
 	if ($_POST["DOMAIN"]=="") $_POST["DOMAIN"] = "localhost";
@@ -24,10 +25,13 @@ if ($_POST["ADDITIONALS"]=="yes") {
       if ($_POST["SERVICE_DIR"] == "" ) $_POST["SERVICE_DIR"]="/etc/user/config/services";
 }
 
-$json = json_encode($_POST);
-echo $json;
+$json = json_encode($_POST, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+//echo $json;
 
-// TODO redis
+echo $op = "install-".date("YmdHis");
+redis_set($op,$json);
+
+//echo redis_get($op);
 
 /*
 put_install_envs();
