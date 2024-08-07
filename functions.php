@@ -12,7 +12,7 @@ function ping_redis() {
 	else return false;
 }
 
-function check_redis($group="webin") {
+function check_redis($group="schedulerin") {
 
 	global $REDIS_HOST;
 
@@ -67,10 +67,10 @@ function redis_set($key, $value) {
 	if ($redis->ping()) {
 		if (!$redis->exists($key)) {
 			//redis-cli -h redis set $key "$value"
-			//redis-cli -h redis sadd webout $key
-			//redis-cli -h redis smembers webout
+			//redis-cli -h redis sadd webin $key
+			//redis-cli -h redis smembers webin
 			$redis->set($key, base64_encode($value));
-			$redis->sAdd('webout', $key);
+			$redis->sAdd('webin', $key);
 		} else {
 			echo "Key already exist: $key";
 		}
@@ -83,9 +83,9 @@ function redis_remove($key) {
 	$redis->connect($REDIS_HOST);
 //	$redis->auth('password');
 	if ($redis->ping()) {
-		//redis-cli -h redis srem webin $key
+		//redis-cli -h redis srem webout $key
 		//redis-cli -h redis del $key
-		$redis->srem("webin", $key);
+		$redis->srem("webout", $key);
 		$redis->del($key);
 	}
 }
