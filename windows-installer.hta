@@ -115,17 +115,16 @@ Sub StartWSL()
 	ShowOutput(objExec)
 
 	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
-	'WSL = "wsl.exe --user root --exec ls"
-	'intReturn = objShell.Run(WSL, 0, True)
-	Set objExec = objShell.Exec(WSL)
+	intReturn = objShell.Run(WSL, 0, True)
 
-	ShowOutput(objExec)
-
-	'If Err.Number <> 0 Then
-	'	MsgBox (Err.number & "-" & err.Description)
-	'else
-	'	MsgBox "Docker run OK"
-	'End If 
+	If Err.Number <> 0 Then
+		MsgBox (Err.number & "-" & err.Description)
+	else
+		MsgBox "Framework scheduler has started"
+		WSL = "wsl.exe --user root --exec docker logs -f framework-scheduler"
+		Set objExec = objShell.Exec(WSL)
+		ShowOutput(objExec)
+	End If 
 End Sub
 
 Sub MapDrive(DriveLetter,DrivePath)
