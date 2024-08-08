@@ -62,9 +62,21 @@ Sub Window_OnLoad
 	dockerIsRunning = CheckDockerStatus()
 
 	If dockerIsRunning Then
-	    MsgBox "Docker is running in WSL.", vbInformation, "Docker Status"
+		MsgBox "Docker is running in WSL.", vbInformation, "Docker Status"
 	Else
-	    MsgBox "Docker is NOT running in WSL.", vbExclamation, "Docker Status"
+		MsgBox "Docker is NOT running in WSL. Starting docker...", vbExclamation, "Docker Status"
+		WSL = "wsl.exe --user root --exec /etc/init.d/docker start"
+		intReturn = objShell.Run(WSL, 0, True)
+		If Err.Number <> 0 Then
+			MsgBox (Err.number & "-" & err.Description)
+		else
+			dockerIsRunning = CheckDockerStatus()
+			If dockerIsRunning Then
+				MsgBox "Docker is running in WSL. ", vbInformation, "Docker Status"
+			Else
+				MsgBox "ERROR: Starting Docker failed in WSL. Exiting install...", vbInformation, "Docker Status"
+			End If
+		End If
 	End If
 
 End Sub
