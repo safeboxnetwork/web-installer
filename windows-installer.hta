@@ -58,6 +58,56 @@ Sub Window_OnLoad
 	'WriteToRegistry wcRegPath & "ServerNotFoundCacheLifeTimeInSec", 0, "REG_DWORD"
 	'WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
 
+	Dim dockerIsRunning
+	dockerIsRunning = CheckDockerStatusInWSL()
+
+	If dockerIsRunning Then
+	    MsgBox "Docker is running in WSL.", vbInformation, "Docker Status"
+	Else
+	    MsgBox "Docker is NOT running in WSL.", vbExclamation, "Docker Status"
+	End If
+
+End Sub
+
+Function CheckDockerStatus()
+
+	Dim objExec, outputLine, allOutput
+
+	' WSL command to check Docker status
+	Dim WSLCommand
+	WSLCommand = "wsl.exe --user root --exec sh -c ""docker info | grep 'Server Version'"""
+
+	' Execute the command
+	On Error Resume Next
+	Set objExec = objShell.Exec(WSLCommand)
+
+	allOutput = ""
+
+	' Loop through the command's output
+	Do While Not objExec.StdOut.AtEndOfStream
+		outputLine = objExec.StdOut.ReadLine()
+		allOutput = allOutput & outputLine & vbCrLf
+	Loop
+
+	logToFile(allOutput)
+
+	' Check if the output contains 'Server Version'
+	If InStr(allOutput, "Server Version") > 0 Then
+		CheckDockerStatus = True
+	Else
+		CheckDockerStatus = False
+	End If
+
+End Function
+
+Sub logToFile(output)
+
+    ' Log the output to a file (optional for debugging)
+    Dim fso, logFile
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set logFile = fso.OpenTextFile("windowss-installer.log", 2, True)
+    logFile.WriteLine "Docker Command Output:" & vbCrLf & output
+    logFile.Close
 End Sub
 
 Sub btnStart_OnClick
