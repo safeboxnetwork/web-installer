@@ -62,18 +62,19 @@ End Sub
 
 Sub btnStart_OnClick
 
-	StartWSL
+	'If txtHost.value="" Then
+	'	MsgBox "Please enter hostname",16,"ERROR"
+	'	txtHost.focus
+	'	Exit Sub
+	'End If
 
-	If txtHost.value="" Then
-		MsgBox "Please enter hostname",16,"ERROR"
-		txtHost.focus
-		Exit Sub
-	End If
 	If txtPort.value="" Then
 		MsgBox "Please enter webserver port number",16,"ERROR"
 		txtPort.focus
 		Exit Sub
 	End If
+
+	StartWSL
 
 	'MsgBox "TEST STARTED",64,"DONE"
 End Sub
@@ -133,7 +134,9 @@ Sub StartWSL()
 
 	ShowOutput(objExec)
 
-	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock --env WEBSERVER_PORT=8090 registry.format.hu/framework-scheduler"
+	Dim WSL
+	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock --env WEBSERVER_PORT=" & txtPort.value & " registry.format.hu/framework-scheduler"
+	MsgBox WSL
 	intReturn = objShell.Run(WSL, 0, True)
 
 	If Err.Number <> 0 Then
