@@ -78,15 +78,8 @@ Sub btnConfigure_OnClick
 	MsgBox "TEST STARTED",64,"DONE"
 End Sub
 
-Sub StartWSL()
-	
-	'WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
-	'intReturn = objShell.Run(WSL, 0, True)
+Sub ShowOutput(objExec)
 
-	WSL = "wsl.exe --user root --exec docker ps -a"
-	Set objExec = objShell.Exec(WSL)
-	outputLine = ""
-	
 	exitCode = objExec.ExitCode
 	If exitCode = 0 Then
 		' Read the output line by line
@@ -95,8 +88,6 @@ Sub StartWSL()
 		Loop
 
 		'WScript.Echo "Command executed successfully:" & vbCrLf & outputLine
-
-		MsgBox "Docker ps OK"
 	Else
 		Dim errorLine
 		errorLine = ""
@@ -110,15 +101,31 @@ Sub StartWSL()
 	' Call JS function to display output because Echo doesn't work in hta
 	Call UpdateOutput(outputLine, errorLine)
 
-	'WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
-	WSL = "wsl.exe --user root --exec ls"
-	intReturn = objShell.Run(WSL, 0, True)
+End Sub
 
-	If Err.Number <> 0 Then
-		MsgBox (Err.number & "-" & err.Description)
-	else
-		MsgBox "Docker run OK"
-	End If 
+Sub StartWSL()
+	
+	'WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
+	'intReturn = objShell.Run(WSL, 0, True)
+
+	WSL = "wsl.exe --user root --exec docker ps --format ""table {{.Names}}\t{{.Status}}"" "
+	Set objExec = objShell.Exec(WSL)
+	outputLine = ""
+
+	ShowOutput(objExec)
+
+	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
+	'WSL = "wsl.exe --user root --exec ls"
+	'intReturn = objShell.Run(WSL, 0, True)
+	Set objExec = objShell.Exec(WSL)
+
+	ShowOutput(objExec)
+
+	'If Err.Number <> 0 Then
+	'	MsgBox (Err.number & "-" & err.Description)
+	'else
+	'	MsgBox "Docker run OK"
+	'End If 
 End Sub
 
 Sub MapDrive(DriveLetter,DrivePath)
@@ -217,9 +224,9 @@ End Sub
             var outputElement = document.getElementById('output');
 
             if (output !== '') {
-                outputElement.innerText = output;
+                outputElement.innerText += output;
             } else if (errorOutput !== '') {
-                outputElement.innerText = errorOutput;
+                outputElement.innerText += errorOutput;
             } else {
                 outputElement.innerText = '...';
             }
