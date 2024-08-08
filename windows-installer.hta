@@ -114,17 +114,35 @@ Sub StartWSL()
 
 	ShowOutput(objExec)
 
-	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock registry.format.hu/framework-scheduler"
+	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock --env WEBSERVER_PORT=8090 registry.format.hu/framework-scheduler"
 	intReturn = objShell.Run(WSL, 0, True)
 
 	If Err.Number <> 0 Then
 		MsgBox (Err.number & "-" & err.Description)
 	else
 		MsgBox "Framework scheduler has started"
-		WSL = "wsl.exe --user root --exec docker logs -f framework-scheduler"
-		Set objExec = objShell.Exec(WSL)
-		ShowOutput(objExec)
+		WSL = "wsl.exe --user root --exec docker logs framework-scheduler"
+		Do
+			Set objExec = objShell.Exec(WSL)
+			ShowOutput(objExec)
+			MsgBox "Please wait"
+			'Delay 5
+		Loop
 	End If 
+End Sub
+
+Sub Delay(seconds)
+    ' Simulate a delay by using a busy loop for the specified seconds
+    Dim start, now
+    start = Timer
+
+    Do
+	now = Timer
+	' Loop until the specified number of seconds has passed
+	If now - start >= seconds Then Exit Do
+	' Reset start if midnight is crossed
+	If now < start Then start = now
+    Loop
 End Sub
 
 Sub MapDrive(DriveLetter,DrivePath)
