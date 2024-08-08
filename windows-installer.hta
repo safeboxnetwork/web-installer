@@ -59,7 +59,7 @@ Sub Window_OnLoad
 	'WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
 
 	Dim dockerIsRunning
-	dockerIsRunning = CheckDockerStatusInWSL()
+	dockerIsRunning = CheckDockerStatus()
 
 	If dockerIsRunning Then
 	    MsgBox "Docker is running in WSL.", vbInformation, "Docker Status"
@@ -105,7 +105,7 @@ Sub logToFile(output)
     ' Log the output to a file (optional for debugging)
     Dim fso, logFile
     Set fso = CreateObject("Scripting.FileSystemObject")
-    Set logFile = fso.OpenTextFile("windowss-installer.log", 2, True)
+    Set logFile = fso.OpenTextFile("windows-installer.log", 2, True)
     logFile.WriteLine "Docker Command Output:" & vbCrLf & output
     logFile.Close
 End Sub
@@ -193,7 +193,7 @@ Sub StartWSL()
 		MsgBox (Err.number & "-" & err.Description)
 	else
 		MsgBox "Framework scheduler has started"
-		WSL = "wsl.exe --user root --exec docker logs framework-scheduler"i
+		WSL = "wsl.exe --user root --exec docker logs framework-scheduler"
 
 		iterationCount = 0
 		maxIterations = 12 ' Run for 1 minute (12 iterations of 5 seconds each)
