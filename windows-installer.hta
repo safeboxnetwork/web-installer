@@ -112,6 +112,37 @@ Function CheckDockerStatus()
 
 End Function
 
+Function CheckScheduler()
+
+	Dim objExec, outputLine, allOutput
+
+	' WSL command to check Docker status
+	Dim WSLCommand
+	WSLCommand = "wsl.exe --user root --exec sh -c ""docker ps --format 'table {{.Names}}' | grep framework-scheduler"" "
+
+	' Execute the command
+	On Error Resume Next
+	Set objExec = objShell.Exec(WSLCommand)
+
+	allOutput = ""
+
+	' Loop through the command's output
+	Do While Not objExec.StdOut.AtEndOfStream
+		outputLine = objExec.StdOut.ReadLine()
+		allOutput = allOutput & outputLine & vbCrLf
+	Loop
+
+	logToFile(allOutput)
+
+	' Check if the output contains 'Server Version'
+	If InStr(allOutput, "framework-scheduler") > 0 Then
+		CheckScheduler = True
+	Else
+		CheckScheduler = False
+	End If
+
+End Function
+
 Sub logToFile(output)
 
     ' Log the output to a file (optional for debugging)
@@ -136,9 +167,8 @@ Sub btnStart_OnClick
 		Exit Sub
 	End If
 
-	StartWSL
+	StartInstall
 
-	'MsgBox "TEST STARTED",64,"DONE"
 End Sub
 
 Sub btnOpen_OnClick
@@ -151,11 +181,14 @@ Sub ShowOutput(objExec)
 	exitCode = objExec.ExitCode
 	If exitCode = 0 Then
 		' Read the output line by line
+		outputLine = ""
 		Do While Not objExec.StdOut.AtEndOfStream
 			outputLine = outputLine & objExec.StdOut.ReadLine() & vbCrLf
 		Loop
 
 		'WScript.Echo "Command executed successfully:" & vbCrLf & outputLine
+		
+		logToFile(outputLine)
 	Else
 		Dim errorLine
 		errorLine = ""
@@ -164,7 +197,10 @@ Sub ShowOutput(objExec)
 		Loop
 
 		'WScript.Echo "Command failed with exit code: " & exitCode & vbCrLf & "Error Output:" & vbCrLf & errorLine
+		
+		logToFile(errorLine)
 	End If
+	
 
 	' Call JS function to display output because Echo doesn't work in hta
 	Call UpdateOutput(outputLine, errorLine)
@@ -185,42 +221,56 @@ Sub Delay(seconds)
     Loop
 End Sub
 
-Sub StartWSL()
+Sub StartInstall()
 	
+	Dim WSL
+
 	'WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
 	'intReturn = objShell.Run(WSL, 0, True)
 
-	WSL = "wsl.exe --user root --exec docker ps --format ""table {{.Names}}\t{{.Status}}"" "
-	Set objExec = objShell.Exec(WSL)
-	outputLine = ""
+	Dim schedulerIsRunning
+	schedulerIsRunning = CheckScheduler()
 
-	ShowOutput(objExec)
+	If schedulerIsRunning Then
+		MsgBox "Scheduler is already running", vbInformation, "Docker Status"
 
-	Dim WSL
+		WSL = "wsl.exe --user root --exec docker ps --format ""table {{.Names}}\t{{.Status}}"" "
+		Set objExec = objShell.Exec(WSL)
+
+		ShowOutput(objExec)
+	Else
+		MsgBox "Scheduler is not running", vbInformation, "Docker Status"
+		StartScheduler
+	End If
+End Sub
+
+Sub StartScheduler()
+
 	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock --env WEBSERVER_PORT=" & txtPort.value & " registry.format.hu/framework-scheduler"
-	MsgBox WSL
 	intReturn = objShell.Run(WSL, 0, True)
 
 	If Err.Number <> 0 Then
 		MsgBox (Err.number & "-" & err.Description)
 	else
-		MsgBox "Framework scheduler has started"
+		MsgBox "Framework scheduler is starting..."
+		Delay 10
 		WSL = "wsl.exe --user root --exec docker logs framework-scheduler"
+		Set objExec = objShell.Exec(WSL)
+		ShowOutput(objExec)
 
 		iterationCount = 0
 		maxIterations = 12 ' Run for 1 minute (12 iterations of 5 seconds each)
 
-		Do
-			iterationCount = iterationCount + 1
-			Set objExec = objShell.Exec(WSL)
-			ShowOutput(objExec)
-			MsgBox "Please wait"
+		'Do
+			'iterationCount = iterationCount + 1
+			'Set objExec = objShell.Exec(WSL)
+			'ShowOutput(objExec)
 			'Delay 5
-			If iterationCount >= maxIterations Then
-				MsgBox "Max iterations reached, stopping script."
-				Exit Do
-			End If
-		Loop
+			'If iterationCount >= maxIterations Then
+			'	MsgBox "Max iterations reached, stopping script."
+			'	Exit Do
+			'End If
+		'Loop
 	End If 
 End Sub
 
@@ -320,9 +370,9 @@ End Sub
             var outputElement = document.getElementById('output');
 
             if (output !== '') {
-                outputElement.innerText += output;
+                outputElement.innerText = output;
             } else if (errorOutput !== '') {
-                outputElement.innerText += errorOutput;
+                outputElement.innerText = errorOutput;
             } else {
                 outputElement.innerText = '...';
             }
