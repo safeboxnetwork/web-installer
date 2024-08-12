@@ -1,6 +1,6 @@
 <?php
 include "functions.php";
-
+sleep(1);
 switch ($_GET["op"]) {
 	case "redis":
 		try {
@@ -19,8 +19,10 @@ switch ($_GET["op"]) {
 
 		$op = "init:".date("YmdHis");
 		redis_set($op,$json);
+		echo "OK"; // TODO?
 	break;
-	case "init_check":
+	case "check_init":
+		echo "NEW";exit;// TEMP-TEST
 		$data = check_redis("web_out");
 		if ($data["STATUS"]==2) echo "NEW";
 		elseif ($data["STATUS"]==1) echo "EXISTS";
