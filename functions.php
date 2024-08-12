@@ -12,25 +12,26 @@ function ping_redis() {
 	else return false;
 }
 
-function check_redis($group="schedulerin") {
+function check_redis($group="scheduler_in") {
 
 	global $REDIS_HOST;
 
 	$redis = new Redis();
 	$redis->connect($REDIS_HOST);
 	if ($redis->ping()) {
-		$members = $redis->sMembers($group); // redis-cli -h safebox-redis smembers generated
+		$members = $redis->sMembers($group); // redis-cli -h redis-server smembers $group
 		//print_r($members);
 
 		foreach ($members as $member) {
 			$value = $redis->get($member);
 			$json_data = base64_decode($value);
-			$data = json_decode($json_data);
+			$data = json_decode($json_data,true);
 			if ($data === null) {
 				echo "JSON read error...";
 				// TODO json error
 			}
 			else {
+				return $data;
 			}
 		}
 	}
@@ -43,12 +44,12 @@ function redis_get($key) {
 	$redis = new Redis();
 	$redis->connect($REDIS_HOST);
 	if ($redis->ping()) {
-		//$arList = $redis->keys("*"); // ? redis-cli -h safebox-redis keys "*" 
+		//$arList = $redis->keys("*"); // ? redis-cli -h redis-server keys "*" 
 		//echo "Stored keys in redis:";
 		//print_r($arList);
 		if ($redis->exists($key)) {
 			$value = $redis->get($key);
-			//redis-cli -h safebox-redis get $key
+			//redis-cli -h redis-server get $key
 			return base64_decode($value);
 		} else {
 			echo "Key does not exist: $key";
@@ -67,10 +68,10 @@ function redis_set($key, $value) {
 	if ($redis->ping()) {
 		if (!$redis->exists($key)) {
 			//redis-cli -h redis set $key "$value"
-			//redis-cli -h redis sadd webin $key
-			//redis-cli -h redis smembers webin
+			//redis-cli -h redis sadd web_in $key
+			//redis-cli -h redis smembers web_in
 			$redis->set($key, base64_encode($value));
-			$redis->sAdd('webin', $key);
+			$redis->sAdd('web_in', $key);
 		} else {
 			echo "Key already exist: $key";
 		}
@@ -83,9 +84,9 @@ function redis_remove($key) {
 	$redis->connect($REDIS_HOST);
 //	$redis->auth('password');
 	if ($redis->ping()) {
-		//redis-cli -h redis srem webout $key
+		//redis-cli -h redis srem web_out $key
 		//redis-cli -h redis del $key
-		$redis->srem("webout", $key);
+		$redis->srem("web_out", $key);
 		$redis->del($key);
 	}
 }

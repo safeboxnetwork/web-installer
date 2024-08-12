@@ -28,7 +28,7 @@ if ($_POST["ADDITIONALS"]=="yes") {
 $json = json_encode($_POST, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 //echo $json;
 
-$op = "install-".date("YmdHis");
+$op = "install:".date("YmdHis");
 redis_set($op,$json);
 
 //echo redis_get($op);
