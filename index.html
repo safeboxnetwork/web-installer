@@ -62,8 +62,11 @@ function check_init() {
       $("#previous").html('Previous install has found...');
       setTimeout(redirectToManage, 3000);
     }
-    else {
+    else if (data=='WAIT') {
       setTimeout(check_init, 1000);
+    }
+    else {
+	    // UNEXPECTED ERROR
     }
   });
 }

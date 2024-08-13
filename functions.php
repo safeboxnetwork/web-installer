@@ -31,7 +31,7 @@ function check_redis($group="scheduler_in") {
 				// TODO json error
 			}
 			else {
-				return $data;
+				return array("$member" => $data);
 			}
 		}
 	}
@@ -79,6 +79,8 @@ function redis_set($key, $value) {
 }
 
 function redis_remove($key) {
+
+	global $REDIS_HOST;
 
 	$redis = new Redis();
 	$redis->connect($REDIS_HOST);

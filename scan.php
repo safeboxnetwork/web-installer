@@ -22,10 +22,14 @@ switch ($_GET["op"]) {
 		echo "OK"; // TODO?
 	break;
 	case "check_init":
-		echo "NEW";exit;// TEMP-TEST
-		$data = check_redis("web_out");
-		if ($data["STATUS"]==2) echo "NEW";
-		elseif ($data["STATUS"]==1) echo "EXISTS";
+		$arr = check_redis("web_out");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($data["INSTALL_STATUS"]==2) echo "NEW";
+				elseif ($data["INSTALL_STATUS"]==1) echo "EXISTS";
+				redis_remove("$key");
+			}
+		}
 		else echo "WAIT";
 	break;
 	case "docker":
