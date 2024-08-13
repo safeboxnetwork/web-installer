@@ -78,7 +78,6 @@ COPY scan.php   /usr/share/nginx/html
 COPY functions.php   /usr/share/nginx/html
 COPY install.html  /usr/share/nginx/html
 COPY install.php   /usr/share/nginx/html
-COPY install.sh    /usr/share/nginx/html
 COPY installer.css /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
