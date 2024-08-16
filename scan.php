@@ -38,7 +38,7 @@ switch ($_GET["op"]) {
 			foreach ($arr as $key=>$data) {
 				//echo $key."-".$_GET["key"];
 				if ($key==$_GET["key"]) { // if install key moved to web_out
-					if ($data["INSTALL_STATUS"]==1) {
+					if ($data["INSTALL_STATUS"]>0) {
 						redis_remove("$key");
 						echo "INSTALLED";
 					}

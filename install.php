@@ -31,9 +31,15 @@ $json = json_encode($_POST, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 // TODO preview about selected options?
 // TODO - new install in progress? INSTALL_STATUS=0
 
-$key = "install:".date("YmdHis");
-redis_set($key,$json);
-//$key = "install:20240816101849"; // DEBUG
+if ($key=check_install()) { 
+	$header_text="Install has already started.<br>Please wait and do not start a new one...";
+}
+else {
+	$header_text="Installing in progress... Please wait...";
+	$key = "install:".date("YmdHis");
+	redis_set($key,$json);
+	//$key = "install:20240816101849"; // DEBUG
+}
 
 /*
 put_install_envs();
@@ -62,7 +68,7 @@ echo "<pre>".$output."</pre>";
 <body id="install" class="text-center">
 <div class="container-fluid">
 <div class="col-md-12">
-	<h1>Installing in progress... Please wait...</h1>
+	<h1><?php echo $header_text?></h1>
 	<div id="redis"></div>
 	<div id="response"></div>
 </div>
