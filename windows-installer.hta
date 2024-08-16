@@ -20,6 +20,9 @@ a	{
 	font-size:9pt;
 	font-family:Verdana;
 }
+div#output {
+	text-align:left;
+}
 </STYLE>
 <SCRIPT LANGUAGE=VBScript>
 Set objNetwork = CreateObject("Wscript.Network")
@@ -28,8 +31,8 @@ Set objShell = CreateObject("WScript.Shell")
 
 Sub Window_OnLoad
 	Dim X, Y, strComputer, objWMIService, colItems, objItem, intHorizontal, strYear, wcRegPath
-	X=500
-	Y=420
+	X=1024
+	Y=768
 	window.resizeTo X,Y
 		' resize the HTA
 	strComputer = "."
@@ -42,7 +45,7 @@ Sub Window_OnLoad
 	window.moveTo (intHorizontal - X) / 2, (intVertical - Y) / 2
 		' centre it
 	'txtName.value=objNetwork.UserName
-	txtHost.focus
+	txtPort.focus
 
 	wcRegPath = "HKLM\SYSTEM\CurrentControlSet\Services\WebClient\Parameters\"
 
@@ -55,31 +58,220 @@ Sub Window_OnLoad
 	'WriteToRegistry wcRegPath & "ServerNotFoundCacheLifeTimeInSec", 0, "REG_DWORD"
 	'WriteToRegistry wcRegPath & "SupportLocking", 1, "REG_DWORD"
 
+	Dim dockerIsRunning
+	dockerIsRunning = CheckDockerStatus()
+
+	If dockerIsRunning Then
+		MsgBox "Docker is running in WSL.", vbInformation, "Docker Status"
+	Else
+		MsgBox "Docker is NOT running in WSL. Starting docker...", vbExclamation, "Docker Status"
+		WSL = "wsl.exe --user root --exec /etc/init.d/docker start"
+		intReturn = objShell.Run(WSL, 0, True)
+		If Err.Number <> 0 Then
+			MsgBox (Err.number & "-" & err.Description)
+		else
+			dockerIsRunning = CheckDockerStatus()
+			If dockerIsRunning Then
+				MsgBox "Docker is running in WSL. ", vbInformation, "Docker Status"
+			Else
+				MsgBox "ERROR: Starting Docker failed in WSL. Exiting install...", vbInformation, "Docker Status"
+			End If
+		End If
+	End If
+
 End Sub
 
-Sub btnConfigure_OnClick
+Function CheckDockerStatus()
 
-	StartWSL
+	Dim objExec, outputLine, allOutput
 
-	If txtHost.value="" Then
-		MsgBox "Please enter hostname",16,"ERROR"
-		txtHost.focus
-		Exit Sub
+	' WSL command to check Docker status
+	Dim WSLCommand
+	WSLCommand = "wsl.exe --user root --exec sh -c ""docker info | grep 'Server Version'"""
+
+	' Execute the command
+	On Error Resume Next
+	Set objExec = objShell.Exec(WSLCommand)
+
+	allOutput = ""
+
+	' Loop through the command's output
+	Do While Not objExec.StdOut.AtEndOfStream
+		outputLine = objExec.StdOut.ReadLine()
+		allOutput = allOutput & outputLine & vbCrLf
+	Loop
+
+	logToFile(allOutput)
+
+	' Check if the output contains 'Server Version'
+	If InStr(allOutput, "Server Version") > 0 Then
+		CheckDockerStatus = True
+	Else
+		CheckDockerStatus = False
 	End If
+
+End Function
+
+Function CheckScheduler()
+
+	Dim objExec, outputLine, allOutput
+
+	' WSL command to check Docker status
+	Dim WSLCommand
+	WSLCommand = "wsl.exe --user root --exec sh -c ""docker ps --format 'table {{.Names}}' | grep framework-scheduler"" "
+
+	' Execute the command
+	On Error Resume Next
+	Set objExec = objShell.Exec(WSLCommand)
+
+	allOutput = ""
+
+	' Loop through the command's output
+	Do While Not objExec.StdOut.AtEndOfStream
+		outputLine = objExec.StdOut.ReadLine()
+		allOutput = allOutput & outputLine & vbCrLf
+	Loop
+
+	logToFile(allOutput)
+
+	' Check if the output contains 'Server Version'
+	If InStr(allOutput, "framework-scheduler") > 0 Then
+		CheckScheduler = True
+	Else
+		CheckScheduler = False
+	End If
+
+End Function
+
+Sub logToFile(output)
+
+    ' Log the output to a file (optional for debugging)
+    Dim fso, logFile
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set logFile = fso.OpenTextFile("windows-installer.log", 2, True)
+    logFile.WriteLine "Docker Command Output:" & vbCrLf & output
+    logFile.Close
+End Sub
+
+Sub btnStart_OnClick
+
+	'If txtHost.value="" Then
+	'	MsgBox "Please enter hostname",16,"ERROR"
+	'	txtHost.focus
+	'	Exit Sub
+	'End If
+
 	If txtPort.value="" Then
-		MsgBox "Please enter port number",16,"ERROR"
+		MsgBox "Please enter webserver port number",16,"ERROR"
 		txtPort.focus
 		Exit Sub
 	End If
 
-	MsgBox "TEST STARTED",64,"DONE"
+	StartInstall
+
 End Sub
 
-Sub StartWSL()
+Sub btnOpen_OnClick
+
+	MsgBox "Open",64,"DONE"
+End Sub
+
+Sub ShowOutput(objExec)
+
+	exitCode = objExec.ExitCode
+	If exitCode = 0 Then
+		' Read the output line by line
+		outputLine = ""
+		Do While Not objExec.StdOut.AtEndOfStream
+			outputLine = outputLine & objExec.StdOut.ReadLine() & vbCrLf
+		Loop
+
+		'WScript.Echo "Command executed successfully:" & vbCrLf & outputLine
+		
+		logToFile(outputLine)
+	Else
+		Dim errorLine
+		errorLine = ""
+		Do While Not objExec.StdErr.AtEndOfStream
+		    errorLine = errorLine & objExec.StdErr.ReadLine() & vbCrLf
+		Loop
+
+		'WScript.Echo "Command failed with exit code: " & exitCode & vbCrLf & "Error Output:" & vbCrLf & errorLine
+		
+		logToFile(errorLine)
+	End If
 	
-	WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
+
+	' Call JS function to display output because Echo doesn't work in hta
+	Call UpdateOutput(outputLine, errorLine)
+
+End Sub
+
+Sub Delay(seconds)
+    ' Simulate a delay by using a busy loop for the specified seconds
+    Dim start, now
+    start = Timer
+
+    Do
+	now = Timer
+	' Loop until the specified number of seconds has passed
+	If now - start >= seconds Then Exit Do
+	' Reset start if midnight is crossed
+	If now < start Then start = now
+    Loop
+End Sub
+
+Sub StartInstall()
+	
+	Dim WSL
+
+	'WSL = "wsl.exe --user root --exec docker ps > C:\Users\wslresult.txt"
+	'intReturn = objShell.Run(WSL, 0, True)
+
+	Dim schedulerIsRunning
+	schedulerIsRunning = CheckScheduler()
+
+	If schedulerIsRunning Then
+		MsgBox "Scheduler is already running", vbInformation, "Docker Status"
+
+		WSL = "wsl.exe --user root --exec docker ps --format ""table {{.Names}}\t{{.Status}}"" "
+		Set objExec = objShell.Exec(WSL)
+
+		ShowOutput(objExec)
+	Else
+		MsgBox "Scheduler is not running", vbInformation, "Docker Status"
+		StartScheduler
+	End If
+End Sub
+
+Sub StartScheduler()
+
+	WSL = "wsl.exe --user root --exec docker run -d -v /var/run/docker.sock:/var/run/docker.sock --env WEBSERVER_PORT=" & txtPort.value & " registry.format.hu/framework-scheduler"
 	intReturn = objShell.Run(WSL, 0, True)
 
+	If Err.Number <> 0 Then
+		MsgBox (Err.number & "-" & err.Description)
+	else
+		MsgBox "Framework scheduler is starting..."
+		Delay 10
+		WSL = "wsl.exe --user root --exec docker logs framework-scheduler"
+		Set objExec = objShell.Exec(WSL)
+		ShowOutput(objExec)
+
+		iterationCount = 0
+		maxIterations = 12 ' Run for 1 minute (12 iterations of 5 seconds each)
+
+		'Do
+			'iterationCount = iterationCount + 1
+			'Set objExec = objShell.Exec(WSL)
+			'ShowOutput(objExec)
+			'Delay 5
+			'If iterationCount >= maxIterations Then
+			'	MsgBox "Max iterations reached, stopping script."
+			'	Exit Do
+			'End If
+		'Loop
+	End If 
 End Sub
 
 Sub MapDrive(DriveLetter,DrivePath)
@@ -173,19 +365,34 @@ Sub InstallCert(CertPath)
 End Sub
 
 </SCRIPT>
+    <script language="JavaScript">
+        function UpdateOutput(output, errorOutput) {
+            var outputElement = document.getElementById('output');
+
+            if (output !== '') {
+                outputElement.innerText = output;
+            } else if (errorOutput !== '') {
+                outputElement.innerText = errorOutput;
+            } else {
+                outputElement.innerText = '...';
+            }
+        }
+    </script>
 </head>
 <body>
 <table>
 <tr>
-	<td>host</td>
-	<td><input type="text" name="txtHost" value="localhost"/></td>
+	<td>Hostname:</td>
+	<td><input type="text" name="txtHost" value="localhost" disabled="disabled"/></td>
 </tr>
 <tr>
-	<td>port</td>
-	<td><input type="text" name="txtPort" value="80" maxlength="5" size="6" /></td>
+	<td>Webserver port:</td>
+	<td><input type="text" name="txtPort" value="8080" maxlength="5" size="6" /></td>
 </tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td><input type="button" value="START" id=btnConfigure /></td></tr>
+<tr><td>&nbsp;</td><td><input type="button" value="START INSTALL" id=btnStart /></td></tr>
 </table>
+<br><br>
+<div id="output"></div>
 </body>
 </html>

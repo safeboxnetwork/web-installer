@@ -22,7 +22,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
-		<input type="registry" class="form-control" name="registry" id="registry" value="registry.format.hu" required>
+		<input type="registry" class="form-control" name="DOCKER_REGISTRY_URL" id="registry" value="registry.format.hu" required>
 		<div class="invalid-feedback">
 		Please enter a valid registry url.
 		</div>
@@ -31,7 +31,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="smarthost">Smarthost proxy?</label>
-		<select class="custom-select d-block w-100" name="smarthost" id="smarthost">
+		<select class="custom-select d-block w-100" name="SMARTHOST_PROXY" id="smarthost">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -41,7 +41,7 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="domain">Please fill in the domain name</label>
-			<input type="domain" class="form-control" name="domain" id="domain" value="localhost">
+			<input type="domain" class="form-control" name="DOMAIN" id="domain" value="localhost">
 			<div class="invalid-feedback">
 			Please enter a valid domain.
 			</div>
@@ -51,7 +51,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="localproxy">Local proxy?</label>
-		<select class="custom-select d-block w-100" name="localproxy" id="localproxy">
+		<select class="custom-select d-block w-100" name="LOCAL_PROXY" id="localproxy">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -60,7 +60,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="vpn">VPN proxy?</label>
-		<select class="custom-select d-block w-100" name="vpn" id="vpn">
+		<select class="custom-select d-block w-100" name="VPN_PROXY" id="vpn">
 		<option value="yes">Yes</option>
 		<option value="no" selected>No</option>
 		</select>
@@ -70,7 +70,7 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
-			<input type="text" class="form-control" name="vpn_domain" id="vpn_domain" value="https://demo.format.hu">
+			<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://demo.format.hu">
 			<div class="invalid-feedback">
 			Please enter a valid domain.
 			</div>
@@ -79,13 +79,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="vpn_key">Please type in the generated VPN passkey (8 digits):</label>
-			<input type="text" class="form-control" name="vpn_key" id="vpn_key" value="" maxlength="8" size="10">
+			<input type="text" class="form-control" name="VPN_KEY" id="vpn_key" value="" maxlength="8" size="10">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
-			<input type="email" class="form-control" name="letsencrypt_mail" id="letsencrypt_mail" value="">
+			<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
 			<div class="invalid-feedback">
 			Please enter a valid email.
 			</div>
@@ -94,14 +94,14 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-			<input type="text" class="form-control" name="letsencrypt_servername" id="letsencrypt_servername" value="letsencrypt">
+			<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
 	    </div>
 	</div>
 </div>
 <div class="row">
     <div class="mb-3">
 		<label for="cron">Cron?</label>
-		<select class="custom-select d-block w-100" name="cron" id="cron">
+		<select class="custom-select d-block w-100" name="CRON" id="cron">
 		<option value="yes">Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -114,7 +114,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="discovery">Would you like to discover services?</label>
-		<select class="custom-select d-block w-100" name="discovery" id="discovery">
+		<select class="custom-select d-block w-100" name="DISCOVERY" id="discovery">
 		<option value="yes" selected>Yes</option>
 		<option value="no">No</option>
 		</select>
@@ -124,13 +124,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="discovery_dir">Path of service discovery scripts: (/usr/local/bin/)</label>
-			<input type="text" class="form-control" name="discovery_dir" id="discovery_dir" value="/usr/local/bin/">
+			<input type="text" class="form-control" name="DISCOVERY_DIR" id="discovery_dir" value="/usr/local/bin/">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="dicovery_config_file">Path of the discovery config file: (discovery.conf)</label>
-			<input type="text" class="form-control" name="dicovery_config_file" id="dicovery_config_file" value="discovery.conf">
+			<input type="text" class="form-control" name="DISCOVERY_CONFIG_FILE" id="dicovery_config_file" value="discovery.conf">
 	    </div>
 	</div>
 </div>
@@ -141,7 +141,7 @@
 <div class="row">
     <div class="mb-3">
 		<label for="additionals">Would you like to install additional applications?</label>
-		<select class="custom-select d-block w-100" name="additionals" id="additionals">
+		<select class="custom-select d-block w-100" name="ADDITIONALS" id="additionals">
 		<option value="yes">Yes</option>
 		<option value="no" selected>No</option>
 		</select>
@@ -151,13 +151,13 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="service_dir">Please add directory path of service files: (/etc/user/config/services/)</label>
-			<input type="text" class="form-control" name="service_dir" id="service_dir" value="/etc/user/config/services">
+			<input type="text" class="form-control" name="SERVICE_DIR" id="service_dir" value="/etc/user/config/services">
 	    </div>
 	</div>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="nextcloud">Do you want to install Nextcloud?</label>
-			<select class="custom-select d-block w-100" name="nextcloud" id="nextcloud">
+			<select class="custom-select d-block w-100" name="NEXTCLOUD" id="nextcloud">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -168,26 +168,26 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_domain">Please add Nextcloud domain: </label>
-				<input type="text" class="form-control" name="nextcloud_domain" id="nextcloud_domain" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_DOMAIN" id="nextcloud_domain" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_username">Please add Nextcloud username: </label>
-				<input type="text" class="form-control" name="nextcloud_username" id="nextcloud_username" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_USERNAME" id="nextcloud_username" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="nextcloud_password">Please add Nextcloud password: </label>
-				<input type="text" class="form-control" name="nextcloud_password" id="nextcloud_password" value="">
+				<input type="text" class="form-control" name="NEXTCLOUD_PASSWORD" id="nextcloud_password" value="">
 		    </div>
 		</div>
 	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="bitwarden">Do you want to install Bitwarden?</label>
-			<select class="custom-select d-block w-100" name="bitwarden" id="bitwarden">
+			<select class="custom-select d-block w-100" name="BITWARDEN" id="bitwarden">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -198,13 +198,13 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="bitwarden_domain">Please add Bitwarden domain: </label>
-				<input type="text" class="form-control" name="bitwarden_domain" id="bitwarden_domain" value="">
+				<input type="text" class="form-control" name="BITWARDEN_DOMAIN" id="bitwarden_domain" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="bitwarden_smtp">Please choose an SMTP server: &nbsp; &nbsp;</label>
-			<select class="custom-select d-block w-100" name="bitwarden_smtp" id="bitwarden_smtp">
+			<select class="custom-select d-block w-100" name="BITWARDEN_SMTP" id="bitwarden_smtp">
 			<option value="1" selected>Gmail</option>
 			<option value="2">Microsoft Outlook/Hotmail</option>
 			<option value="3">Other</option>
@@ -215,51 +215,51 @@
 			<div class="row">
 			    <div class="mb-3">
 				<label for="bitwarden_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
-				<input type="text" class="form-control" name="bitwarden_smtp_host" id="bitwarden_smtp_host" value="">
+				<input type="text" class="form-control" name="BITWARDEN_SMTP_HOST" id="bitwarden_smtp_host" value="">
 			    </div>
 			</div>
 			<div class="row">
 			    <div class="mb-3">
 				<label for="bitwarden_smtp_port">Please add SMTP PORT (587, 465, 25, etc.): </label>
-				<input type="text" class="form-control" name="bitwarden_smtp_port" id="bitwarden_smtp_port" value="">
+				<input type="text" class="form-control" name="BITWARDEN_SMTP_PORT" id="bitwarden_smtp_port" value="">
 			    </div>
 			</div>
 			<div class="row">
 			    <div class="mb-3">
 				<label for="bitwarden_smtp_security">Please add SMTP SECURITY (starttls, force_tls, off, etc.): </label>
-				<input type="text" class="form-control" name="bitwarden_smtp_security" id="bitwarden_smtp_security" value="">
+				<input type="text" class="form-control" name="BITWARDEN_SMTP_SECURITY" id="bitwarden_smtp_security" value="">
 			    </div>
 			</div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="bitwarden_smtp_host">Please add SMTP FROM (mail address from): </label>
-			<input type="text" class="form-control" name="bitwarden_smtp_from" id="bitwarden_smtp_from" value="">
+			<input type="text" class="form-control" name="BITWARDEN_SMTP_FROM" id="bitwarden_smtp_from" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="bitwarden_smtp_username">Please add SMTP USERNAME: </label>
-			<input type="text" class="form-control" name="bitwarden_smtp_username" id="bitwarden_smtp_username" value="">
+			<input type="text" class="form-control" name="BITWARDEN_SMTP_USERNAME" id="bitwarden_smtp_username" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="bitwarden_smtp_password">Please add SMTP PASSWORD: </label>
-			<input type="text" class="form-control" name="bitwarden_smtp_password" id="bitwarden_smtp_password" value="">
+			<input type="text" class="form-control" name="BITWARDEN_SMTP_PASSWORD" id="bitwarden_smtp_password" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="bitwarden_domains_whitelist">Please add Domains Whitelist (list of domains): </label>
-			<input type="text" class="form-control" name="bitwarden_domains_whitelist" id="bitwarden_domains_whitelist" value="">
+			<input type="text" class="form-control" name="BITWARDEN_DOMAINS_WHITELIST" id="bitwarden_domains_whitelist" value="">
 		    </div>
 		</div>
 	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="guacamole">Do you want to install Guacamole?</label>
-			<select class="custom-select d-block w-100" name="guacamole" id="guacamole">
+			<select class="custom-select d-block w-100" name="GUACAMOLE" id="guacamole">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -270,25 +270,25 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="guacamole_domain">Please add Guacamole domain: </label>
-				<input type="text" class="form-control" name="guacamole_domain" id="guacamole_domain" value="">
+				<input type="text" class="form-control" name="GUACAMOLE_DOMAIN" id="guacamole_domain" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="guacamole_username">Please add Guacamole admin username: </label>
-				<input type="text" class="form-control" name="guacamole_username" id="guacamole_username" value="">
+				<input type="text" class="form-control" name="GUACAMOLE_USERNAME" id="guacamole_username" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="guacamole_password">Please add Guacamole admin password: </label>
-				<input type="text" class="form-control" name="guacamole_password" id="guacamole_password" value="">
+				<input type="text" class="form-control" name="GUACAMOLE_PASSWORD" id="guacamole_password" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 			<label for="guacemole_totp">Do you want TOTP via login? </label>
-			<select class="custom-select d-block w-100" name="guacemole_totp" id="guacemole_totp">
+			<select class="custom-select d-block w-100" name="GUACAMOLE_TOTP" id="guacamole_totp">
 			<option value="yes" selected>Yes</option>
 			<option value="no">No</option>
 			</select>
@@ -298,14 +298,14 @@
 		    <div class="mb-3">
 			<label for="guacamole_ban_duration">Do you want limitation in case invalid login or password? Please add a number how many minutes for deny retry. If you add 0 means it will disabled.";
 			</label>
-			<input type="text" class="form-control" name="guacamole_ban_duration" id="guacamole_ban_duration" value="5">
+			<input type="text" class="form-control" name="GUACAMOLE_BAN_DURATION" id="guacamole_ban_duration" value="5">
 		    </div>
 		</div>
 	</fieldset>
 	<div class="row">
 	    <div class="mb-3">
 			<label for="smtp_server">Do you want to install SMTP server?</label>
-			<select class="custom-select d-block w-100" name="smtp_server" id="smtp_server">
+			<select class="custom-select d-block w-100" name="SMTP_SERVER" id="smtp_server">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -314,7 +314,7 @@
 	<div class="row">
 	    <div class="mb-3">
 			<label for="roundcube">Do you want to install roundcube?</label>
-			<select class="custom-select d-block w-100" name="roundcube" id="roundcube">
+			<select class="custom-select d-block w-100" name="ROUNDCUBE" id="roundcube">
 			<option value="yes">Yes</option>
 			<option value="no" selected>No</option>
 			</select>
@@ -325,37 +325,37 @@
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_imap_host">Please add IMAP HOST: &nbsp; &nbsp; &nbsp; </label>
-				<input type="text" class="form-control" name="roundcube_imap_host" id="roundcube_imap_host" value="">
+				<input type="text" class="form-control" name="ROUNDCUBE_IMAP_HOST" id="roundcube_imap_host" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_imap_port">Please add IMAP PORT (default: 143): </label>
-				<input type="text" class="form-control" name="roundcube_imap_port" id="roundcube_imap_port" value="143">
+				<input type="text" class="form-control" name="ROUNDCUBE_IMAP_PORT" id="roundcube_imap_port" value="143">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_smtp_host">Please add SMTP HOST: &nbsp; &nbsp; &nbsp; &nbsp; </label>
-				<input type="text" class="form-control" name="roundcube_smtp_host" id="roundcube_smtp_host" value="">
+				<input type="text" class="form-control" name="ROUNDCUBE_SMTP_HOST" id="roundcube_smtp_host" value="">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_smtp_port">Please add SMTP PORT (587, 465, 25, etc., default: 25): </label>
-				<input type="text" class="form-control" name="roundcube_smtp_port" id="roundcube_smtp_port" value="25">
+				<input type="text" class="form-control" name="ROUNDCUBE_SMTP_PORT" id="roundcube_smtp_port" value="25">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_upload">Please add UPLOAD_MAX_FILESIZE (default: 50M): </label>
-				<input type="text" class="form-control" name="roundcube_upload" id="roundcube_upload" value="50M">
+				<input type="text" class="form-control" name="ROUNDCUBE_UPLOAD" id="roundcube_upload" value="50M">
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="mb-3">
 				<label for="roundcube_domain">Please add Roundcube DOMAIN: </label>
-				<input type="text" class="form-control" name="roundcube_domain" id="roundcube_domain" value="">
+				<input type="text" class="form-control" name="ROUNDCUBE_DOMAIN" id="roundcube_domain" value="">
 		    </div>
 		</div>
 	</div>
@@ -376,7 +376,7 @@
 <script>
 jQuery(document).ready(function(){
 
-	jQuery('select#smarthost').click(function() {
+	jQuery('select#smarthost').change(function() {
 		if (jQuery(this).val()=='yes') jQuery('#div_smarthost').show();
 		else jQuery('#div_smarthost').hide();
 
