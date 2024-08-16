@@ -29,10 +29,11 @@ $json = json_encode($_POST, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 //echo $json;
 
 // TODO preview about selected options?
-// TODO - new install in progress?
+// TODO - new install in progress? INSTALL_STATUS=0
 
 $key = "install:".date("YmdHis");
 redis_set($key,$json);
+//$key = "install:20240816101849"; // DEBUG
 
 /*
 put_install_envs();
@@ -86,8 +87,9 @@ function check_install() {
 	redirectToManage();
     }
     else {
-      $("#previous").html('Please wait...');
-      setTimeout(redirectToInstall, 1000);
+      counter+=1
+      $("#response").html('Please wait... ' + counter);
+      setTimeout(check_install, 1000);
     }
   });
 }
@@ -103,8 +105,7 @@ function check_install() {
     }
   });
 
-  //setTimeout(redirectToManage, 10000);
-
+  counter=0;
 });
 </script>
 </body>
