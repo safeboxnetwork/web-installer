@@ -60,10 +60,12 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="containers") {
-					echo $data["RESULT"];
+					echo base64_decode($data["RESULT"]);
+					redis_remove("$key");
 				}
 			}
 		}
+		else echo "";
 	break;
 	case "docker":
 		echo true;
