@@ -32,6 +32,21 @@ switch ($_GET["op"]) {
 		}
 		else echo "WAIT";
 	break;
+	case "check_install":
+		$arr = check_redis("web_out",$_GET["key"]);
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				//echo $key."-".$_GET["key"];
+				if ($key==$_GET["key"]) { // if install key moved to web_out
+					if ($data["INSTALL_STATUS"]==1) {
+						redis_remove("$key");
+						echo "INSTALLED";
+					}
+				}
+			}
+		}
+		else echo "NOT EXISTS";
+	break;
 	case "docker":
 		echo true;
 	break;

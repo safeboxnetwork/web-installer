@@ -12,7 +12,7 @@ function ping_redis() {
 	else return false;
 }
 
-function check_redis($group="scheduler_in") {
+function check_redis($group="scheduler_in", $key="") {
 
 	global $REDIS_HOST;
 
@@ -23,6 +23,8 @@ function check_redis($group="scheduler_in") {
 		//print_r($members);
 
 		foreach ($members as $member) {
+			if ($key!="" && $member!=$key) continue; // check a specific key in a group
+
 			$value = $redis->get($member);
 			$json_data = base64_decode($value);
 			$data = json_decode($json_data,true);

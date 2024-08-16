@@ -28,10 +28,11 @@ if ($_POST["ADDITIONALS"]=="yes") {
 $json = json_encode($_POST, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 //echo $json;
 
-$op = "install:".date("YmdHis");
-redis_set($op,$json);
+// TODO preview about selected options?
+// TODO - new install in progress?
 
-//echo redis_get($op);
+$key = "install:".date("YmdHis");
+redis_set($key,$json);
 
 /*
 put_install_envs();
@@ -45,3 +46,66 @@ echo "<pre>".$output."</pre>";
 */
 
 ?>
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>INSTALLER TOOL</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<!-- Custom styles for this template -->
+<link href="installer.css?t=1" rel="stylesheet">
+</head>
+<body id="install" class="text-center">
+<div class="container-fluid">
+<div class="col-md-12">
+	<h1>Installing in progress... Please wait...</h1>
+	<div id="redis"></div>
+	<div id="response"></div>
+</div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script>
+$(function() {
+
+function redirectToManage() {
+    window.location.href = 'manage.html';
+}
+
+function check_install() {
+  var url  = 'scan.php?op=check_install&key=<?php echo $key;?>';
+  $.get(url, function(data){
+    console.log(data);
+    if (data=='INSTALLED') {
+	redirectToManage();
+    }
+    else {
+      $("#previous").html('Please wait...');
+      setTimeout(redirectToInstall, 1000);
+    }
+  });
+}
+
+  var url  = 'scan.php?op=redis';
+  $.get(url, function(data){
+    if (data=='OK') {
+      $("#redis").html('Redis server - OK');
+      check_install();
+    }
+    else {
+      $("#redis").html('Redis server is not available...');
+    }
+  });
+
+  //setTimeout(redirectToManage, 10000);
+
+});
+</script>
+</body>
+</html>
