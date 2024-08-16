@@ -20,11 +20,9 @@ function check_install() {
 	$redis->connect($REDIS_HOST);
 	if ($redis->ping()) {
 		$members = $redis->sMembers("web_in"); // redis-cli -h redis-server smembers $group
-		print_r($members);
 
 		$in_progress=0;
 		foreach ($members as $member) {
-			echo substr($member,0,7);
 			if (substr($member,0,7)=="install") {
 				$in_progress=$member;
 				break;

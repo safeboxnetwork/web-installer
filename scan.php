@@ -47,6 +47,24 @@ switch ($_GET["op"]) {
 		}
 		else echo "NOT EXISTS";
 	break;
+	case "containers":
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "containers";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+
+	case "check_containers":
+		$arr = check_redis("web_out","containers");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="containers") {
+					echo $data["RESULT"];
+				}
+			}
+		}
+	break;
 	case "docker":
 		echo true;
 	break;
