@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Authentication</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+</head>
+<body>
+    <button id="login">Login with MetaMask</button>
+    <script>
+        document.getElementById('login').onclick = async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                const web3 = new Web3(window.ethereum);
+                try {
+                    // Request account access
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    
+                    // Get the user's account
+                    const accounts = await web3.eth.getAccounts();
+                    const account = accounts[0];
+                    
+                    // Sign a message
+                    const message = "Sign this message to authenticate";
+                    const signature = await web3.eth.personal.sign(message, account);
+
+                    // Send the signature to the server for verification
+                    fetch('/verify_signature.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ account, signature, message })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.verified) {
+                              alert('Authentication successful!');
+                          } else {
+                              alert('Authentication failed!');
+                          }
+                      });
+                } catch (error) {
+                    console.error('User denied account access:', error);
+                }
+            } else {
+                alert('Please install MetaMask!');
+            }
+        };
+    </script>
+</body>
+</html>
