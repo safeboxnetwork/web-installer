@@ -28,6 +28,26 @@ switch ($_GET["op"]) {
 		}
 		else echo "NOT EXISTS";
 	break;
+	case "repositories":
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "repositories";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+
+	case "check_repositories":
+		$arr = check_redis("web_out","repositories");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="repositories") {
+					echo base64_decode($data["RESULT"]);
+					redis_remove("$key");
+				}
+			}
+		}
+		else echo "";
+	break;
 	case "init":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
