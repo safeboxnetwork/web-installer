@@ -55,16 +55,9 @@ switch ($_GET["op"]) {
 					}
 					redis_remove("$key");
 				}
-
 			}
 		}
 		else echo "WAIT";
-		$arr = check_redis("web_out","repositories");
-		if (!empty($arr)) {
-			foreach ($arr as $key=>$data) {
-			}
-		}
-		else echo "";
 	break;
 	case "deployments":
 		$arr = array("STATUS" => 0);
@@ -73,6 +66,21 @@ switch ($_GET["op"]) {
 		$op = "deployments";
 		redis_set($op,$json);
 		echo "OK"; // TODO?
+	break;
+	case "check_deployments":
+		$arr = check_redis("web_out","deployments");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="deployments") {
+					foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
+						//echo base64_decode($content);
+						echo $service_name."<br>";
+					}
+					//redis_remove("$key");
+				}
+			}
+		}
+		else echo "";
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
@@ -87,7 +95,7 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="repositories") {
-					echo base64_decode($data["RESULT"]);
+					echo base64_decode($data["REPOSITORIES"]);
 					redis_remove("$key");
 				}
 			}
