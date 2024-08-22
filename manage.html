@@ -21,25 +21,30 @@
 </div>
 
 <fieldset id="settings" class="hidden">
-<legend>Settings</legend>
-<div id="repositories" style="text-align:left">Loading...</div>
+<legend>Repositories</legend>
+	<div id="repositories" style="text-align:left">Loading...</div>
 
-<form class="form-install" action="#" method="post">
-<div class="row">
-    <div class="mb-3">
-	<label for="registry">Please add a new repository name:</label>
-	<input type="registry" class="form-control" name="repository" id="repository" value="" required>
-	<div class="invalid-feedback">
-	Please enter a valid repository name.
+	<form class="form-install" action="#" method="post">
+	<div class="row">
+	    <div class="mb-3">
+		<label for="registry">Please add a new repository name:</label>
+		<input type="registry" class="form-control" name="repository" id="repository" value="" required>
+		<div class="invalid-feedback">
+		Please enter a valid repository name.
+		</div>
+	    </div>
 	</div>
-    </div>
-</div>
-<div class="row">
-    <div class="mb-3">
-	<button class="btn btn-lg btn-primary btn-block" type="button"> Send </button>
-    </div>
-</div>
-</form>
+	<div class="row">
+	    <div class="mb-3">
+		<button class="btn btn-lg btn-primary btn-block" type="button"> Add </button>
+	    </div>
+	</div>
+	</form>
+</fieldset>
+
+<fieldset>
+<legend>System</legend>
+<div id="system" style="text-align:left">Loading...</div>
 </fieldset>
 
 <fieldset>
@@ -110,7 +115,7 @@ function get_system() {
 }
 
 function check_deployments() {
-  var url  = 'scan.php?op=check_deployments&services=1';
+  var url  = 'scan.php?op=check_deployments';
   jQuery.get(url, function(data) {
       if (data!="") {
 	      jQuery("#deployments").html(data);
@@ -148,6 +153,7 @@ function get_containers() {
 
 jQuery(document).ready(function(){
 
+	get_system();
 	get_repositories();
 	get_deployments();
 	get_containers();

@@ -72,11 +72,14 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployments") {
-					foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
-						//echo base64_decode($content);
-						echo $service_name."<br>";
+					if (count($data["INSTALLED_SERVICES"])) {
+						foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
+							//echo base64_decode($content);
+							echo $service_name."<br>";
+						}
 					}
-					//redis_remove("$key");
+					else echo "There are no deployments.";
+					redis_remove("$key");
 				}
 			}
 		}
