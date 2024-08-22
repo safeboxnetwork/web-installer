@@ -12,7 +12,7 @@ function ping_redis() {
 	else return false;
 }
 
-function check_install() {
+function check_install() { // is install in progress
 
 	global $REDIS_HOST;
 
@@ -42,8 +42,9 @@ function check_redis($group="scheduler_in", $key="") {
 		$members = $redis->sMembers($group); // redis-cli -h redis-server smembers $group
 		//print_r($members);
 
+		$result = array();
 		foreach ($members as $member) {
-			if ($key!="" && $member!=$key) continue; // check a specific key in a group
+			if ($key!="" && $member!=$key) continue; // find a specific key in a group
 
 			$value = $redis->get($member);
 			$json_data = base64_decode($value);
@@ -52,10 +53,11 @@ function check_redis($group="scheduler_in", $key="") {
 				echo "JSON read error...";
 				// TODO json error
 			}
-			else {
-				return array("$member" => $data);
+			else { 
+				$result["$member"] = $data;
 			}
 		}
+		return $result;
 	}
 }
 

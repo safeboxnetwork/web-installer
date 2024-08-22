@@ -28,6 +28,52 @@ switch ($_GET["op"]) {
 		}
 		else echo "NOT EXISTS";
 	break;
+	case "system":
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "system"; //"init:".date("YmdHis");
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+	break;
+	case "check_system":
+		$arr = check_redis("web_out","system");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="system") {
+					if ($data["INSTALL_STATUS"]==2) echo "NEW";
+					elseif ($data["INSTALL_STATUS"]==1) {
+						if ($_GET["services"]==1) {
+							$deployments = "";
+							foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
+								//echo base64_decode($content);
+								echo $service_name."<br>";
+							}
+							echo $deployments."<br>";
+						}
+						else echo "EXISTS";
+					}
+					redis_remove("$key");
+				}
+
+			}
+		}
+		else echo "WAIT";
+		$arr = check_redis("web_out","repositories");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+			}
+		}
+		else echo "";
+	break;
+	case "deployments":
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "deployments";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
@@ -47,36 +93,6 @@ switch ($_GET["op"]) {
 			}
 		}
 		else echo "";
-	break;
-	case "init":
-		$arr = array("STATUS" => 0);
-		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-
-		$op = "init:".date("YmdHis");
-		redis_set($op,$json);
-		echo "OK"; // TODO?
-	break;
-	case "check_init":
-		$arr = check_redis("web_out");
-		if (!empty($arr)) {
-			foreach ($arr as $key=>$data) {
-
-				if ($data["INSTALL_STATUS"]==2) echo "NEW";
-				elseif ($data["INSTALL_STATUS"]==1) {
-					if ($_GET["services"]==1) {
-						$deployments = "";
-						foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
-							//echo base64_decode($content);
-							echo $service_name."<br>";
-						}
-						echo $deployments."<br>";
-					}
-					else echo "EXISTS";
-				}
-				redis_remove("$key");
-			}
-		}
-		else echo "WAIT";
 	break;
 	case "containers":
 		$arr = array("STATUS" => 0);

@@ -48,12 +48,12 @@ function redirectToManage() {
     window.location.href = 'manage.html';
 }
 
-function start_init() {
-  var url  = 'scan.php?op=init';
+function start_system() {
+  var url  = 'scan.php?op=system';
   $.get(url, function(data){
     if (data=='OK') {
       $("#previous").html('Scanning for previous install. Please wait...');
-      check_init();
+      check_system();
     }
     else {
       $("#previous").html('Scanning for previous install has aborted...');
@@ -61,8 +61,8 @@ function start_init() {
   });
 }
 
-function check_init() {
-  var url  = 'scan.php?op=check_init';
+function check_system() {
+  var url  = 'scan.php?op=check_system';
   $.get(url, function(data){
     console.log(data);
     if (data=='NEW') {
@@ -74,7 +74,7 @@ function check_init() {
       setTimeout(redirectToManage, 3000);
     }
     else if (data=='WAIT') {
-      setTimeout(check_init, 1000);
+      setTimeout(check_system, 1000);
     }
     else {
 	    // UNEXPECTED ERROR
@@ -86,7 +86,7 @@ function check_init() {
   $.get(url, function(data){
     if (data=='OK') {
       $("#redis").html('Redis server - OK');
-      start_init();
+      start_system();
     }
     else {
       $("#redis").html('Redis server is not available...');
