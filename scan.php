@@ -44,12 +44,11 @@ switch ($_GET["op"]) {
 					if ($data["INSTALL_STATUS"]==2) echo "NEW";
 					elseif ($data["INSTALL_STATUS"]==1) {
 						if ($_GET["services"]==1) {
-							$deployments = "";
 							foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
 								//echo base64_decode($content);
 								echo $service_name."<br>";
 							}
-							echo $deployments."<br>";
+							echo "<br>";
 						}
 						else echo "EXISTS";
 					}
@@ -73,19 +72,27 @@ switch ($_GET["op"]) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployments") {
 					if (count($data["DEPLOYMENTS"])) {
-						foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
-							//echo base64_decode($content);
-							echo $service_name."<br>";
+						if ($data["DEPLOYMENTS"]["deployments"]=="NONE") echo "There are no deployments.<br>";
+						else {
+							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
+								//echo base64_decode($content);
+								echo $service_name."<br>";
+							}
 						}
 					}
-					else echo "There are no deployments.";
+					else echo "There are no deployments.<br>";
+
 					if (count($data["INSTALLED_SERVICES"])) {
-						foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
-							//echo base64_decode($content);
-							echo $service_name."<br>";
+						if ($data["INSTALLED_SERVICES"]["services"]=="NONE") echo "There are no installed services.<br>";
+						else {
+							foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
+								//echo base64_decode($content);
+								echo $service_name."<br>";
+							}
+							echo "<br>";
 						}
 					}
-					else echo "There are no deployments.";
+					else echo "There are no installed services.<br>";
 					redis_remove("$key");
 				}
 			}
@@ -112,10 +119,13 @@ switch ($_GET["op"]) {
 					redis_remove("$key");
 				}
 			}
+			redis_remove("add_repository");
 		}
 		else echo "";
 	break;
 	case "add_repository":
+		redis_remove("add_repository");
+
 		$arr = array("NEW_REPO" => $_GET["repo"]);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
