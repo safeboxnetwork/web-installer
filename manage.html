@@ -21,30 +21,33 @@
 </div>
 
 <fieldset id="settings" class="hidden">
-<legend>Repositories</legend>
-	<div id="repositories" style="text-align:left">Loading...</div>
+	<fieldset>
+	<legend>Repositories</legend>
+		<div id="repositories" style="text-align:left">Loading...</div>
 
-	<form class="form-install" action="#" method="post">
-	<div class="row">
-	    <div class="mb-3">
-		<label for="registry">Please add a new repository name:</label>
-		<input type="registry" class="form-control" name="repository" id="repository" value="" required>
-		<div class="invalid-feedback">
-		Please enter a valid repository name.
+		<hr>
+		<form class="form-install" action="#" method="post" id="add_repo">
+		<div class="row">
+		    <div class="mb-3" style="text-align:left">
+			<label for="registry">Please add a new GIT repository URL: </label>
+			<input type="registry" class="form-control" name="repository" id="repository" size="100" value="" required>
+			<div class="invalid-feedback">
+			Please enter a valid repository url.
+			</div>
+		    </div>
 		</div>
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="mb-3">
-		<button class="btn btn-lg btn-primary btn-block" type="button"> Add </button>
-	    </div>
-	</div>
-	</form>
-</fieldset>
+		<div class="row">
+		    <div class="mb-3">
+			<button class="btn btn-lg btn-primary btn-block" type="submit" id="repo_add_btn"> Add </button>
+		    </div>
+		</div>
+		</form>
+	</fieldset>
 
-<fieldset>
-<legend>System</legend>
-<div id="system" style="text-align:left">Loading...</div>
+	<fieldset>
+	<legend>System services</legend>
+	<div id="system" style="text-align:left">Loading...</div>
+	</fieldset>
 </fieldset>
 
 <fieldset>
@@ -95,6 +98,14 @@ function get_repositories() {
   });
 }
 
+function add_repository() {
+  var url  = 'scan.php?op=add_repository&repo='+jQuery('#repository').val();
+  jQuery.get(url, function(data) {
+	  if (data=="OK") {
+	  }
+	get_repositories();
+  });
+}
 function check_system() {
   var url  = 'scan.php?op=check_system&services=1';
   jQuery.get(url, function(data) {
@@ -160,6 +171,12 @@ jQuery(document).ready(function(){
 
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
+	});
+
+	jQuery('#add_repo').submit(function() {
+		jQuery('#repositories').html('Loading...');
+		add_repository();
+		return false;
 	});
 
 	jQuery('select#smarthost').click(function() {

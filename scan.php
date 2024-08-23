@@ -92,18 +92,29 @@ switch ($_GET["op"]) {
 		$op = "repositories";
 		redis_set($op,$json);
 		echo "OK"; // TODO?
-
+	break;
 	case "check_repositories":
 		$arr = check_redis("web_out","repositories");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="repositories") {
-					echo base64_decode($data["REPOSITORIES"]);
+					$repos = json_decode(base64_decode($data["REPOSITORIES"]));
+					foreach ($repos->repositories as $repo) {
+						echo $repo."<br>";
+					}
 					redis_remove("$key");
 				}
 			}
 		}
 		else echo "";
+	break;
+	case "add_repository":
+		$arr = array("NEW_REPO" => $_GET["repo"]);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "add_repository";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
 	break;
 	case "containers":
 		$arr = array("STATUS" => 0);
@@ -112,7 +123,7 @@ switch ($_GET["op"]) {
 		$op = "containers";
 		redis_set($op,$json);
 		echo "OK"; // TODO?
-
+	break;
 	case "check_containers":
 		$arr = check_redis("web_out","containers");
 		if (!empty($arr)) {
