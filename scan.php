@@ -72,6 +72,13 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployments") {
+					if (count($data["DEPLOYMENTS"])) {
+						foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
+							//echo base64_decode($content);
+							echo $service_name."<br>";
+						}
+					}
+					else echo "There are no deployments.";
 					if (count($data["INSTALLED_SERVICES"])) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
 							//echo base64_decode($content);
