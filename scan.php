@@ -114,10 +114,31 @@ switch ($_GET["op"]) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
-						echo base64_decode($data["TEMPLATE"]);
+						$template = json_decode(base64_decode($data["TEMPLATE"]));
+						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
+						foreach ($template->fields as $field) {
+							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
+								<input ".($field->required=="true" ? "required" : "")." type=\"text\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">
+							</div></div>";
+						}
+						echo "
+						<div class=\"row\">
+						<div class=\"mb-3\">
+						<input type=\"hidden\" value=\"{$template->name}\" id=\"additional\">
+						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_btn\">Install</button>
+						</div>
+						</div>
+						</form></fieldset>
+<script>
+	jQuery('#deploy_form').submit(function() {
+		deploy(jQuery('#additional').val());
+		return false;
+	});
+</script>
+						";
 					}
 					else { // deploy
-						echo $data["STATUS"];
+						echo "DEPLOY:".$data["STATUS"];
 					}
 					redis_remove("$key");
 				}
@@ -131,9 +152,12 @@ switch ($_GET["op"]) {
 		}
 		else {
 			$text="Installing in progress... Please wait...";
-			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy");
+			$fields = $_GET;
+			unset($fields["op"]);
+			unset($fields["additional"]);
+			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
+			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-
 			$op = "deployment";
 			redis_set($op,$json);
 		}

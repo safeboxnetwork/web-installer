@@ -106,6 +106,7 @@ function add_repository() {
 	get_repositories();
   });
 }
+
 function check_system() {
   var url  = 'scan.php?op=check_system&services=1';
   jQuery.get(url, function(data) {
@@ -148,6 +149,22 @@ function load_template(additional) {
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
+      		setTimeout(check_deployment, 500, additional);
+	  }
+  });
+}
+
+function deploy(additional) {
+  pars = '';
+  jQuery('input.additional_field').each(function(index) {
+	console.log('Field ' + $(this).attr('id') + ': ' + $(this).val());
+	pars += '&'+$(this).attr('id') + '=' + $(this).val();
+  });
+  //console.log(pars);
+  var url  = 'scan.php?op=deploy&additional='+additional+pars;
+  jQuery.get(url, function(data) {
+	  if (data!="") {
+	        jQuery("#"+additional).html(data);
       		setTimeout(check_deployment, 500, additional);
 	  }
   });

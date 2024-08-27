@@ -43,7 +43,7 @@ function check_deploy() { // is a deploy in progress
 
 		$in_progress=0;
 		foreach ($members as $member) {
-			if (substr($member,0,7)=="deploy") {
+			if (substr($member,0,10)=="deployment") {
 				$in_progress=$member;
 				break;
 			}
