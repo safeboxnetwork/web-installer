@@ -99,31 +99,44 @@ switch ($_GET["op"]) {
 		}
 		else echo "";
 	break;
+	case "deployment":
+		$arr = array("NAME" => $_GET["additional"], "ACTION" => "ask");
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "deployment";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+	break;
 	case "deploy":
 		if ($key=check_deploy()) { 
-			$header_text="A deployment has already started.<br>Please wait and do not start a new one...";
+			$text="A deployment has already started.<br>Please wait and do not start a new one...";
 		}
 		else {
-			$header_text="Installing in progress... Please wait...";
-			$key = "deploy:".date("YmdHis");
-			redis_set($key,$json);
-			//$key = "deploy:20240816101849"; // DEBUG
+			$text="Installing in progress... Please wait...";
+			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy");
+			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+			$op = "deployment";
+			redis_set($op,$json);
 		}
+		echo $text;
 	break;
-	case "check_deploy":
-		$arr = check_redis("web_out",$_GET["key"]);
+	case "check_deployment":
+		$arr = check_redis("web_out","deployment");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
-				//echo $key."-".$_GET["key"];
-				if ($key==$_GET["key"]) { // if install key moved to web_out
-					if ($data["INSTALL_STATUS"]>0) {
-						redis_remove("$key");
-						echo "INSTALLED";
+				if ($key=="deployment") {
+					if ($data["STATUS"]=="0") { // ask
+						echo base64_decode($data["TEMPLATE"]);
 					}
+					else {
+						echo $data["STATUS"];
+					}
+					redis_remove("$key");
 				}
 			}
 		}
-		else echo "NOT EXISTS";
+		else echo "";
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
