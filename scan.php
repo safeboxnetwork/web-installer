@@ -77,7 +77,7 @@ switch ($_GET["op"]) {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
 								//echo base64_decode($content);
 								echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
-								echo '<div id="'.$service_name.'"></div>'
+								echo '<div id="'.$service_name.'"></div>';
 							}
 						}
 					}
