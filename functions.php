@@ -32,6 +32,26 @@ function check_install() { // is install in progress
 	}
 }
 
+function check_deploy() { // is a deploy in progress
+
+	global $REDIS_HOST;
+
+	$redis = new Redis();
+	$redis->connect($REDIS_HOST);
+	if ($redis->ping()) {
+		$members = $redis->sMembers("web_in"); // redis-cli -h redis-server smembers $group
+
+		$in_progress=0;
+		foreach ($members as $member) {
+			if (substr($member,0,7)=="deploy") {
+				$in_progress=$member;
+				break;
+			}
+		}
+		return $in_progress;
+	}
+}
+
 function check_redis($group="scheduler_in", $key="") {
 
 	global $REDIS_HOST;
