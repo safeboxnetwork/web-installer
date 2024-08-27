@@ -143,6 +143,26 @@ function get_deployments() {
 	  }
   });
 }
+
+function load_template(additional) {
+  var url  = 'scan.php?op=deployment&additional='+additional;
+  jQuery.get(url, function(data) {
+	  if (data=="OK") {
+      		setTimeout(check_deployment, 500, additional);
+	  }
+  });
+}
+
+function check_deployment(additional) {
+  var url  = 'scan.php?op=check_deployment';
+  jQuery.get(url, function(data) {
+      if (data!="") {
+	      jQuery("#"+additional).html(data);
+      }
+      else setTimeout(check_deployment, 500, additional);
+  });
+}
+
 function check_containers() {
   var url  = 'scan.php?op=check_containers';
   jQuery.get(url, function(data) {

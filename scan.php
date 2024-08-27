@@ -76,7 +76,8 @@ switch ($_GET["op"]) {
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
 								//echo base64_decode($content);
-								echo $service_name."<br>";
+								echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
+								echo '<div id="'.$service_name.'"></div>'
 							}
 						}
 					}
@@ -107,6 +108,23 @@ switch ($_GET["op"]) {
 		redis_set($op,$json);
 		echo "OK"; // TODO?
 	break;
+	case "check_deployment":
+		$arr = check_redis("web_out","deployment");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="deployment") {
+					if ($data["STATUS"]=="0") { // ask
+						echo base64_decode($data["TEMPLATE"]);
+					}
+					else { // deploy
+						echo $data["STATUS"];
+					}
+					redis_remove("$key");
+				}
+			}
+		}
+		else echo "";
+	break;
 	case "deploy":
 		if ($key=check_deploy()) { 
 			$text="A deployment has already started.<br>Please wait and do not start a new one...";
@@ -120,23 +138,6 @@ switch ($_GET["op"]) {
 			redis_set($op,$json);
 		}
 		echo $text;
-	break;
-	case "check_deployment":
-		$arr = check_redis("web_out","deployment");
-		if (!empty($arr)) {
-			foreach ($arr as $key=>$data) {
-				if ($key=="deployment") {
-					if ($data["STATUS"]=="0") { // ask
-						echo base64_decode($data["TEMPLATE"]);
-					}
-					else {
-						echo $data["STATUS"];
-					}
-					redis_remove("$key");
-				}
-			}
-		}
-		else echo "";
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
