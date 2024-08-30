@@ -182,7 +182,7 @@ switch ($_GET["op"]) {
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 			$op = "deployment";
-			//redis_set($op,$json);
+			redis_set($op,$json);
 		}
 		echo $text;
 	break;
