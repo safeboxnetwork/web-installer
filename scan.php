@@ -175,14 +175,14 @@ switch ($_GET["op"]) {
 					if (in_array($field_arr[2],$algos)) $base = hash($field_arr[2],$base);
 					else $base = hash("md5",$base); // default alg
 
-					$base = substr($base,0,$len);
+					$fields["$field_key"] = substr($base,0,$len);
 				}
 			}
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 			$op = "deployment";
-			redis_set($op,$json);
+			//redis_set($op,$json);
 		}
 		echo $text;
 	break;
