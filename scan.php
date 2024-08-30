@@ -117,9 +117,14 @@ switch ($_GET["op"]) {
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						foreach ($template->fields as $field) {
+							if (isset($field->generated)) {
+								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">";
+							}
+							else {
 							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
 								<input ".($field->required=="true" ? "required" : "")." type=\"text\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">
 							</div></div>";
+							}
 						}
 						echo "
 						<div class=\"row\">
@@ -155,6 +160,24 @@ switch ($_GET["op"]) {
 			$fields = $_GET;
 			unset($fields["op"]);
 			unset($fields["additional"]);
+			$algos = hash_algos();
+			foreach ($fields as $field_key => $field_value) {
+				$field_arr = explode(":",$field_value);
+				if ($field_arr[0]=="generated") {
+					if (intval($field_arr[3])==0) $len = 10; // default length
+					else $len = $field_arr[3];
+
+					if ($field_arr[1]=="random") $base = rand(100000,999999);
+					elseif ($field_arr[1]=="time") $base = time();
+					elseif ($field_arr[1]!="") $base = $field_arr[1]; // fix string
+					else $base = rand(100000,999999); // default
+
+					if (in_array($field_arr[2],$algos)) $base = hash($field_arr[2],$base);
+					else $base = hash("md5",$base); // default alg
+
+					$base = substr($base,0,$len);
+				}
+			}
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
