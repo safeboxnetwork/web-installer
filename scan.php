@@ -76,7 +76,7 @@ switch ($_GET["op"]) {
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
 								//echo base64_decode($content);
-								echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
+								echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.(array_key_exists($service_name,$data["INSTALLED_SERVICES"]) ? " - INSTALLED" : "").'</div>';
 								echo '<div id="'.$service_name.'"></div>';
 							}
 						}
@@ -84,6 +84,7 @@ switch ($_GET["op"]) {
 					else echo "There are no deployments.<br>";
 
 					if (count($data["INSTALLED_SERVICES"])) {
+						echo "<br>Installed services:<br>";
 						if ($data["INSTALLED_SERVICES"]["services"]=="NONE") echo "There are no installed services.<br>";
 						else {
 							foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
