@@ -137,6 +137,14 @@ function redis_remove($key) {
 	}
 }
 
+function get_vpn_url($domain,$passkey) {
+
+	$date = gmdate("Ymd");
+	$hash = hash("sha256",$passkey*$date);
+	$url = $domain."/".$passkey."/secret";
+	return $url;
+}
+
 // not in use
 function put_install_envs() {
 
