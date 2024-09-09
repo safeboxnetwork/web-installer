@@ -82,16 +82,23 @@ function check_system() {
   });
 }
 
+function check_redis() {
+
   var url  = 'scan.php?op=redis';
   $.get(url, function(data){
+    console.log(data);
     if (data=='OK') {
       $("#redis").html('Redis server - OK');
       start_system();
     }
     else {
       $("#redis").html('Redis server is not available...');
+      setTimeout(check_redis, 1000);
     }
   });
+}
+
+  check_redis();
 
   //setTimeout(redirectToManage, 10000);
 
