@@ -12,14 +12,13 @@ if ($_POST["SMARTHOST_PROXY"]=="Y") {
 
 }
 
+/*
 if ($_POST["VPN_PROXY"]=="Y") {
-	$vpnkey_url = get_vpn_url($_POST["VPN_DOMAIN"],$_POST["VPN_KEY"]);
+	$vpnkey_url = get_vpn_url($_POST["VPN_DOMAIN"],$_POST["VPN_PASS"]);
 	// DEBUG
-
 	echo $vpnkey_url;
-	echo "<br>";
-	echo file_get_contents($vpnkey_url);
 }
+*/
 
 if ($_POST["DISCOVERY"]=="yes") {
 	if ($_POST["DISCOVERY_DIR"] == "" ) $_POST["DISCOVERY_DIR"]="/usr/local/bin/";

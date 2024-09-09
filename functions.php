@@ -171,7 +171,7 @@ function put_install_envs() {
 	putenv('VPN_PROXY='.$_POST["vpn"]);
 	if ($_POST["vpn"]=="yes") {
 		putenv('VPN_DOMAIN='.$_POST["vpn_domain"]);
-		putenv('VPN_KEY='.$_POST["vpn_key"]);
+		putenv('VPN_PASS='.$_POST["vpn_pass"]);
 
 		putenv('LETSENCRYPT_MAIL='.$_POST["letsencrypt_mail"]);
 		putenv('LETSENCRYPT_SERVERNAME='.$_POST["letsencrypt_servername"]);
