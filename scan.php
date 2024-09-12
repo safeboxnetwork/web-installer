@@ -58,6 +58,33 @@ switch ($_GET["op"]) {
 		}
 		else echo "WAIT";
 	break;
+	case "services":
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "services"; //"init:".date("YmdHis");
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+	break;
+	case "check_services":
+		$arr = check_redis("web_out","services");
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				if ($key=="services") {
+					if ($data["INSTALL_STATUS"]==2) echo "NEW";
+					elseif ($data["INSTALL_STATUS"]==1) {
+						foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
+							//echo base64_decode($content);
+							echo $service_name."<br>";
+						}
+						echo "<br>";
+					}
+					redis_remove("$key");
+				}
+			}
+		}
+		else echo "WAIT";
+	break;
 	case "deployments":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);

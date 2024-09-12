@@ -56,8 +56,8 @@
 </fieldset>
 
 <fieldset>
-<legend>Running services</legend>
-<pre><div id="running" style="text-align:left">Loading...</div></pre>
+<legend>Services</legend>
+<pre><div id="services" style="text-align:left">Loading...</div></pre>
 </fieldset>
 
 <fieldset>
@@ -180,11 +180,30 @@ function check_deployment(additional) {
   });
 }
 
+function check_services() {
+  var url  = 'scan.php?op=check_services';
+  jQuery.get(url, function(data) {
+      if (data!="") {
+	      jQuery("#services").html(data);
+      }
+      else setTimeout(check_services, 1000);
+  });
+}
+
+function get_services() {
+  var url  = 'scan.php?op=services';
+  jQuery.get(url, function(data) {
+	  if (data=="OK") {
+      		setTimeout(check_services, 1000);
+	  }
+  });
+}
+
 function check_containers() {
   var url  = 'scan.php?op=check_containers';
   jQuery.get(url, function(data) {
       if (data!="") {
-	      jQuery("#running").html(data);
+	      jQuery("#containers").html(data);
       }
       else setTimeout(check_containers, 1000);
   });
@@ -204,7 +223,7 @@ jQuery(document).ready(function(){
 	get_system();
 	get_repositories();
 	get_deployments();
-	get_containers();
+	get_services();
 
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
