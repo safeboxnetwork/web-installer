@@ -193,9 +193,7 @@ function check_services() {
 function get_services() {
   var url  = 'scan.php?op=services';
   jQuery.get(url, function(data) {
-	  if (data=="OK") {
-      		setTimeout(check_services, 1000);
-	  }
+  	setTimeout(check_services, 1000);
   });
 }
 
