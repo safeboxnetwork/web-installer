@@ -74,9 +74,9 @@ switch ($_GET["op"]) {
 					if ($data["INSTALL_STATUS"]==2) echo "NEW";
 					elseif ($data["INSTALL_STATUS"]==1) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
-							//echo base64_decode($object->content);
+							//echo base64_decode($object["content"]);
 							echo $service_name."<br>";
-							echo $object->running."<br>";
+							echo $object["running"]."<br>";
 						}
 						echo "<br>";
 					}
