@@ -150,7 +150,7 @@ switch ($_GET["op"]) {
 							}
 							else {
 							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
-								<input ".($field->required=="true" ? "required" : "")." type=\"text\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">
+								<input ".($field->required=="true" ? "required" : "")." type=\"".($field->password=="true" ? "password" : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">
 							</div></div>";
 							}
 						}
