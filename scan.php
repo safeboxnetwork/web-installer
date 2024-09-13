@@ -1,5 +1,14 @@
 <?php
 include "functions.php";
+
+function show_service($name, $containers) {
+	$str = '<div>'.$name."</div>";
+	$str .= '<div id="'.$name.'" style="padding-left: 20px">'.$containers.'
+</div>';
+
+	echo $str;
+}
+
 sleep(1);
 switch ($_GET["op"]) {
 	case "redis":
@@ -46,8 +55,7 @@ switch ($_GET["op"]) {
 						if ($_GET["services"]==1) {
 							foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 								//echo base64_decode($content);
-								echo $service_name."<br>";
-								echo $object["running"]."<br>";
+								show_service($service_name, $object["running"]);
 							}
 							echo "<br>";
 						}
@@ -76,8 +84,7 @@ switch ($_GET["op"]) {
 					elseif ($data["INSTALL_STATUS"]==1) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 							//echo base64_decode($object["content"]);
-							echo $service_name."<br>";
-							echo $object["running"]."<br>";
+							show_service($service_name, $object["running"]);
 						}
 						echo "<br>";
 					}
