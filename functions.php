@@ -145,6 +145,19 @@ function get_vpn_url($domain,$passkey) {
 	return $url;
 }
 
+function show_service($name, $containers) {
+	$str = '<div>'.$name."</div>";
+	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+	$containers = trim($containers);
+	$arr = explode(" ",$containers);
+	foreach ($arr as $container) {
+		$str .= $container."<br>";
+	}
+	$str .= '</div>';
+
+	echo $str;
+}
+
 // not in use
 function put_install_envs() {
 

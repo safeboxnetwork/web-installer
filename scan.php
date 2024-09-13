@@ -1,14 +1,6 @@
 <?php
 include "functions.php";
 
-function show_service($name, $containers) {
-	$str = '<div>'.$name."</div>";
-	$str .= '<div id="'.$name.'" style="padding-left: 20px">'.$containers.'
-</div>';
-
-	echo $str;
-}
-
 sleep(1);
 switch ($_GET["op"]) {
 	case "redis":
