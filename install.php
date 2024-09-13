@@ -6,7 +6,7 @@ if ($_POST["SMARTHOST_PROXY"]=="Y") {
 	# if not FQDN
 	$arr = explode(".",$_POST["DOMAIN"]);
 	if (count($arr)==1) {
-		echo "Warning! It seems DOMAAIN is not an FQDN. Self-signed certificate will be created only.";
+		echo "Warning! It seems DOMAIN is not an FQDN. Self-signed certificate will be created only.";
 		$_POST["SELF_SIGNED_CERTIFICATE"] = "true";
 	}
 
