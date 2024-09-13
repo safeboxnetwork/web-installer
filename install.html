@@ -40,11 +40,20 @@
 <div id="div_smarthost">
 	<div class="row">
 	    <div class="mb-3">
-			<label for="domain">Please fill in the domain name</label>
-			<input type="domain" class="form-control" name="DOMAIN" id="domain" value="localhost">
-			<div class="invalid-feedback">
-			Please enter a valid domain.
-			</div>
+		<label for="domain">Please fill in the domain name</label>
+		<input type="domain" class="form-control" name="DOMAIN" id="domain" value="localhost">
+		<div class="invalid-feedback">
+		Please enter a valid domain.
+		</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+		<label for="local_backend">Would you like to run local backend?</label>
+		<select class="custom-select d-block w-100" name="LOCAL_BACKEND" id="local_backend">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
+		</select>
 	    </div>
 	</div>
 </div>
