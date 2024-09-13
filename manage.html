@@ -50,23 +50,27 @@
 	</fieldset>
 </fieldset>
 
-<fieldset>
-<legend>Deployments</legend>
-<div id="deployments" style="text-align:left">Loading...</div>
-</fieldset>
+<div id="default">
 
-<fieldset>
-<legend>Services</legend>
-<pre><div id="services" style="text-align:left">Loading...</div></pre>
-</fieldset>
+	<fieldset>
+	<legend>Deployments</legend>
+	<div id="deployments" style="text-align:left">Loading...</div>
+	</fieldset>
 
-<fieldset>
-<legend>Disk management</legend>
-</fieldset>
+	<fieldset>
+	<legend>Services</legend>
+	<pre><div id="services" style="text-align:left">Loading...</div></pre>
+	</fieldset>
 
-<fieldset>
-<legend>Monitor</legend>
-</fieldset>
+	<fieldset>
+	<legend>Disk management</legend>
+	</fieldset>
+
+	<fieldset>
+	<legend>Monitor</legend>
+	</fieldset>
+
+</div>
 
 </div>
 </div>
@@ -229,6 +233,7 @@ jQuery(document).ready(function(){
 
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
+		jQuery('#default').toggle();
 	});
 
 	jQuery('#add_repo').submit(function() {
