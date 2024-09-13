@@ -110,10 +110,12 @@ function add_repository() {
 function check_system() {
   var url  = 'scan.php?op=check_system&services=1';
   jQuery.get(url, function(data) {
-      if (data!="") {
-	      jQuery("#system").html(data);
+      if (data=="WAIT" || data=="") {
+        setTimeout(check_system, 1000);
       }
-      else setTimeout(check_system, 500);
+      else {
+        jQuery("#system").html(data);
+      }
   });
 }
 
@@ -121,7 +123,7 @@ function get_system() {
   var url  = 'scan.php?op=system';
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
-      		setTimeout(check_system, 500);
+      		setTimeout(check_system, 1000);
 	  }
   });
 }
@@ -132,7 +134,7 @@ function check_deployments() {
       if (data!="") {
 	      jQuery("#deployments").html(data);
       }
-      else setTimeout(check_deployments, 500);
+      else setTimeout(check_deployments, 1000);
   });
 }
 
@@ -140,7 +142,7 @@ function get_deployments() {
   var url  = 'scan.php?op=deployments';
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
-      		setTimeout(check_deployments, 500);
+      		setTimeout(check_deployments, 1000);
 	  }
   });
 }
@@ -149,7 +151,7 @@ function load_template(additional) {
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
-      		setTimeout(check_deployment, 500, additional);
+      		setTimeout(check_deployment, 1000, additional);
 	  }
   });
 }
@@ -165,7 +167,7 @@ function deploy(additional) {
   jQuery.get(url, function(data) {
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
-      		setTimeout(check_deployment, 500, additional);
+      		setTimeout(check_deployment, 1000, additional);
 	  }
   });
 }
@@ -176,17 +178,19 @@ function check_deployment(additional) {
       if (data!="") {
 	      jQuery("#"+additional).html(data);
       }
-      else setTimeout(check_deployment, 500, additional);
+      else setTimeout(check_deployment, 1000, additional);
   });
 }
 
 function check_services() {
   var url  = 'scan.php?op=check_services';
   jQuery.get(url, function(data) {
-      if (data!="") {
-	      jQuery("#services").html(data);
+      if (data=="WAIT" || data=="") {
+        setTimeout(check_services, 1000);
       }
-      else setTimeout(check_services, 1000);
+      else {
+	jQuery("#services").html(data);
+      }
   });
 }
 
