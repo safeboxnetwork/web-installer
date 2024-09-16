@@ -139,6 +139,27 @@ function get_system() {
   });
 }
 
+function check_updates() {
+  var url  = 'scan.php?op=check_updates';
+  jQuery.get(url, function(data) {
+      if (data=="WAIT" || data=="") {
+        setTimeout(check_updates, 1000);
+      }
+      else {
+        jQuery("#updates").html(data);
+      }
+  });
+}
+
+function get_updates() {
+  var url  = 'scan.php?op=update';
+  jQuery.get(url, function(data) {
+	  if (data=="OK") {
+      		setTimeout(check_update, 1000);
+	  }
+  });
+}
+
 function check_deployments() {
   var url  = 'scan.php?op=check_deployments';
   jQuery.get(url, function(data) {
