@@ -48,6 +48,13 @@
 	<legend>System services</legend>
 	<div id="system" style="text-align:left">Loading...</div>
 	</fieldset>
+	
+	<fieldset>
+	<legend>Updates</legend>
+	<div id="update" style="text-align:left">
+		<a href="javascript:void()" id="update_btn">Looking for updates</a>
+	</div>
+	</fieldset>
 </fieldset>
 
 <div id="default">
@@ -234,6 +241,10 @@ jQuery(document).ready(function(){
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
 		jQuery('#default').toggle();
+	});
+
+	jQuery('#update_btn').click(function() {
+		get_updates();
 	});
 
 	jQuery('#add_repo').submit(function() {
