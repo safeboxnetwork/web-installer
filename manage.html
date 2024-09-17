@@ -52,7 +52,7 @@
 	<fieldset>
 	<legend>Updates</legend>
 	<div id="updates" style="text-align:left">
-		<a href="javascript:void()" id="update_btn">Looking for updates</a>
+		<a href="javascript:void()" id="update_btn">Search updates</a>
 	</div>
 	</fieldset>
 </fieldset>
@@ -152,10 +152,10 @@ function check_updates() {
 }
 
 function get_updates() {
-  var url  = 'scan.php?op=update';
+  var url  = 'scan.php?op=updates';
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
-      		setTimeout(check_update, 1000);
+      		setTimeout(check_updates, 1000);
 	  }
   });
 }
@@ -265,6 +265,7 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery('#update_btn').click(function() {
+		jQuery('#updates').html('Looking for updates... Please wait...');
 		get_updates();
 	});
 
