@@ -99,11 +99,9 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="updates") {
-					if ($data["INSTALL_STATUS"]==2) echo "NEW";
-					elseif ($data["INSTALL_STATUS"]==1) {
+					if ($data["INSTALL_STATUS"]==1) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
-							//echo base64_decode($object["content"]);
-							show_service($service_name, $object["running"]);
+							show_service_update($service_name, $object["update"], $object["uptodate"]);
 						}
 						echo "<br>";
 					}

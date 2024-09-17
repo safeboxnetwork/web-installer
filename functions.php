@@ -158,6 +158,28 @@ function show_service($name, $containers) {
 	echo $str;
 }
 
+function show_service_update($name, $update, $uptodate) {
+	$str = '<div>'.$name."</div>";
+
+	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+	$update = trim($update);
+	$arr = explode(" ",$update);
+	foreach ($arr as $container) {
+		$str .= $container." - UPDATE AVAILABLE<br>";
+	}
+	$str .= '</div>';
+
+	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+	$uptodate = trim($uptodate);
+	$arr = explode(" ",$uptodate);
+	foreach ($arr as $container) {
+		$str .= $container." - Already up to date<br>";
+	}
+	$str .= '</div>';
+
+	echo $str;
+}
+
 // not in use
 function put_install_envs() {
 
