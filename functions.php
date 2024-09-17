@@ -161,21 +161,25 @@ function show_service($name, $containers) {
 function show_service_update($name, $update, $uptodate) {
 	$str = '<div>'.$name."</div>";
 
-	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
 	$update = trim($update);
-	$arr = explode(" ",$update);
-	foreach ($arr as $container) {
-		$str .= $container." - UPDATE AVAILABLE<br>";
+	if (!empty($update)) {
+		$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+		$arr = explode(" ",$update);
+		foreach ($arr as $container) {
+			$str .= $container." - UPDATE AVAILABLE<br>";
+		}
+		$str .= '</div>';
 	}
-	$str .= '</div>';
 
-	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
 	$uptodate = trim($uptodate);
-	$arr = explode(" ",$uptodate);
-	foreach ($arr as $container) {
-		$str .= $container." - Already up to date<br>";
+	if (!empty($uptodate)) {
+		$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+		$arr = explode(" ",$uptodate);
+		foreach ($arr as $container) {
+			$str .= $container." - Already up to date<br>";
+		}
+		$str .= '</div>';
 	}
-	$str .= '</div>';
 
 	echo $str;
 }

@@ -101,7 +101,7 @@ switch ($_GET["op"]) {
 				if ($key=="updates") {
 					if ($data["INSTALL_STATUS"]==1) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
-							show_service_update($service_name, $object["update"], $object["uptodate"]);
+							show_service_update($service_name, trim($object["update"]), trim($object["uptodate"]));
 						}
 						echo "<br>";
 					}
