@@ -255,6 +255,19 @@ switch ($_GET["op"]) {
 		}
 		echo $text;
 	break;
+	case "uninstall":
+		if ($key=check_uninstall()) { 
+			$text="Uninstall process has already started.<br>Please wait and do not start a new one...";
+		}
+		else {
+			$text="Uninstall in progress... Please wait...";
+			$arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
+			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+			$op = "uninstall";
+			redis_set($op,$json);
+		}
+		echo $text;
+	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
