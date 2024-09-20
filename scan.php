@@ -196,21 +196,33 @@ switch ($_GET["op"]) {
 </script>
 						";
 					}
-					else { // deploy
-						echo "DEPLOY:".$data["STATUS"];
+					elseif ($data["STATUS"]=="2") { // deploy
+						echo "Install has finished.";
 					}
 					redis_remove("$key");
 				}
 			}
 		}
-		else echo "";
+		else {
+			$arr = check_redis("web_in","deployment");
+			if (!empty($arr)) { // deployment in progress
+				foreach ($arr as $key=>$data) {
+					if ($key=="deployment") {
+						if ($data["STATUS"]=="1") { // TODO - curenct state message???
+							echo "Install in progress... Please wait...";
+						}
+					}
+				}
+			}
+			else echo ""; // no deployment, finished
+		}
 	break;
 	case "deploy":
 		if ($key=check_deploy()) { 
 			$text="A deployment has already started.<br>Please wait and do not start a new one...";
 		}
 		else {
-			$text="Installing in progress... Please wait...";
+			$text="Install in progress... Please wait...";
 			$fields = $_GET;
 			unset($fields["op"]);
 			unset($fields["additional"]);
