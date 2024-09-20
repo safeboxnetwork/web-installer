@@ -189,6 +189,26 @@ function load_template(additional) {
   });
 }
 
+function uninstall(additional) {
+  var url  = 'scan.php?op=uninstall&additional='+additional;
+  jQuery.get(url, function(data) {
+	  if (data!="") {
+	        jQuery("#"+additional).html(data);
+      		setTimeout(check_uninstall, 1000, additional);
+	  }
+  });
+}
+
+function check_uninstall(additional) {
+  var url  = 'scan.php?op=check_uninstall';
+  jQuery.get(url, function(data) {
+      if (data!="") {
+	      jQuery("#"+additional).html(data);
+      }
+      else setTimeout(check_uninstall, 1000, additional);
+  });
+}
+
 function deploy(additional) {
   pars = '';
   jQuery('input.additional_field').each(function(index) {

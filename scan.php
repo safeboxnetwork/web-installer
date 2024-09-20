@@ -129,7 +129,10 @@ switch ($_GET["op"]) {
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
 								//echo base64_decode($content);
-								echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.(array_key_exists($service_name,$data["INSTALLED_SERVICES"]) ? " - INSTALLED" : "").'</div>';
+								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) {
+									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a></div>';
+								}
+								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
 								echo '<div id="'.$service_name.'"></div>';
 							}
 						}
