@@ -137,8 +137,8 @@ switch ($_GET["op"]) {
 							}
 						}
 					}
-					else echo "There are no deployments.<br>";
-
+					else echo "There are no deployments.";
+					echo "<br>";
 /*
 					if (count($data["INSTALLED_SERVICES"])) {
 						echo "<br>Installed services:<br>";
