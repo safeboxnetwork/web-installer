@@ -6,6 +6,10 @@ fieldset.sub_block legend {color: black}
 h1 { color: #049dff; margin-top:50px;}
 a.stop {font-weight:bold; text-decoration:none; font-size:30px}
 
+table {border: 1px solid  #049dff; width:100%;}
+table th {padding-left: 20px; color: #049dff; width: 25%;}
+table td {padding-left: 20px; text-align:left; width: 25%;}
+
 body#scan{
 /*  background-color: #7E57C2; */
 }

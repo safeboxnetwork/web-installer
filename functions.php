@@ -146,39 +146,37 @@ function get_vpn_url($domain,$passkey) {
 }
 
 function show_service($name, $containers) {
-	$str = '<div>'.$name."</div>";
-	$str .= '<div id="'.$name.'" style="padding-left: 20px">';
+	$str = '<table id="'.$name.'">';
+	$str .= "<tr><th>{$name}</th><td><b>Container name</b></td><td><b>Status</b></td><td><b>Action</b></td></tr>";
 	$containers = trim($containers);
 	$arr = explode(" ",$containers);
 	foreach ($arr as $container) {
-		$str .= $container."<br>";
+		$c_arr = explode(":",$container);
+		$str .= "<tr><td>&nbsp;</td><td>".$c_arr[0]."</td><td>".$c_arr[1]."</td><td>RESTART</td></tr>";
 	}
-	$str .= '</div>';
+	$str .= '</table>';
 
 	echo $str;
 }
 
 function show_service_update($name, $update, $uptodate) {
-	$str = '<div>'.$name."</div>";
+	$str = '<table id="'.$name.'">';
+	$str .= "<tr><th>{$name}</th><td><b>Container name</b></td><td><b>Status</b></td><td><b>Action</b></td></tr>";
 
 	$update = trim($update);
 	if (!empty($update)) {
-		$str .= '<div id="'.$name.'" style="padding-left: 20px">';
 		$arr = explode(" ",$update);
 		foreach ($arr as $container) {
-			$str .= $container." - UPDATE AVAILABLE<br>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>UPDATE AVAILABLE</td><td>UPDATE</td></tr>";
 		}
-		$str .= '</div>';
 	}
 
 	$uptodate = trim($uptodate);
 	if (!empty($uptodate)) {
-		$str .= '<div id="'.$name.'" style="padding-left: 20px">';
 		$arr = explode(" ",$uptodate);
 		foreach ($arr as $container) {
-			$str .= $container." - Already up to date<br>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>Already up to date</td><td></td></tr>";
 		}
-		$str .= '</div>';
 	}
 
 	echo $str;
