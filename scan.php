@@ -76,7 +76,7 @@ switch ($_GET["op"]) {
 					elseif ($data["INSTALL_STATUS"]==1) {
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 							//echo base64_decode($object["content"]);
-							show_service($service_name, $object["running"]);
+							show_service($service_name, $object["running"].":Up");
 						}
 						echo "<br>";
 					}
@@ -139,6 +139,7 @@ switch ($_GET["op"]) {
 					}
 					else echo "There are no deployments.<br>";
 
+/*
 					if (count($data["INSTALLED_SERVICES"])) {
 						echo "<br>Installed services:<br>";
 						if ($data["INSTALLED_SERVICES"]["services"]=="NONE") echo "There are no installed services.<br>";
@@ -151,6 +152,7 @@ switch ($_GET["op"]) {
 						}
 					}
 					else echo "There are no installed services.<br>";
+*/
 					redis_remove("$key");
 				}
 			}
