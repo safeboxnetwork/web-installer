@@ -216,6 +216,9 @@ switch ($_GET["op"]) {
 						if ($data["STATUS"]=="1") { // TODO - curenct state message???
 							echo "Install in progress... Please wait...";
 						}
+						elseif ($data["STATUS"]=="2") { 
+							echo "Install has finished.";
+						}
 					}
 				}
 			}
