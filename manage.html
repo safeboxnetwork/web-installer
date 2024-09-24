@@ -181,6 +181,7 @@ function get_deployments() {
 }
 
 function load_template(additional) {
+  jQuery("#"+additional).html('Loading...');
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
 	  if (data=="OK") {
