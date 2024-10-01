@@ -147,12 +147,12 @@ function get_vpn_url($domain,$passkey) {
 
 function show_service($name, $containers) {
 	$str = '<table id="'.$name.'">';
-	$str .= "<tr><th>{$name}</th><td><b>Container name</b></td><td><b>Status</b></td><td><b>Action</b></td></tr>";
+	$str .= "<tr><th>{$name}</th></tr>";
 	$containers = trim($containers);
 	$arr = explode("|",$containers);
 	foreach ($arr as $container) {
-		$c_arr = explode(":",$container);
-		$str .= "<tr><td>&nbsp;</td><td>".$c_arr[0]."</td><td>".$c_arr[1]."</td><td>RESTART</td></tr>";
+		$c_arr = explode("#",$container);
+		$str .= "<tr><td>".$c_arr[0]."</td><td>".$c_arr[1]."</td><td>".$c_arr[2]."</td><td>RESTART</td></tr>";
 	}
 	$str .= '</table>';
 
