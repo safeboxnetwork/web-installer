@@ -178,6 +178,7 @@ function show_service_update($name, $update, $uptodate) {
 			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>Already up to date</td><td></td></tr>";
 		}
 	}
+	$str .= '</table>';
 
 	echo $str;
 }
