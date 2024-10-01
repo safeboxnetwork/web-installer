@@ -45,6 +45,7 @@ switch ($_GET["op"]) {
 					if ($data["INSTALL_STATUS"]==2) echo "NEW";
 					elseif ($data["INSTALL_STATUS"]==1) {
 						if ($_GET["services"]==1) {
+							echo "<table><tr><td><b>Service/Container</b></td><td><b>Image</b></td><td><b>Status</b></td><td><b>Action</b></td></tr></table>";
 							foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 								//echo base64_decode($content);
 								show_service($service_name, $object["running"]);
@@ -74,10 +75,10 @@ switch ($_GET["op"]) {
 				if ($key=="services") {
 					if ($data["INSTALL_STATUS"]==2) echo "NEW";
 					elseif ($data["INSTALL_STATUS"]==1) {
-						echo "<table><tr><td>Service/Container</td><td><b>Image</b></td><td><b>Status</b></td><td><b>Action</b></td></tr></table>";
+						echo "<table><tr><td><b>Service/Container</b></td><td><b>Image</b></td><td><b>Status</b></td><td><b>Action</b></td></tr></table>";
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 							//echo base64_decode($object["content"]);
-							show_service($service_name, $object["running"].":Up");
+							show_service($service_name, $object["running"]);
 						}
 						echo "<br>";
 					}
@@ -101,6 +102,7 @@ switch ($_GET["op"]) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="updates") {
 					if ($data["INSTALL_STATUS"]==1) {
+						echo "<table><tr><td><b>Service/Container</b></td><td><b>Image</b></td><td><b>Status</b></td><td><b>Action</b></td></tr></table>";
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
 							show_service_update($service_name, trim($object["update"]), trim($object["uptodate"]));
 						}
