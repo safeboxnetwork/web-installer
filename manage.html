@@ -190,6 +190,26 @@ function load_template(additional) {
   });
 }
 
+function reinstall(additional) {
+  jQuery("#"+additional).html('Loading...');
+  var url  = 'scan.php?op=reinstall&additional='+additional;
+  jQuery.get(url, function(data) {
+	  if (data=="OK") {
+      		setTimeout(check_reinstall, 1000, additional);
+	  }
+  });
+}
+
+function check_reinstall(additional) {
+  var url  = 'scan.php?op=check_reinstall';
+  jQuery.get(url, function(data) {
+      if (data!="") {
+	      jQuery("#"+additional).html(data);
+      }
+      else setTimeout(check_reinstall, 1000, additional);
+  });
+}
+
 function uninstall(additional) {
   var url  = 'scan.php?op=uninstall&additional='+additional;
   jQuery.get(url, function(data) {

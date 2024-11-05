@@ -133,7 +133,7 @@ switch ($_GET["op"]) {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
 								//echo base64_decode($content);
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) {
-									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a></div>';
+									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a> - <a href="#" onclick="reinstall(\''.$service_name.'\')">REINSTALL</a></div>';
 								}
 								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
 								echo '<div id="'.$service_name.'"></div>';
@@ -170,6 +170,8 @@ switch ($_GET["op"]) {
 		redis_set($op,$json);
 		echo "OK"; // TODO?
 	break;
+	case "check_reinstall":
+		$reinstall = 1;
 	case "check_deployment":
 		$arr = check_redis("web_out","deployment");
 		if (!empty($arr)) {
@@ -177,6 +179,9 @@ switch ($_GET["op"]) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
+						if ($reinstall) {
+							var_dump($template);
+						}
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
@@ -192,7 +197,7 @@ switch ($_GET["op"]) {
 						<div class=\"row\">
 						<div class=\"mb-3\">
 						<input type=\"hidden\" value=\"{$template->name}\" id=\"additional\">
-						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_btn\">Install</button>
+						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
 						</div>
 						</div>
 						</form></fieldset>
@@ -263,15 +268,23 @@ switch ($_GET["op"]) {
 		}
 		echo $text;
 	break;
+	case "reinstall":
+		$arr = array("NAME" => $_GET["additional"], "ACTION" => "reinstall");
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		$op = "deployment";
+		redis_set($op,$json);
+		echo "OK"; // TODO?
+	break;
 	case "uninstall":
-		if ($key=check_uninstall()) { 
-			$text="Uninstall process has already started.<br>Please wait and do not start a new one...";
+		if ($key=check_deploy()) { 
+			$text="Deploy/uninstall process has already started.<br>Please wait and do not start a new one...";
 		}
 		else {
 			$text="Uninstall in progress... Please wait...";
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-			$op = "uninstall";
+			$op = "deployment";
 			redis_set($op,$json);
 		}
 		echo $text;
