@@ -51,6 +51,7 @@ function redirectToManage() {
 function start_system() {
   var url  = 'scan.php?op=system';
   $.get(url, function(data){
+    console.log('start_system: '+data);
     if (data=='OK') {
       $("#previous").html('Scanning for previous install. Please wait...');
       check_system();
@@ -64,7 +65,7 @@ function start_system() {
 function check_system() {
   var url  = 'scan.php?op=check_system';
   $.get(url, function(data){
-    console.log(data);
+    console.log('check_system: '+data);
     if (data=='NEW') {
       $("#previous").html('No previous install has found...');
       setTimeout(redirectToInstall, 3000);
@@ -86,7 +87,7 @@ function check_redis() {
 
   var url  = 'scan.php?op=redis';
   $.get(url, function(data){
-    console.log(data);
+    console.log('check_redis: '+data);
     if (data=='OK') {
       $("#redis").html('Redis server - OK');
       start_system();
@@ -98,7 +99,39 @@ function check_redis() {
   });
 }
 
-  check_redis();
+function check_directory() {
+
+  var url  = 'scan.php?op=directory';
+  $.get(url, function(data){
+    console.log('check_directory: '+data);
+    if (data=='OK') {
+      $("#redis").html('Connection is ready - OK');
+      start_system();
+    }
+    else {
+      $("#redis").html('Shared directory is not available...');
+    }
+  });
+}
+
+function check_interface() {
+
+  var url  = 'scan.php?op=get_interface';
+  $.get(url, function(data){
+    console.log('check_interface: '+data);
+    if (data=='redis') {
+  	check_redis();
+    }
+    else if (data=='directory') {
+  	check_directory();
+    }
+    else {
+	$("#redis").html('Invalid interface definition...');
+    }
+  });
+}
+
+  check_interface();
 
   //setTimeout(redirectToManage, 10000);
 

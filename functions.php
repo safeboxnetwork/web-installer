@@ -1,6 +1,8 @@
 <?php
 
 $REDIS_HOST='redis-server';
+$SHARED_DIR = "shared";
+$INTERFACE = "directory"; // redis OR directory
 
 function ping_redis() {
 
@@ -117,7 +119,7 @@ function redis_set($key, $value) {
 			$redis->set($key, base64_encode($value));
 			$redis->sAdd('web_in', $key);
 		} else {
-			echo "Key already exist: $key";
+			//echo "Key already exist: $key";
 		}
 	}
 }
@@ -276,6 +278,29 @@ function put_install_envs() {
 		      putenv('ROUNDCUBE_DOMAIN='.$_POST["roundcube_domain"]);
 	      }
 	}
+}
+
+function set_output($op,$output) {
+
+	global $SHARED_DIR;
+
+	redis_set($op,$output);
+
+	file_put_contents($SHARED_DIR."/".$op,$output);
+
+	return true;
+}
+
+function check_response($key="") {
+
+	$arr = check_redis("web_out",$key);
+	//$arr = check_files("web_out",$key);
+
+	return $arr;
+}
+
+function remove_response($key) {
+	redis_remove("$key");
 }
 
 ?>

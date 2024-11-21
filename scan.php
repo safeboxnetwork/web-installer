@@ -3,6 +3,21 @@ include "functions.php";
 
 sleep(1);
 switch ($_GET["op"]) {
+	case "get_interface":
+		echo $INTERFACE;
+	break;
+	case "directory":
+		if (file_exists($SHARED_DIR)) {
+			$test_file = $SHARED_DIR."/test";
+			file_put_contents($test_file,"TEST");
+			if (file_exists($test_file)) {
+				echo "OK";
+				unlink($test_file);
+			}
+			else echo "WRITE ERROR";
+		}
+		else echo "DIRECTORY DOESN'T EXISTS";
+	break;
 	case "redis":
 		try {
 			$ret = ping_redis();
@@ -33,12 +48,10 @@ switch ($_GET["op"]) {
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "system"; //"init:".date("YmdHis");
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("system",$json)) echo "OK"; // TODO?
 	break;
 	case "check_system":
-		$arr = check_redis("web_out","system");
+		$arr = check_response("system");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="system") {
@@ -54,7 +67,7 @@ switch ($_GET["op"]) {
 						}
 						else echo "EXISTS";
 					}
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
