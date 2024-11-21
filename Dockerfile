@@ -78,6 +78,9 @@ COPY install.php   /usr/share/nginx/html
 COPY installer.css /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
+RUN mkdir -p /usr/share/nginx/html/shared
+RUN chown -R nobody:nobody /usr/share/nginx/html/shared
+
 VOLUME ["/var/cache/nginx"]
 
 EXPOSE 80
