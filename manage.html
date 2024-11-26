@@ -94,10 +94,13 @@
 function check_repositories() {
   var url  = 'scan.php?op=check_repositories';
   jQuery.get(url, function(data) {
-      if (data!="") {
-	      jQuery("#repositories").html(data);
+      console.log('check_repositories: '+data);
+      if (data=="WAIT" || data=="") {
+		setTimeout(check_repositories, 500);
       }
-      else setTimeout(check_repositories, 500);
+      else {
+		jQuery("#repositories").html(data);
+      }
   });
 }
 
@@ -107,6 +110,7 @@ function get_repositories() {
 	  if (data=="OK") {
       		setTimeout(check_repositories, 500);
 	  }
+	  else alert(data);
   });
 }
 
@@ -137,6 +141,7 @@ function get_system() {
 	  if (data=="OK") {
       		setTimeout(check_system, 1000);
 	  }
+	  else alert(data);
   });
 }
 
@@ -296,9 +301,9 @@ function get_containers() {
 
 jQuery(document).ready(function(){
 
+	get_deployments();
 	get_system();
 	get_repositories();
-	get_deployments();
 	get_services();
 
 	jQuery('#settings_btn').click(function() {

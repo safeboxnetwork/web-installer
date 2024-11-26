@@ -94,9 +94,10 @@ function redirectToManage() {
 }
 
 function check_install() {
+
   var url  = 'scan.php?op=check_install&key=<?php echo $key;?>';
   $.get(url, function(data){
-    console.log(data);
+    console.log('check_install:'+data+' counter: '+counter);
     if (data=='INSTALLED') {
 	redirectToManage();
     }
@@ -108,17 +109,55 @@ function check_install() {
   });
 }
 
+function check_redis() {
+
   var url  = 'scan.php?op=redis';
   $.get(url, function(data){
+    console.log('check_redis: '+data);
     if (data=='OK') {
       $("#redis").html('Redis server - OK');
       check_install();
     }
     else {
       $("#redis").html('Redis server is not available...');
+      setTimeout(check_redis, 1000);
     }
   });
+}
 
+function check_directory() {
+
+  var url  = 'scan.php?op=directory';
+  $.get(url, function(data){
+    console.log('check_directory: '+data);
+    if (data=='OK') {
+      $("#redis").html('Connection is ready - OK');
+      check_install();
+    }
+    else {
+      $("#redis").html('Shared directory is not available...');
+    }
+  });
+}
+
+function check_interface() {
+
+  var url  = 'scan.php?op=get_interface';
+  $.get(url, function(data){
+    console.log('check_interface: '+data);
+    if (data=='redis') {
+  	check_redis();
+    }
+    else if (data=='directory') {
+  	check_directory();
+    }
+    else {
+	$("#redis").html('Invalid interface definition...');
+    }
+  });
+}
+
+  check_interface();
   counter=0;
 });
 </script>

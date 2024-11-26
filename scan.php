@@ -29,26 +29,12 @@ switch ($_GET["op"]) {
 			echo "RedisException caught: " . $e->getMessage();
 		}
 	break;
-	case "check_install":
-		$arr = check_redis("web_out",$_GET["key"]);
-		if (!empty($arr)) {
-			foreach ($arr as $key=>$data) {
-				//echo $key."-".$_GET["key"];
-				if ($key==$_GET["key"]) { // if install key moved to web_out
-					if ($data["INSTALL_STATUS"]>0) {
-						redis_remove("$key");
-						echo "INSTALLED";
-					}
-				}
-			}
-		}
-		else echo "NOT EXISTS";
-	break;
 	case "system":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		if (set_output("system",$json)) echo "OK"; // TODO?
+		if (set_output("system",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_system":
 		$arr = check_response("system");
@@ -73,13 +59,27 @@ switch ($_GET["op"]) {
 		}
 		else echo "WAIT";
 	break;
+	case "check_install": // called in install.php - check if install process has finished
+		$arr = check_response($_GET["key"]); // TODO - replace key with "install", key can be "install*"
+		if (!empty($arr)) {
+			foreach ($arr as $key=>$data) {
+				//echo $key."-".$_GET["key"];
+				if ($key==$_GET["key"]) { // if install key moved to web_out
+					if ($data["INSTALL_STATUS"]>0) {
+						remove_response("$key");
+						echo "INSTALLED";
+					}
+				}
+			}
+		}
+		else echo "NOT EXISTS"; // TODO - check if in progress or just not exists ???
+	break;
 	case "services":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "services"; //"init:".date("YmdHis");
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("services",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_services":
 		$arr = check_redis("web_out","services");
@@ -131,9 +131,8 @@ switch ($_GET["op"]) {
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "deployments";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("deployments",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_deployments":
 		$arr = check_redis("web_out","deployments");
@@ -307,11 +306,11 @@ switch ($_GET["op"]) {
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
 		$op = "repositories";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("repositories",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_repositories":
-		$arr = check_redis("web_out","repositories");
+		$arr = check_response("repositories");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="repositories") {
@@ -319,12 +318,12 @@ switch ($_GET["op"]) {
 					foreach ($repos->repositories as $repo) {
 						echo $repo."<br>";
 					}
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
-			redis_remove("add_repository");
+			remove_response("add_repository");
 		}
-		else echo "";
+		else echo "WAIT";
 	break;
 	case "add_repository":
 		redis_remove("add_repository");
