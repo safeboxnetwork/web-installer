@@ -91,6 +91,52 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script>
 
+function check_deployments() {
+  var url  = 'scan.php?op=check_deployments';
+  jQuery.get(url, function(data) {
+      console.log('check_deployments: '+data);
+      if (data=="WAIT" || data=="") {
+	  setTimeout(check_deployments, 1000);
+      }
+      else jQuery("#deployments").html(data);
+  });
+}
+
+function get_deployments() {
+  var url  = 'scan.php?op=deployments';
+  jQuery.get(url, function(data) {
+  	console.log('deployments: '+data);
+	if (data=="OK") {
+      		setTimeout(check_deployments, 1000);
+	}
+	else jQuery("#deployments").html(data);
+  });
+}
+
+function check_system() {
+  var url  = 'scan.php?op=check_system&services=1';
+  jQuery.get(url, function(data) {
+    console.log('check_system: '+data);
+      if (data=="WAIT" || data=="") {
+        setTimeout(check_system, 1000);
+      }
+      else {
+        jQuery("#system").html(data);
+      }
+  });
+}
+
+function get_system() {
+  var url  = 'scan.php?op=system';
+  jQuery.get(url, function(data) {
+    console.log('system: '+data);
+	  if (data=="OK") {
+      		setTimeout(check_system, 1000);
+	  }
+	  else alert(data);
+  });
+}
+
 function check_repositories() {
   var url  = 'scan.php?op=check_repositories';
   jQuery.get(url, function(data) {
@@ -107,47 +153,28 @@ function check_repositories() {
 function get_repositories() {
   var url  = 'scan.php?op=repositories';
   jQuery.get(url, function(data) {
-	  if (data=="OK") {
-      		setTimeout(check_repositories, 500);
-	  }
-	  else alert(data);
+	console.log('repositories: '+data);
+	if (data=="OK") {
+		setTimeout(check_repositories, 500);
+	}
+	else alert(data);
   });
 }
 
 function add_repository() {
   var url  = 'scan.php?op=add_repository&repo='+jQuery('#repository').val();
   jQuery.get(url, function(data) {
+	console.log('add_repository: '+data);
 	  if (data=="OK") {
 	  }
 	get_repositories();
   });
 }
 
-function check_system() {
-  var url  = 'scan.php?op=check_system&services=1';
-  jQuery.get(url, function(data) {
-      if (data=="WAIT" || data=="") {
-        setTimeout(check_system, 1000);
-      }
-      else {
-        jQuery("#system").html(data);
-      }
-  });
-}
-
-function get_system() {
-  var url  = 'scan.php?op=system';
-  jQuery.get(url, function(data) {
-	  if (data=="OK") {
-      		setTimeout(check_system, 1000);
-	  }
-	  else alert(data);
-  });
-}
-
 function check_updates() {
   var url  = 'scan.php?op=check_updates';
   jQuery.get(url, function(data) {
+	console.log('check_updates: '+data);
       if (data=="WAIT" || data=="") {
         setTimeout(check_updates, 1000);
       }
@@ -160,47 +187,20 @@ function check_updates() {
 function get_updates() {
   var url  = 'scan.php?op=updates';
   jQuery.get(url, function(data) {
+	console.log('updates: '+data);
 	  if (data=="OK") {
       		setTimeout(check_updates, 1000);
 	  }
   });
 }
 
-function check_deployments() {
-  var url  = 'scan.php?op=check_deployments';
-  jQuery.get(url, function(data) {
-      if (data!="") {
-	      jQuery("#deployments").html(data);
-      }
-      else setTimeout(check_deployments, 1000);
-  });
-}
-
-function get_deployments() {
-  var url  = 'scan.php?op=deployments';
-  jQuery.get(url, function(data) {
-	  if (data=="OK") {
-      		setTimeout(check_deployments, 1000);
-	  }
-  });
-}
-
 function load_template(additional) {
-  jQuery("#"+additional).html('Loading...');
+  jQuery("#"+additional).html('Loading '+additional+' template...');
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
+	console.log('load_template: '+data);
 	  if (data=="OK") {
       		setTimeout(check_deployment, 1000, additional);
-	  }
-  });
-}
-
-function reinstall(additional) {
-  jQuery("#"+additional).html('Loading...');
-  var url  = 'scan.php?op=reinstall&additional='+additional;
-  jQuery.get(url, function(data) {
-	  if (data=="OK") {
-      		setTimeout(check_reinstall, 1000, additional);
 	  }
   });
 }
@@ -208,6 +208,7 @@ function reinstall(additional) {
 function check_reinstall(additional) {
   var url  = 'scan.php?op=check_reinstall';
   jQuery.get(url, function(data) {
+	console.log('check_reinstall: '+data);
       if (data!="") {
 	      jQuery("#"+additional).html(data);
       }
@@ -215,12 +216,13 @@ function check_reinstall(additional) {
   });
 }
 
-function uninstall(additional) {
-  var url  = 'scan.php?op=uninstall&additional='+additional;
+function reinstall(additional) {
+  jQuery("#"+additional).html('Loading...');
+  var url  = 'scan.php?op=reinstall&additional='+additional;
   jQuery.get(url, function(data) {
-	  if (data!="") {
-	        jQuery("#"+additional).html(data);
-      		setTimeout(check_uninstall, 1000, additional);
+	console.log('reinstall '+additional+': '+data);
+	  if (data=="OK") {
+      		setTimeout(check_reinstall, 1000, additional);
 	  }
   });
 }
@@ -228,10 +230,33 @@ function uninstall(additional) {
 function check_uninstall(additional) {
   var url  = 'scan.php?op=check_uninstall';
   jQuery.get(url, function(data) {
+	console.log('check_uninstall '+additional+': '+data);
       if (data!="") {
 	      jQuery("#"+additional).html(data);
       }
       else setTimeout(check_uninstall, 1000, additional);
+  });
+}
+
+function uninstall(additional) {
+  var url  = 'scan.php?op=uninstall&additional='+additional;
+  jQuery.get(url, function(data) {
+	console.log('uninstall '+additional+': '+data);
+	  if (data!="") {
+	        jQuery("#"+additional).html(data);
+      		setTimeout(check_uninstall, 1000, additional);
+	  }
+  });
+}
+
+function check_deployment(additional) {
+  var url  = 'scan.php?op=check_deployment';
+  jQuery.get(url, function(data) {
+	console.log('check_deployment '+additional+': '+data);
+      if (data!="") {
+	      jQuery("#"+additional).html(data);
+      }
+      else setTimeout(check_deployment, 1000, additional);
   });
 }
 
@@ -244,6 +269,7 @@ function deploy(additional) {
   //console.log(pars);
   var url  = 'scan.php?op=deploy&additional='+additional+pars;
   jQuery.get(url, function(data) {
+	console.log('deploy '+additional+': '+data);
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
       		setTimeout(check_deployment, 1000, additional);
@@ -251,19 +277,10 @@ function deploy(additional) {
   });
 }
 
-function check_deployment(additional) {
-  var url  = 'scan.php?op=check_deployment';
-  jQuery.get(url, function(data) {
-      if (data!="") {
-	      jQuery("#"+additional).html(data);
-      }
-      else setTimeout(check_deployment, 1000, additional);
-  });
-}
-
 function check_services() {
   var url  = 'scan.php?op=check_services';
   jQuery.get(url, function(data) {
+	console.log('check_services: '+data);
       if (data=="WAIT" || data=="") {
         setTimeout(check_services, 1000);
       }
@@ -276,6 +293,7 @@ function check_services() {
 function get_services() {
   var url  = 'scan.php?op=services';
   jQuery.get(url, function(data) {
+	console.log('services: '+data);
   	setTimeout(check_services, 1000);
   });
 }
@@ -283,6 +301,7 @@ function get_services() {
 function check_containers() {
   var url  = 'scan.php?op=check_containers';
   jQuery.get(url, function(data) {
+	console.log('check_containers: '+data);
       if (data!="") {
 	      jQuery("#containers").html(data);
       }
@@ -293,6 +312,7 @@ function check_containers() {
 function get_containers() {
   var url  = 'scan.php?op=containers';
   jQuery.get(url, function(data) {
+	console.log('containers: '+data);
 	  if (data=="OK") {
       		setTimeout(check_containers, 1000);
 	  }

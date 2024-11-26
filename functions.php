@@ -1,8 +1,9 @@
 <?php
 
 $REDIS_HOST='redis-server';
-$SHARED_DIR = "shared";
+$SHARED_DIR = "/var/tmp/shared";
 $INTERFACE = "directory"; // redis OR directory
+//$INTERFACE = "redis";
 
 function ping_redis() {
 
@@ -282,25 +283,68 @@ function put_install_envs() {
 
 function set_output($op,$output) {
 
-	global $SHARED_DIR;
+	global $INTERFACE, $SHARED_DIR;
 
-	redis_set($op,$output);
-
-	file_put_contents($SHARED_DIR."/".$op,$output);
+	if ($INTERFACE=="redis") {
+		redis_set($op,$output);
+	}
+	else {
+		file_put_contents($SHARED_DIR."/input/".$op,$output);
+	}
 
 	return true;
 }
 
+function check_files($dir,$key) {
+
+	global $SHARED_DIR;
+
+	if (file_exists($SHARED_DIR."/{$dir}/".$key)) {
+		$arr[$key] = file_get_contents($SHARED_DIR."/{$dir}/".$key);
+	}
+	else $arr = "";
+
+	return $arr;
+}
+
+function check_request($key="") {
+
+	global $INTERFACE;
+
+	if ($INTERFACE=="redis") {
+		$arr = check_redis("web_in",$key);
+	}
+	else {
+		$arr = check_files("input",$key);
+	}
+
+	return $arr;
+}
+
 function check_response($key="") {
 
-	$arr = check_redis("web_out",$key);
-	//$arr = check_files("web_out",$key);
+	global $INTERFACE;
+
+	if ($INTERFACE=="redis") {
+		$arr = check_redis("web_out",$key);
+	}
+	else {
+		$arr = check_files("output",$key);
+	}
 
 	return $arr;
 }
 
 function remove_response($key) {
-	redis_remove("$key");
+
+	global $INTERFACE, $SHARED_DIR;
+
+	if ($INTERFACE=="redis") {
+		redis_remove("$key");
+	}
+	else {
+		//unlink($SHARED_DIR."/".$key);
+	}	
 }
 
 ?>

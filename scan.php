@@ -82,7 +82,7 @@ switch ($_GET["op"]) {
 		else echo "ERROR";
 	break;
 	case "check_services":
-		$arr = check_redis("web_out","services");
+		$arr = check_response("services");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="services") {
@@ -95,7 +95,7 @@ switch ($_GET["op"]) {
 						}
 						echo "<br>";
 					}
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
@@ -105,12 +105,11 @@ switch ($_GET["op"]) {
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "updates"; //"init:".date("YmdHis");
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("updates",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_updates":
-		$arr = check_redis("web_out","updates");
+		$arr = check_response("updates");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="updates") {
@@ -121,7 +120,7 @@ switch ($_GET["op"]) {
 						}
 						echo "<br>";
 					}
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
@@ -135,7 +134,7 @@ switch ($_GET["op"]) {
 		else echo "ERROR";
 	break;
 	case "check_deployments":
-		$arr = check_redis("web_out","deployments");
+		$arr = check_response("deployments");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployments") {
@@ -168,24 +167,23 @@ switch ($_GET["op"]) {
 					}
 					else echo "There are no installed services.<br>";
 */
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
-		else echo "";
+		else echo "WAIT";
 	break;
 	case "deployment":
 		$arr = array("NAME" => $_GET["additional"], "ACTION" => "ask");
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "deployment";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("deployment",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_reinstall":
 		$reinstall = 1;
 	case "check_deployment":
-		$arr = check_redis("web_out","deployment");
+		$arr = check_response("deployment");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployment") {
@@ -224,16 +222,16 @@ switch ($_GET["op"]) {
 					elseif ($data["STATUS"]=="2") { // deploy
 						echo "Install has finished.";
 					}
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
 		else {
-			$arr = check_redis("web_in","deployment");
+			$arr = check_request("deployment");
 			if (!empty($arr)) { // deployment in progress
 				foreach ($arr as $key=>$data) {
 					if ($key=="deployment") {
-						if ($data["STATUS"]=="1") { // TODO - curenct state message???
+						if ($data["STATUS"]=="1") { // TODO - current state message???
 							echo "Install in progress... Please wait...";
 						}
 						elseif ($data["STATUS"]=="2") { 
@@ -275,8 +273,8 @@ switch ($_GET["op"]) {
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-			$op = "deployment";
-			redis_set($op,$json);
+			if (set_output("deployment",$json)) echo "OK";
+			else echo "ERROR";
 		}
 		echo $text;
 	break;
@@ -284,9 +282,8 @@ switch ($_GET["op"]) {
 		$arr = array("NAME" => $_GET["additional"], "ACTION" => "reinstall");
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "deployment";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("deployment",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "uninstall":
 		if ($key=check_deploy()) { 
@@ -297,7 +294,8 @@ switch ($_GET["op"]) {
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 			$op = "deployment";
-			redis_set($op,$json);
+			if (set_output("deployment",$json)) echo "OK";
+			else echo "ERROR";
 		}
 		echo $text;
 	break;
@@ -305,7 +303,6 @@ switch ($_GET["op"]) {
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "repositories";
 		if (set_output("repositories",$json)) echo "OK";
 		else echo "ERROR";
 	break;
@@ -326,30 +323,28 @@ switch ($_GET["op"]) {
 		else echo "WAIT";
 	break;
 	case "add_repository":
-		redis_remove("add_repository");
+		remove_response("add_repository");
 
 		$arr = array("NEW_REPO" => $_GET["repo"]);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "add_repository";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("add_repository",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "containers":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		$op = "containers";
-		redis_set($op,$json);
-		echo "OK"; // TODO?
+		if (set_output("containers",$json)) echo "OK";
+		else echo "ERROR";
 	break;
 	case "check_containers":
-		$arr = check_redis("web_out","containers");
+		$arr = check_response("containers");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="containers") {
 					echo base64_decode($data["RESULT"]);
-					redis_remove("$key");
+					remove_response("$key");
 				}
 			}
 		}
