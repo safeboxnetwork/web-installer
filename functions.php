@@ -17,45 +17,19 @@ function ping_redis() {
 
 function check_install() { // is install in progress
 
-	global $REDIS_HOST;
-
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-	if ($redis->ping()) {
-		$members = $redis->sMembers("web_in"); // redis-cli -h redis-server smembers $group
-
-		$in_progress=0;
-		foreach ($members as $member) {
-			if (substr($member,0,7)=="install") {
-				$in_progress=$member;
-				break;
-			}
-		}
-		return $in_progress;
-	}
+	$arr = check_request("install");
+	if (!empty($arr)) return "install"; // install in progress
+	else return "";
 }
 
 function check_deploy() { // is a deploy in progress
 
-	global $REDIS_HOST;
-
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-	if ($redis->ping()) {
-		$members = $redis->sMembers("web_in"); // redis-cli -h redis-server smembers $group
-
-		$in_progress=0;
-		foreach ($members as $member) {
-			if (substr($member,0,10)=="deployment") {
-				$in_progress=$member;
-				break;
-			}
-		}
-		return $in_progress;
-	}
+	$arr = check_request("deployment");
+	if (!empty($arr)) return "deployment"; // deploy in progress
+	else return 0;
 }
 
-function check_redis($group="scheduler_in", $key="") {
+function check_redis($group="web_out", $key="") {
 
 	global $REDIS_HOST;
 

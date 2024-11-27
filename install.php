@@ -44,9 +44,10 @@ if ($key=check_install()) {
 }
 else {
 	$header_text="Installing in progress... Please wait...";
-	$key = "install:".date("YmdHis");
-	redis_set($key,$json);
-	//$key = "install:20240816101849"; // DEBUG
+	//$key = "install:".date("YmdHis");
+	$key = "install";
+	if (set_output($key,$json)) echo "OK";
+	else echo "ERROR";
 }
 
 /*
