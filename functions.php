@@ -300,11 +300,19 @@ function check_files($dir,$key) {
 	global $SHARED_DIR;
 
 	if (file_exists($SHARED_DIR."/{$dir}/".$key)) {
-		$arr[$key] = file_get_contents($SHARED_DIR."/{$dir}/".$key);
+		$json_data = file_get_contents($SHARED_DIR."/{$dir}/".$key);
+		$data = json_decode($json_data,true);
+		if ($data === null) {
+			echo "JSON read error...";
+			// TODO json error
+		}
+		else { 
+			$result["$key"] = $data;
+		}
 	}
-	else $arr = "";
+	else $result = "";
 
-	return $arr;
+	return $result;
 }
 
 function check_request($key="") {
