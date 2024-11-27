@@ -289,7 +289,7 @@ function set_output($op,$output) {
 		redis_set($op,$output);
 	}
 	else {
-		file_put_contents($SHARED_DIR."/input/".$op,$output);
+		file_put_contents($SHARED_DIR."/input/".$op.".json",$output);
 	}
 
 	return true;
@@ -298,9 +298,10 @@ function set_output($op,$output) {
 function check_files($dir,$key) {
 
 	global $SHARED_DIR;
-
-	if (file_exists($SHARED_DIR."/{$dir}/".$key)) {
-		$json_data = file_get_contents($SHARED_DIR."/{$dir}/".$key);
+	
+	$input_file = $SHARED_DIR."/{$dir}/".$key.".json";
+	if (file_exists($input_file)) {
+		$json_data = file_get_contents($input_file);
 		$data = json_decode($json_data,true);
 		if ($data === null) {
 			echo "JSON read error...";
