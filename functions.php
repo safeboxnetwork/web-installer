@@ -326,7 +326,8 @@ function remove_response($key) {
 		redis_remove("$key");
 	}
 	else {
-		//unlink($SHARED_DIR."/".$key);
+		copy($SHARED_DIR."/output/".$key.".json",$SHARED_DIR."/".$key.".json"); // DEBUG - last json
+		unlink($SHARED_DIR."/output/".$key.".json");
 	}	
 }
 
