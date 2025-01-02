@@ -259,15 +259,25 @@ switch ($_GET["op"]) {
 					if (intval($field_arr[3])==0) $len = 10; // default length
 					else $len = $field_arr[3];
 
-					if ($field_arr[1]=="random") $base = rand(100000,999999);
-					elseif ($field_arr[1]=="time") $base = time();
-					elseif ($field_arr[1]!="") $base = $field_arr[1]; // fix string
-					else $base = rand(100000,999999); // default
+					if ($field_arr[1]=="openssl") {
+						if ($field_arr[2]=="hex") $command = "openssl rand -hex $len";
+						elseif ($field_arr[2]=="base64") $command = "openssl rand -base64 $len";
+						else $command = "openssl rand $len"; // raw
+						$output = shell_exec($command);
+						if ($output === null) $output = "OPENSSL_ERROR";
+					}
+					else {
+						if ($field_arr[1]=="random") $base = rand(100000,999999);
+						elseif ($field_arr[1]=="time") $base = time();
+						elseif ($field_arr[1]!="") $base = $field_arr[1]; // fix string
+						else $base = rand(100000,999999); // default
 
-					if (in_array($field_arr[2],$algos)) $base = hash($field_arr[2],$base);
-					else $base = hash("md5",$base); // default alg
+						if (in_array($field_arr[2],$algos)) $base = hash($field_arr[2],$base);
+						else $base = hash("md5",$base); // default alg
 
-					$fields["$field_key"] = substr($base,0,$len);
+						$output = substr($base,0,$len);
+					}
+					$fields["$field_key"] = $output;
 				}
 			}
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
