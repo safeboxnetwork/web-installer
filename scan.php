@@ -245,7 +245,7 @@ switch ($_GET["op"]) {
 	break;
 	case "deploy":
 		if ($key=check_deploy($_GET["additional"])) { 
-			$text="A deployment has already started.<br>Please wait and do not start a new one...";
+			$text="A deployment ({$_GET["additional"]}) has already started.<br>Please wait and do not start a new one...";
 		}
 		else {
 			$text="Install in progress... Please wait...";

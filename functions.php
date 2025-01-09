@@ -25,10 +25,11 @@ function check_install() { // is install in progress
 function check_deploy($application) { // is an application deploy in progress
 
 	$arr = check_request("deployment");
-	if (!empty($arr)) return "deployment"; // deploy in progress install has started
+	if (!empty($arr)) return "deploy-".$application; // deploy in progress install has started
 	else {
 		$arr = check_response("deploy-".$application); // application install in progress PID exists
-		return 0;
+		if (!empty($arr)) return "deploy-".$application;
+		else return 0;
 	}
 }
 
