@@ -142,11 +142,13 @@ switch ($_GET["op"]) {
 						if ($data["DEPLOYMENTS"]["deployments"]=="NONE") echo "There are no deployments.<br>";
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
+								$orig_service_name = $service_name;
+								$service_name = strtolower($service_name);
 								//echo base64_decode($content);
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) {
 									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a> - <a href="#" onclick="reinstall(\''.$service_name.'\')">REINSTALL</a></div>';
 								}
-								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$service_name.'</a> - '.$content.'</div>';
+								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.'</div>';
 								echo '<div id="'.$service_name.'"></div>';
 							}
 						}
