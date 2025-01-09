@@ -250,9 +250,9 @@ function uninstall(additional) {
 }
 
 function check_deployment(additional) {
-  var url  = 'scan.php?op=check_deployment';
+  var url  = 'scan.php?op=check_deployment&additional='+additional;
   jQuery.get(url, function(data) {
-	console.log('check_deployment '+additional+': '+data);
+      console.log('check_deployment '+additional+': '+data);
       if (data!="") {
 	      jQuery("#"+additional).html(data);
       }

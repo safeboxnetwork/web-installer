@@ -227,11 +227,11 @@ switch ($_GET["op"]) {
 			}
 		}
 		else {
-			$arr = check_request("deployment");
+			$arr = check_deploy($_GET["additional"]);
 			if (!empty($arr)) { // deployment in progress
 				foreach ($arr as $key=>$data) {
-					if ($key=="deployment") {
-						if ($data["STATUS"]=="1") { // TODO - current state message???
+					if ($key=="deploy-".$_GET["additional"]) {
+						if ($data["STATUS"]=="1") {
 							echo "Install in progress... Please wait...";
 						}
 						elseif ($data["STATUS"]=="2") { 
