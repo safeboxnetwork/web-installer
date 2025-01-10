@@ -156,6 +156,7 @@ function get_repositories() {
 	console.log('repositories: '+data);
 	if (data=="OK") {
 		setTimeout(check_repositories, 500);
+		get_deployments();
 	}
 	else alert(data);
   });
@@ -321,9 +322,8 @@ function get_containers() {
 
 jQuery(document).ready(function(){
 
-	get_deployments();
-	get_system();
 	get_repositories();
+	get_system();
 	get_services();
 
 	jQuery('#settings_btn').click(function() {
