@@ -21,12 +21,34 @@
 <legend>Base settings</legend>
 <div class="row">
     <div class="mb-3">
-		<label for="user_auth">User auth enable?</label>
+		<label for="user_auth">User auth (homeguard) enable?</label>
 		<select class="custom-select d-block w-100" name="USER_AUTH" id="user_auth">
 		<option value="yes">Yes</option>
 		<option value="no" selected>No</option>
 		</select>
     </div>
+</div>
+<div id="div_user_auth" class="hidden">
+	<div class="row">
+	    <div class="mb-3">
+		<label for="auth_username">Username:</label>
+		<input type="text" class="form-control" name="AUTH_USERNAME" id="auth_username" value="" maxlength="20" size="20">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+		<label for="auth_password">Password:</label>
+		<input type="text" class="form-control" name="AUTH_PASSWORD" id="auth_password" value="" maxlength="20" size="20">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+		<label for="auth_role">Role</label>
+		<select class="custom-select d-block w-100" name="AUTH_ROLE" id="auth_role">
+		<option value="admin">Admin</option>
+		</select>
+	    </div>
+	</div>
 </div>
 <div class="row">
     <div class="mb-3">
