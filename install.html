@@ -190,6 +190,10 @@ jQuery(document).ready(function(){
 			alert("Warning! Local proxy will not work without smarthost proxy service.");
 		}
 	});
+	jQuery('select#user_auth').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_user_auth').show();
+		else jQuery('#div_user_auth').hide();
+	});
 	jQuery('select#vpn').click(function() {
 		if (jQuery(this).val()=='yes') jQuery('#div_vpn').show();
 		else jQuery('#div_vpn').hide();
