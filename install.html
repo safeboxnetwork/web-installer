@@ -21,6 +21,51 @@
 <legend>Base settings</legend>
 <div class="row">
     <div class="mb-3">
+		<label for="vpn">VPN proxy?</label>
+		<select class="custom-select d-block w-100" name="VPN_PROXY" id="vpn">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
+		</select>
+    </div>
+</div>
+<div id="div_vpn" class="hidden">
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
+			<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://demo.format.hu">
+			<div class="invalid-feedback">
+			Please enter a valid domain.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
+			<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+			<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
+			<div class="invalid-feedback">
+			Please enter a valid email.
+			</div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="mb-3">
+			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+			<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
+	    </div>
+	</div>
+</div>
+</fieldset>
+
+<fieldset>
+<legend>Advanced settings</legend>
+<div class="row">
+    <div class="mb-3">
 		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
 		<input type="registry" class="form-control" name="DOCKER_REGISTRY_URL" id="registry" value="registry.format.hu" required>
 		<div class="invalid-feedback">
@@ -65,47 +110,6 @@
 		<option value="no">No</option>
 		</select>
     </div>
-</div>
-<div class="row">
-    <div class="mb-3">
-		<label for="vpn">VPN proxy?</label>
-		<select class="custom-select d-block w-100" name="VPN_PROXY" id="vpn">
-		<option value="yes">Yes</option>
-		<option value="no" selected>No</option>
-		</select>
-    </div>
-</div>
-<div id="div_vpn" class="hidden">
-	<div class="row">
-	    <div class="mb-3">
-			<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://demo.format.hu):</label>
-			<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://demo.format.hu">
-			<div class="invalid-feedback">
-			Please enter a valid domain.
-			</div>
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="mb-3">
-			<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
-			<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="mb-3">
-			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
-			<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
-			<div class="invalid-feedback">
-			Please enter a valid email.
-			</div>
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="mb-3">
-			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-			<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
-	    </div>
-	</div>
 </div>
 <div class="row">
     <div class="mb-3">
