@@ -61,13 +61,13 @@
 <div id="default">
 
 	<fieldset>
-	<legend>Deployments</legend>
+	<legend><span id="deployments_btn">Deployments</span></legend>
 	<div id="deployments" style="text-align:left">Loading...</div>
 	</fieldset>
 
 	<fieldset>
-	<legend>Services</legend>
-	<div id="services" style="text-align:left">Loading...</div>
+	<legend><span id="services_btn">Services</span></legend>
+	<div id="services" style="text-align:left;display:none;">Loading...</div>
 	</fieldset>
 
 	<fieldset>
@@ -325,6 +325,14 @@ jQuery(document).ready(function(){
 	get_repositories();
 	get_system();
 	get_services();
+
+	jQuery('#deployments_btn').click(function() {
+		jQuery('#deployments').toggle();
+	});
+
+	jQuery('#services_btn').click(function() {
+		jQuery('#services').toggle();
+	});
 
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
