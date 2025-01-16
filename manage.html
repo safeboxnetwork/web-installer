@@ -327,10 +327,12 @@ jQuery(document).ready(function(){
 	get_services();
 
 	jQuery('#deployments_btn').click(function() {
+		jQuery('#services').hide();
 		jQuery('#deployments').toggle();
 	});
 
 	jQuery('#services_btn').click(function() {
+		jQuery('#deployments').hide();
 		jQuery('#services').toggle();
 	});
 
