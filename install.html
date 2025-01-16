@@ -81,7 +81,8 @@
 </fieldset>
 
 <fieldset>
-<legend>Advanced settings</legend>
+<legend><span id="advanced">Advanced settings</span></legend>
+<div id="advanced_div">
 <div class="row">
     <div class="mb-3">
 		<label for="registry">Please fill in the docker registry name (default:registry.format.hu):</label>
@@ -138,6 +139,7 @@
 		</select>
     </div>
 </div>
+</div>
 </fieldset>
 <br>
 <button class="btn btn-lg btn-primary btn-block" type="submit">Start install</button>
@@ -153,6 +155,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script>
 jQuery(document).ready(function(){
+
+	jQuery('#advanced').click(function() {
+		jQuery('#advanced_div').toggle();
+	});
 
 	jQuery('select#smarthost').change(function() {
 		if (jQuery(this).val()=='yes') jQuery('#div_smarthost').show();
