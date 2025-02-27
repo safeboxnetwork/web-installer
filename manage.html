@@ -17,7 +17,48 @@
 <h1>Found deployed environment</h1>
 
 <div style="text-align:right">
+	<a href="javascript:void()" id="vpn_btn">VPN</a>
 	<a href="javascript:void()" id="settings_btn">SETTINGS</a>
+</div>
+
+
+<div id="vpn" class="hidden">
+	<fieldset>
+	<legend>Enable proxy</legend>
+	<form class="form-install" action="#" method="post" id="save_vpn">
+		<div class="row">
+		    <div class="mb-3">
+				<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://portal.dev.format.hu):</label>
+				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.dev.format.hu">
+				<div class="invalid-feedback">
+				Please enter a valid domain.
+				</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
+				<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+				<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
+				<div class="invalid-feedback">
+				Please enter a valid email.
+				</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+				<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
+		    </div>
+		</div>
+	</form>
+	</fieldset>
+	<br>
 </div>
 
 <fieldset id="settings" class="hidden">
@@ -169,6 +210,17 @@ function add_repository() {
 	  if (data=="OK") {
 	  }
 	get_repositories();
+  });
+}
+
+function save_vpn() {
+  var url  = 'scan.php?op=save_vpn&vpn_domain='+jQuery('#vpn_domain').val()+'&vpn_pass='+jQuery('#vpn_pass').val()+'&letsencrypt_mail='+jQuery('#letsencrypt_mail').val()+'&letsencrypt_servername='+jQuery('#letsencrypt_servername').val(;
+
+  jQuery.get(url, function(data) {
+	console.log('save_vpn: '+data);
+	  if (data=="OK") {
+	  }
+	//get_vpn();
   });
 }
 
@@ -339,6 +391,13 @@ jQuery(document).ready(function(){
 	jQuery('#settings_btn').click(function() {
 		jQuery('#settings').toggle();
 		jQuery('#default').toggle();
+		jQuery('#vpn').hide();
+	});
+
+	jQuery('#vpn_btn').click(function() {
+		jQuery('#vpn').toggle();
+		jQuery('#default').toggle();
+		jQuery('#settings').hide();
 	});
 
 	jQuery('#update_btn').click(function() {
@@ -349,6 +408,12 @@ jQuery(document).ready(function(){
 	jQuery('#add_repo').submit(function() {
 		jQuery('#repositories').html('Loading...');
 		add_repository();
+		return false;
+	});
+
+	jQuery('#save_vpn').submit(function() {
+		jQuery('#vpn').html('Loading...');
+		save_vpn();
 		return false;
 	});
 

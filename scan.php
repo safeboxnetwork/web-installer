@@ -343,6 +343,20 @@ switch ($_GET["op"]) {
 		if (set_output("add_repository",$json)) echo "OK";
 		else echo "ERROR";
 	break;
+	case "save_vpn":
+		remove_response("save_repository");
+
+		$arr = array(
+			"VPN_DOMAIN" => $_GET["vpn_domain"],
+			"VPN_PASS" => $_GET["vpn_pass"],
+			"LETSENCRYPT_MAIL" => $_GET["letsencrypt_mail"],
+			"LETSENCRYPT_SERVERNAME" => $_GET["letsencrypt_servername"]
+		);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		if (set_output("save_vpn",$json)) echo "OK";
+		else echo "ERROR";
+	break;
 	case "containers":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
