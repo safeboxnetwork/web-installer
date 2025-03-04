@@ -1,5 +1,10 @@
 kind: pipeline
+type: kubernetes
 name: default
+
+node_selector:
+  physical-node: dev2
+
 trigger:
   branch:
     - main
@@ -8,42 +13,33 @@ trigger:
 workspace:
   path: /drone/src
 
-environment:
-  REPO_NAME: web-installer
-  IMAGE_NAME: web-installer
-  REGISTRY_SERVER_NAME: registry.format.hu
-  DOCKER_REGISTRY_URL: registry.format.hu
-
 steps:
-  - name: build image
-    image: plugins/docker
-    commands:
-      - cd /drone/src/
-      - export DOCKER_CLI_EXPERIMENTAL=enabled
-      
-      - docker build --platform linux/amd64 --build-arg BUILDPLATFORM=linux/amd64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 -f Dockerfile .
-      - docker build --platform linux/arm64 --build-arg BUILDPLATFORM=linux/arm64 --tag $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64 -f Dockerfile .
-
-      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 
-      - docker push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64
-
-      - |
-        docker manifest create $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} \
-        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64 \
-        $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64 
- 
-      - docker manifest annotate --arch arm64 --variant v8 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/arm64
-      - docker manifest annotate --arch amd64 $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME} $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}/amd64
-      - docker manifest push $${DOCKER_REGISTRY_URL}/$${IMAGE_NAME}
-
-    when:
-      branch:
-        - main
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
- 
-volumes:
-  - name: docker
-    host:
-      path: /var/run/docker.sock
+  - name: build multiarch from dev
+    image: docker.io/owncloudci/drone-docker-buildx:4
+    privileged: true
+    settings:
+      registry: registry.dev.format.hu
+      repo: registry.dev.format.hu/web-installer
+      tags: latest
+      dockerfile: Dockerfile
+      username:
+        from_secret: dev-hu-registry-username
+      password: 
+        from_secret: dev-hu-registry-password
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    
+  - name: pull image to dockerhub
+    image: docker.io/owncloudci/drone-docker-buildx:4
+    privileged: true
+    settings:
+      repo: safebox/web-installer
+      tags: latest
+      username:
+        from_secret: dockerhub-username
+      password: 
+        from_secret: dockerhub-password
+      platforms:
+        - linux/amd64
+        - linux/arm64
