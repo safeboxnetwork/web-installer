@@ -149,7 +149,7 @@ switch ($_GET["op"]) {
 									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a> - <a href="#" onclick="reinstall(\''.$service_name.'\')">REINSTALL</a></div>';
 								}
 								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.'</div>';
-								echo '<div id="'.$service_name.'"></div>';
+								echo '<div id="'.$service_name.'" class="deployment"></div>';
 							}
 						}
 					}
@@ -192,7 +192,7 @@ switch ($_GET["op"]) {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
 						if ($reinstall) {
-							var_dump($template);
+							//var_dump($template);
 						}
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						foreach ($template->fields as $field) {
