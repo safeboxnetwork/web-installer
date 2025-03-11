@@ -294,6 +294,29 @@ function check_files($dir,$key) {
 	return $result;
 }
 
+function check_letsencrypt() {
+
+	global $SHARED_DIR;
+	
+	$input_file = $SHARED_DIR."/output/letsencrypt.json";
+	if (file_exists($input_file)) {
+		$json_data = file_get_contents($input_file);
+		$data = json_decode($json_data,true);
+		if ($data === null) {
+			echo "JSON read error...";
+			// TODO json error
+		}
+		else {
+			foreach ($data as $d) {	
+				$result[$d["domain"]] = $d;
+			}
+		}
+	}
+	else $result = "";
+
+	return $result;
+}
+
 function check_request($key="") {
 
 	global $INTERFACE;
