@@ -191,10 +191,20 @@ switch ($_GET["op"]) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
+						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						if ($reinstall) {
 							//var_dump($template);
+                                                        //var_dump($template);
+                                                        $letsencrypt = check_letsencrypt();
+                                                        foreach ($template->fields as $field) {
+                                                                if ($field->key=="DOMAIN") {
+                                                                        if (!empty($letsencrypt[$field->value])) {
+                                                                                echo "LETSENCRYPT: ".$letsencrypt[$field->value]["status"]." - ".$letsencrypt[$field->value]["date"];
+                                                                                echo " - <a href=\"letsencrypt_log.php?domain={$field->value}\" target=\"_blank\">LOG</a><br><br>";
+                                                                        }
+                                                                }
+                                                        }
 						}
-						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
 								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_field\">";
