@@ -197,11 +197,11 @@ switch ($_GET["op"]) {
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
-								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">";
+								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_field\">";
 							}
 							else {
 							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
-								<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$field->key}\" class=\"additional_field\">
+								<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_field\">
 							</div></div>";
 							}
 						}
