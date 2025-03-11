@@ -74,6 +74,7 @@ COPY index.html    /usr/share/nginx/html
 COPY scan.html   /usr/share/nginx/html
 COPY manage.html   /usr/share/nginx/html
 COPY scan.php   /usr/share/nginx/html
+COPY letsencrypt_log.php   /usr/share/nginx/html
 COPY functions.php   /usr/share/nginx/html
 COPY install.html  /usr/share/nginx/html
 COPY install.php   /usr/share/nginx/html
