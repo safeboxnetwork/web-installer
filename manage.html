@@ -312,7 +312,8 @@ function uninstall(additional) {
 function check_deployment(additional) {
   var url  = 'scan.php?op=check_deployment&additional='+additional;
   jQuery.get(url, function(data) {
-      console.log('check_deployment '+additional+': '+data);
+      console.log('check_deployment '+additional);
+      //console.log('check_deployment data: '+data);
       if (data!="") {
 	      jQuery("#"+additional).html(data);
       }
