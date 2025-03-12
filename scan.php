@@ -247,6 +247,7 @@ switch ($_GET["op"]) {
 						}
 						elseif ($data["STATUS"]=="2") { 
 							echo "Install has finished.";
+							remove_response("$key"); // remove from output if finished so reinstall can start
 						}
 					}
 				}
