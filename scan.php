@@ -191,7 +191,7 @@ switch ($_GET["op"]) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
-						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_form\"><br>";
+						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\"><br>";
 						if ($reinstall) {
 							//var_dump($template);
                                                         //var_dump($template);
@@ -224,8 +224,8 @@ switch ($_GET["op"]) {
 						</div>
 						</form></fieldset>
 <script>
-	jQuery('#deploy_form').submit(function() {
-		deploy(jQuery('#additional').val());
+	jQuery('#deploy_{$template->name}_form').submit(function() {
+		deploy('{$template->name}');
 		return false;
 	});
 </script>
