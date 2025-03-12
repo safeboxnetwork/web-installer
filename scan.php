@@ -243,7 +243,8 @@ switch ($_GET["op"]) {
 				foreach ($arr as $key=>$data) {
 					if ($key=="deploy-".$_GET["additional"]) {
 						if ($data["STATUS"]=="1") {
-							echo "Install in progress... Please wait...";
+							//echo "Install in progress... Please wait...";
+							echo "";
 						}
 						elseif ($data["STATUS"]=="2") { 
 							echo "Install has finished.";
