@@ -207,11 +207,11 @@ switch ($_GET["op"]) {
 						}
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
-								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_field\">";
+								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
 							}
 							else {
 							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
-								<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_field\">
+								<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">
 							</div></div>";
 							}
 						}

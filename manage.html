@@ -323,7 +323,7 @@ function check_deployment(additional) {
 
 function deploy(additional) {
   pars = '';
-  jQuery('input.additional_field').each(function(index) {
+  jQuery('input.additional_'+additional).each(function(index) {
 	console.log('Field ' + $(this).attr('name') + ': ' + $(this).val());
 	//pars += '&'+$(this).attr('id') + '=' + $(this).val();
 	pars += '&'+$(this).attr('name') + '=' + $(this).val();
