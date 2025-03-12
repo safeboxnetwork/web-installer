@@ -218,8 +218,7 @@ switch ($_GET["op"]) {
 						echo "
 						<div class=\"row\">
 						<div class=\"mb-3\">
-						<input type=\"hidden\" value=\"{$template->name}\" id=\"additional\">
-						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
+						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
 						</div>
 						</div>
 						</form></fieldset>
