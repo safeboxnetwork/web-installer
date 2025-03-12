@@ -339,6 +339,24 @@ function deploy(additional) {
   });
 }
 
+function redeploy(additional) {
+  pars = '';
+  jQuery('input.additional_'+additional).each(function(index) {
+	console.log('Field ' + $(this).attr('name') + ': ' + $(this).val());
+	//pars += '&'+$(this).attr('id') + '=' + $(this).val();
+	pars += '&'+$(this).attr('name') + '=' + $(this).val();
+  });
+  //console.log(pars);
+  var url  = 'scan.php?op=redeploy&additional='+additional+pars;
+  jQuery.get(url, function(data) {
+	console.log('redeploy '+additional+': '+data);
+	  if (data!="") {
+	        jQuery("#"+additional).html(data);
+      		setTimeout(check_deployment, 1000, additional);
+	  }
+  });
+}
+
 function check_services() {
   var url  = 'scan.php?op=check_services';
   jQuery.get(url, function(data) {

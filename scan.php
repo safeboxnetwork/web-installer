@@ -224,7 +224,7 @@ switch ($_GET["op"]) {
 						</form></fieldset>
 <script>
 	jQuery('#deploy_{$template->name}_form').submit(function() {
-		deploy('{$template->name}');
+		".($reinstall ? "redeploy" : "deploy")."('{$template->name}');
 		return false;
 	});
 </script>
@@ -256,6 +256,7 @@ switch ($_GET["op"]) {
 			else echo ""; // no deployment, finished
 		}
 	break;
+	case "redeploy":
 	case "deploy":
 		if ($key=check_deploy($_GET["additional"])) { 
 			$text="A deployment ({$_GET["additional"]}) has already started.<br>Please wait and do not start a new one...";
@@ -294,7 +295,7 @@ switch ($_GET["op"]) {
 				}
 			}
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
-			$arr = array("NAME" => $_GET["additional"], "ACTION" => "deploy", "PAYLOAD" => $payload);
+			$arr = array("NAME" => $_GET["additional"], "ACTION" => $_GET["op"], "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 			if (set_output("deployment",$json)) echo "OK";
 			else echo "ERROR";
