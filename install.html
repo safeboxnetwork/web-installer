@@ -178,6 +178,15 @@
 <script>
 jQuery(document).ready(function(){
 
+        jQuery('#diagnostic').click(function() {
+                if (jQuery(this).val()=='yes') {
+                        jQuery('#local_backend').val('yes');
+                }
+                else {
+                        jQuery('#local_backend').val('no');
+                }
+        });
+
 	jQuery('#advanced').click(function() {
 		jQuery('#advanced_div').toggle();
 	});
