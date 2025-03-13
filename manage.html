@@ -8,7 +8,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <!-- Custom styles for this template -->
-<link href="installer.css?t=4" rel="stylesheet">
+<link href="installer.css?t=5" rel="stylesheet">
 </head>
 <body id="manage" class="text-center">
 <div class="container-fluid">
@@ -18,6 +18,9 @@
 
 <div style="text-align:left;float:left">
 	<a href="javascript:void()" id="vpn_btn">VPN</a>
+        Status:
+        <span id="vpn_on" class="hidden green">ON</span>
+        <span id="vpn_off" class="hidden red">OFF</span>
 </div>
 <div style="text-align:right;float:right">
 	<a href="javascript:void()" id="settings_btn">SETTINGS</a>
@@ -220,6 +223,22 @@ function add_repository() {
   });
 }
 
+function check_vpn() {
+  var url  = 'scan.php?op=check_vpn';
+  jQuery.get(url, function(data) {
+        console.log('check_vpn: '+data);
+        if (data=="2") {
+          $('#vpn_off').hide();
+          $('#vpn_on').show();
+        }
+        else {
+          $('#vpn_on').hide();
+          $('#vpn_off').show();
+        }
+        setTimeout(check_vpn, 10000);
+  });
+}
+
 function save_vpn() {
   var url  = 'scan.php?op=save_vpn&vpn_domain='+jQuery('#vpn_domain').val()+'&vpn_pass='+jQuery('#vpn_pass').val()+'&letsencrypt_mail='+jQuery('#letsencrypt_mail').val()+'&letsencrypt_servername='+jQuery('#letsencrypt_servername').val();
 
@@ -407,6 +426,7 @@ jQuery(document).ready(function(){
 	get_repositories();
 	get_system();
 	get_services();
+	check_vpn();
 
 	jQuery('#deployments_btn').click(function() {
 		jQuery('#services').hide();

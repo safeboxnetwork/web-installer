@@ -387,6 +387,20 @@ switch ($_GET["op"]) {
 		if (set_output("add_repository",$json)) echo "OK";
 		else echo "ERROR";
 	break;
+        case "check_vpn":
+                $key = "check_vpn";
+                $arr = array("STATUS" => 0);
+                $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+                set_output($key,$json);
+                sleep(1);
+                $arr = check_response($key);
+                if (!empty($arr)) {
+                        $data = $arr[$key];
+                        echo $data["STATUS"];
+                        remove_response("$key");
+                }
+                else echo "NO";
+        break;
 	case "save_vpn":
 		remove_response("save_repository");
 

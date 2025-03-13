@@ -16,6 +16,9 @@ body#scan{
 /*  background-color: #7E57C2; */
 }
 
+.red {color: red}
+.green {color: green}
+
 .mt-100{
   margin-top: 100px;
 }
