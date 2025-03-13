@@ -309,20 +309,52 @@ switch ($_GET["op"]) {
 		if (set_output("deployment",$json)) echo "OK";
 		else echo "ERROR";
 	break;
-	case "uninstall":
-		if ($key=check_deploy()) { 
-			$text="Deploy/uninstall process has already started.<br>Please wait and do not start a new one...";
-		}
-		else {
-			$text="Uninstall in progress... Please wait...";
-			$arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
-			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-			$op = "deployment";
-			if (set_output("deployment",$json)) echo "OK";
-			else echo "ERROR";
-		}
-		echo $text;
-	break;
+        case "check_uninstall":
+                $arr = check_deploy($_GET["additional"]);
+                if (!empty($arr)) { // deployment in progress
+                        foreach ($arr as $key=>$data) {
+                                if ($key=="deploy-".$_GET["additional"]) {
+                                        if ($data["STATUS"]=="1") {
+                                                echo "Install in progress... You can't uninstall while in progress...";
+                                        }
+                                        elseif ($data["STATUS"]=="2") {
+                                                echo "Install has finished...";
+                                                remove_response("$key");
+                                        }
+                                }
+                        }
+                }
+                else { // no deployment in progress -> uninstall
+                        $key = "uninstall-".$_GET["additional"];
+                        $arr = check_response($key);
+                        if (!empty($arr)) {
+                                $data = $arr[$key];
+                                if ($data["STATUS"]=="1") {
+                                        echo "Uninstall in progress... Please wait... ".date("Y-m-d H:i:s");
+                                }
+                                elseif ($data["STATUS"]=="2") {
+                                        echo "OK";
+                                        remove_response("$key");
+                                }
+                        }
+                        else echo "Uninstall in progress... Please wait...";
+                }
+        break;
+        case "uninstall":
+                if ($key=check_deploy($_GET["additional"])) {
+                        $text="Deploy/uninstall process has already started.<br>Please wait and do not start a new one...";
+                }
+                else {
+                        $text="Uninstall in progress... Please wait...";
+                        $arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
+                        $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+                        if (set_output("deployment",$json)) echo "OK";
+                        else echo "ERROR";
+                }
+                echo $text;
+        break;
+
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
