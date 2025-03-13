@@ -63,8 +63,9 @@ RUN apk --no-cache add php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-curl \
     php${PHP_VERSION}-pecl-redis \
-    vim \
     curl \
+    vim \
+    git \
     rm -rf /var/cache/apk/*
 
 COPY nginx.conf /etc/nginx/nginx.conf
