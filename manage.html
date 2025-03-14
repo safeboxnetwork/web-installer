@@ -274,6 +274,10 @@ function get_updates() {
 }
 
 function load_template(additional) {
+
+  jQuery("div.deployment").each(function(index) {
+        $(this).html('');
+  });
   jQuery("#"+additional).html('Loading '+additional+' template...');
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
@@ -296,7 +300,10 @@ function check_reinstall(additional) {
 }
 
 function reinstall(additional) {
-  jQuery("#"+additional).html('Loading...');
+  jQuery("div.deployment").each(function(index) {
+        $(this).html('');
+  });
+  jQuery("#"+additional).html('Loading '+additional+' template...');
   var url  = 'scan.php?op=reinstall&additional='+additional;
   jQuery.get(url, function(data) {
 	console.log('reinstall '+additional+': '+data);
@@ -325,6 +332,9 @@ function check_uninstall(additional) {
 
 function uninstall(additional) {
 
+  jQuery("div.deployment").each(function(index) {
+        $(this).html('');
+  });
 	data = '<fieldset><form action="#" method="post"><div class="row">YOU ARE GOING TO UNINSTALL '+additional.toUpperCase()+'.<br>ARE YOU SURE? IF YES, PLEASE CLICK ON THE BUTTON BELOW.<br><br></div><div class="row"><div class="mb-3"><button class="btn btn-lg btn-primary btn-block" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div></div></form></fieldset>';
 	jQuery("#"+additional).html(data);
 }
