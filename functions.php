@@ -307,9 +307,9 @@ function check_letsencrypt() {
 			// TODO json error
 		}
 		else {
-			foreach ($data as $d) {	
-				$result[$d["domain"]] = $d;
-			}
+                        foreach ($data as $domain => $domain_data) {
+                                $result[$domain] = $domain_data;
+                        }
 		}
 	}
 	else $result = "";
