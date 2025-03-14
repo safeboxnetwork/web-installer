@@ -196,14 +196,18 @@ switch ($_GET["op"]) {
 							//var_dump($template);
                                                         //var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
-                                                        foreach ($template->fields as $field) {
-                                                                if ($field->key=="DOMAIN") {
-                                                                        if (!empty($letsencrypt[$field->value])) {
-                                                                                echo "LETSENCRYPT: ".$letsencrypt[$field->value]["status"]." - ".$letsencrypt[$field->value]["date"];
-                                                                                echo " - <a href=\"letsencrypt_log.php?domain={$field->value}\" target=\"_blank\">LOG</a><br><br>";
-                                                                        }
-                                                                }
-                                                        }
+							if (empty($letsencrypt)) echo "LETSENCRYPT in progress...";
+							else {
+								foreach ($template->fields as $field) {
+									if ($field->key=="DOMAIN") {
+										if (!empty($letsencrypt[$field->value])) {
+											echo "LETSENCRYPT: ".$letsencrypt[$field->value]["status"]." - ".$letsencrypt[$field->value]["date"];
+											echo " - <a href=\"letsencrypt_log.php?domain={$field->value}\" target=\"_blank\">LOG</a><br><br>";
+										}
+										else echo "LETSENCRYPT in progress for {$field->value}.";
+									}
+								}
+							}
 						}
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
