@@ -232,6 +232,7 @@ switch ($_GET["op"]) {
 					}
 					elseif ($data["STATUS"]=="2") { // deploy
 						echo "Install has finished.";
+						echo "<script>get_deployments();</script>";
 					}
 					remove_response("$key");
 				}
@@ -248,6 +249,7 @@ switch ($_GET["op"]) {
 						}
 						elseif ($data["STATUS"]=="2") { 
 							echo "Install has finished.";
+							echo "<script>get_deployments();</script>";
 							remove_response("$key"); // remove from output if finished so reinstall can start
 						}
 					}
@@ -319,6 +321,7 @@ switch ($_GET["op"]) {
                                         }
                                         elseif ($data["STATUS"]=="2") {
                                                 echo "Install has finished...";
+						echo "<script>get_deployments();</script>";
                                                 remove_response("$key");
                                         }
                                 }

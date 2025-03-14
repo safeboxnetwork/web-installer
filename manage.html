@@ -316,7 +316,10 @@ function check_uninstall(additional) {
       if (data!="OK") {
               setTimeout(check_uninstall, 1000, additional);
       }
-      else jQuery("#"+additional).html('Uninstall has finished');
+      else {
+	  jQuery("#"+additional).html('Uninstall has finished');
+	  get_deployments();
+      }
   });
 }
 
