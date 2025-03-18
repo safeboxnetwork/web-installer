@@ -142,11 +142,11 @@ switch ($_GET["op"]) {
 						if ($data["DEPLOYMENTS"]["deployments"]=="NONE") echo "There are no deployments.<br>";
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
-								$orig_service_name = $service_name;
-								$service_name = strtolower($service_name);
-								//echo base64_decode($content);
+                                                                $orig_service_name = $service_name;
+                                                                $service_name = strtolower($service_name);
+                                                                //echo base64_decode($content);
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) {
-									echo '<div>'.$service_name.' - '.$content.' - INSTALLED - <a href="#" onclick="uninstall(\''.$service_name.'\')">UNINSTALL</a> - <a href="#" onclick="reinstall(\''.$service_name.'\')">REINSTALL</a></div>';
+                                                                        echo '<div><a href="#" onclick="reinstall(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.' - INSTALLED</div>';
 								}
 								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.'</div>';
 								echo '<div id="'.$service_name.'" class="deployment"></div>';
@@ -219,18 +219,31 @@ switch ($_GET["op"]) {
 							</div></div>";
 							}
 						}
-						echo "
-						<div class=\"row\">
-						<div class=\"mb-3\">
-						<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
-						</div>
-						</div>
-						</form></fieldset>
+
+
+                                                echo "
+                                                <div class=\"row\">
+                                                <div class=\"mb-3\">
+                                                <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
+                                                </div>";
+                                                echo "
+                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
+                                                <button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
+                                                </div>
+                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
+                                                <button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
+                                                </div>";
+                                                echo "
+                                                </div>
+                                                </form></fieldset>
 <script>
 	jQuery('#deploy_{$template->name}_form').submit(function() {
 		".($reinstall ? "redeploy" : "deploy")."('{$template->name}');
 		return false;
 	});
+        jQuery('#cancel_{$template->name}_btn').click(function() {
+                $('div#{$template->name}').html('');
+        });
 </script>
 						";
 					}
