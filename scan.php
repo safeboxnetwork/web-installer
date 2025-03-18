@@ -376,7 +376,25 @@ switch ($_GET["op"]) {
                 }
                 echo $text;
         break;
+        case "check_upgrade":
+                $arr = check_response("upgrade");
+                if (!empty($arr)) {
+                        foreach ($arr as $key=>$data) {
+                                if ($key=="upgrade") {
+                                        var_dump($arr);
+                                        //remove_response("$key");
+                                }
+                        }
+                }
+                else echo "WAIT";
+        break;
+        case "upgrade":
+                $arr = array("NAME" => "framework", "ACTION" => "upgrade");
+                $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
+                if (set_output("upgrade",$json)) echo "OK";
+                else echo "ERROR";
+        break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
