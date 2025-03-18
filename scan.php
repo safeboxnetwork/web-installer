@@ -226,13 +226,15 @@ switch ($_GET["op"]) {
                                                 <div class=\"mb-3\">
                                                 <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
                                                 </div>";
-                                                echo "
-                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
-                                                <button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
-                                                </div>
-                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
-                                                <button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
-                                                </div>";
+						if ($reinstall) {
+							echo "
+							<div class=\"mb-3\" style=\"margin-left:30px;\">
+							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
+							</div>
+							<div class=\"mb-3\" style=\"margin-left:30px;\">
+							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
+							</div>";
+						}
                                                 echo "
                                                 </div>
                                                 </form></fieldset>
