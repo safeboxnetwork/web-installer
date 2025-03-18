@@ -277,6 +277,23 @@ function get_updates() {
   });
 }
 
+function update(service) {
+        if (service=='framework') {
+                framework_upgrade();
+        }
+        else alert(service+' update under construction');
+}
+
+function framework_upgrade() {
+  var url  = 'scan.php?op=upgrade';
+  jQuery.get(url, function(data) {
+        console.log('framework upgrade: '+data);
+          if (data=="OK") {
+                setTimeout(check_upgrade, 1000);
+          }
+  });
+}
+
 function load_template(additional) {
 
   jQuery("div.deployment").each(function(index) {

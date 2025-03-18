@@ -148,7 +148,7 @@ function show_service_update($name, $update, $uptodate) {
 	if (!empty($update)) {
 		$arr = explode(" ",$update);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>UPDATE AVAILABLE</td><td>UPDATE</td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>UPDATE AVAILABLE</td><td><a href=\"#\" onclick=\"update('{$name}')\">UPDATE</a></td></tr>";
 		}
 	}
 
