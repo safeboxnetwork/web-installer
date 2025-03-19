@@ -141,7 +141,7 @@ function show_service($name, $containers) {
 }
 
 function show_service_update($name, $update, $uptodate) {
-	$str = '<table id="'.$name.'">';
+	$str = '<table id="update_'.$name.'">';
 	$str .= "<tr><th>{$name}</th></tr>";
 
 	$update = trim($update);
