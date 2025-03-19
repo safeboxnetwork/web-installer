@@ -127,7 +127,7 @@ function get_vpn_url($domain,$passkey) {
 }
 
 function show_service($name, $containers) {
-	$str = '<table id="'.$name.'">';
+	$str = '<table id="service_'.$name.'">';
 	$str .= "<tr><th>{$name}</th></tr>";
 	$containers = trim($containers);
 	$arr = explode("|",$containers);
