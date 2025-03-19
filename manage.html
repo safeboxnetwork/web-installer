@@ -284,6 +284,19 @@ function update(service) {
         else alert(service+' update under construction');
 }
 
+function check_upgrade() {
+  var url  = 'scan.php?op=check_upgrade';
+  jQuery.get(url, function(data) {
+        console.log('check_upgrade: '+data);
+      if (data=="WAIT" || data=="") {
+        setTimeout(check_upgrade, 1000);
+      }
+      else {
+              // TODO
+      }
+  });
+}
+
 function framework_upgrade() {
   var url  = 'scan.php?op=upgrade';
   jQuery.get(url, function(data) {
