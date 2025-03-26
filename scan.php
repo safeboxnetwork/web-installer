@@ -389,7 +389,7 @@ switch ($_GET["op"]) {
                 else echo "WAIT";
         break;
         case "upgrade":
-                $arr = array("NAME" => "framework", "ACTION" => "upgrade");
+                $arr = array("NAME" => $_GET["service"], "ACTION" => "upgrade");
                 $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
                 if (set_output("upgrade",$json)) echo "OK";

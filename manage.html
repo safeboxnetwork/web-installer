@@ -279,13 +279,6 @@ function get_updates() {
   });
 }
 
-function update(service) {
-        if (service=='framework') {
-                framework_upgrade();
-        }
-        else alert(service+' update under construction');
-}
-
 function check_upgrade() {
   var url  = 'scan.php?op=check_upgrade';
   jQuery.get(url, function(data) {
@@ -299,10 +292,11 @@ function check_upgrade() {
   });
 }
 
-function framework_upgrade() {
-  var url  = 'scan.php?op=upgrade';
+function upgrade(service) {
+  var url  = 'scan.php?op=upgrade&service='+service;
+  console.log('upgrade start: '+service);
   jQuery.get(url, function(data) {
-        console.log('framework upgrade: '+data);
+        console.log('upgrade end: '+service);
           if (data=="OK") {
                 setTimeout(check_upgrade, 1000);
           }
