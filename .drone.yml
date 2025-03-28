@@ -6,8 +6,6 @@ node_selector:
   physical-node: dev1
 
 trigger:
-  branch:
-    - main
   event:
     - push
     - tag
