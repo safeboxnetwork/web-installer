@@ -116,7 +116,7 @@ switch ($_GET["op"]) {
 					if ($data["INSTALL_STATUS"]==1) {
 						echo "<table><tr><td><b>Service/Container</b></td><td><b>Image</b></td><td><b>Status</b></td><td><b>Action</b></td></tr></table>";
 						foreach ($data["INSTALLED_SERVICES"] as $service_name => $object) {
-							show_service_update($service_name, trim($object["update"]), trim($object["uptodate"]));
+							show_service_update($service_name, trim($object["update"]), trim($object["uptodate"]), trim($object["error"])));
 						}
 						echo "<br>";
 					}
