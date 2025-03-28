@@ -140,7 +140,7 @@ function show_service($name, $containers) {
 	echo $str;
 }
 
-function show_service_update($name, $update, $uptodate) {
+function show_service_update($name, $update, $uptodate, $error) {
 	$str = '<table id="update_'.$name.'">';
 	$str .= "<tr><th>{$name}</th></tr>";
 
@@ -156,9 +156,19 @@ function show_service_update($name, $update, $uptodate) {
 	if (!empty($uptodate)) {
 		$arr = explode(" ",$uptodate);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>Already up to date</td><td></td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>Already up to date</td><td><a href=\"#\" onclick=\"upgrade('{$name}')\">FORCE UPDATE</a></td></tr>";
 		}
 	}
+
+        $error = trim($error);
+        if (!empty($error)) {
+                $arr = explode(" ",$error);
+                foreach ($arr as $container) {
+                        //$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>N/A</td><td></td></tr>";
+                        $str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>N/A</td><td><a href=\"#\" onclick=\"upgrade('{$name}')\">TRY UPDATE</a></td></tr>";
+                }
+        }
+
 	$str .= '</table>';
 
 	echo $str;
