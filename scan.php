@@ -180,7 +180,6 @@ switch ($_GET["op"]) {
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\"><br>";
 						if ($reinstall) {
-							//var_dump($template);
                                                         //var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
 							if (empty($letsencrypt)) echo "LETSENCRYPT in progress...";
