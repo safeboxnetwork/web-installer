@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --app-bg: #f0f0f0;
+            --button-border: #000000;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --app-bg: #2c2c2c;
+            --button-border: #ffffff;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .profile img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo img {
+            width: 50px;
+            height: 50px;
+        }
+        .logo div {
+            margin: 0;
+            padding: 0;
+        }
+        .logo h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+        }
+        .toggle {
+            cursor: pointer;
+            width: 40px;
+            height: 20px;
+            border: 1px solid var(--button-border);
+            border-radius: 10px;
+            position: relative;
+        }
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: var(--button-border);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            background: none;
+            border: 1px solid var(--button-border);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .my-apps {
+            flex: 1;
+            background-color: var(--app-bg);
+            padding: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 40px;
+            min-width: 92%;
+            max-width: 92%;
+            margin: 0 auto;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+            cursor: pointer;
+        }
+        .app img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 15px;
+        }
+        .footer-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer-center {
+            text-align: center;
+        }
+        .footer-center p {
+            margin: 5px 0;
+        }
+        .footer-center strong {
+            font-size: 18px;
+        }
+        .footer-center a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer-center a:hover {
+            text-decoration: underline;
+        }
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+        .footer-social a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .popup.hidden {
+            display: none;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .popup-content {
+            background: var(--bg-color);
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-content .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .footer-links a,
+        [data-theme="dark"] .footer-social a {
+            color: white;
+        }
+
+        [data-theme="dark"] .footer-links a:hover,
+        [data-theme="dark"] .footer-social a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .input-group input {
+            padding: 10px;
+            border: 1px solid var(--button-border);
+            border-radius: 10px;
+            background: none;
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .input-group button {
+            padding: 10px 20px;
+            background: none;
+            border: 1px solid var(--button-border);
+            border-radius: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  color: var(--text-color);
+  position: relative;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  height: 24px;
+  width: 24px;
+  background-color: var(--app-bg);
+  border: 2px solid var(--button-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ha be van pipálva: sötét hátteret és világos szegélyt */
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--button-border);
+  border-color: var(--button-border);
+}
+
+/* A pipa - kisebb és középen */
+.checkmark::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 6px;
+  border: solid var(--bg-color);
+  border-width: 0 0 3px 3px;
+  transform: rotate(-45deg);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Ha be van jelölve: megjelenik a pipa */
+.checkbox-container input:checked ~ .checkmark::after {
+  opacity: 1;
+}
+
+/* Dark mode variációk */
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --app-bg: #2c2c2c;
+  --button-border: #e0e0e0;
+}
+
+
+        .custom-select {
+            padding: 10px;
+            border: 1px solid var(--button-border);
+            border-radius: 10px;
+            background-color: var(--app-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpolyline points='1 1 7 7 13 1' style='fill:none;stroke:black;stroke-width:2' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+
+        [data-theme="dark"] .custom-select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpolyline points='1 1 7 7 13 1' style='fill:none;stroke:white;stroke-width:2' /%3E%3C/svg%3E");
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .buttons button {
+                width: 80%;
+            }
+
+            .my-apps {
+                min-width: 75%;
+                max-width: 75%;
+                padding: 20px;
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .app {
+                width: 80px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .footer-links, .footer-social {
+                justify-content: center;
+            }
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .input-group input,
+            .input-group button,
+            .input-group select,
+            .checkbox-container {
+                width: 100%;
+            }
+        }
+    </style>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<!-- Custom styles for this template -->
+<link href="installer.css?t=5" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    <div class="profile" id="profileSection">
+        <img src="image.png" alt="Profilkép">
+        <div>Pro</div>
+    </div>
+    <div class="logo">
+        <img src="image.png" alt="Logo">
+        <div><h1>Control Panel</h1></div>
+    </div>
+    <div class="toggle" id="themeToggle"></div>
+</header>
+
+<div class="buttons">
+    <button id="myAppsBtn">My Apps</button>
+    <button id="installAppsBtn">Install Apps</button>
+    <button id="backupBtn">Backup</button>
+    <button id="diskBtn">Disk Management</button>
+    <button id="monitorBtn">Monitor</button>
+</div>
+
+<div class="my-apps" id="myAppsContainer"></div>
+<div id="popup" class="popup hidden">
+  <div class="popup-content">
+    <span class="close">&times;</span>
+    <div id="popupText" class="deployment">Load app template here</div>
+  </div>
+</div>
+<footer>
+    <div class="footer-links">
+        <a href="#">Help</a>
+        <a href="#">Docs</a>
+        <a href="#">Report</a>
+    </div>
+
+    <div class="footer-center">
+        <p>Want to access your services remotely?</p>
+        <p><strong><a href="#">Go Pro!</a></strong></p>
+    </div>
+
+    <div class="footer-social">
+        <a href="#">GitHub</a>
+        <a href="#">X</a>
+    </div>
+</footer>
+
+<script>
+    const toggle = document.getElementById('themeToggle');
+    toggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+        toggle.classList.toggle('active');
+    });
+</script>
+
+<script>
+    // apps array beállítása common.js-ben
+    const apps = []; // GLOBAL VARIABLE
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+    const myAppsBtn = document.getElementById('myAppsBtn');
+    const installAppsBtn = document.getElementById('installAppsBtn');
+    const backupBtn = document.getElementById('backupBtn');
+    const diskBtn = document.getElementById('diskBtn');
+    const monitorBtn = document.getElementById('monitorBtn');
+
+    const myAppsContainer = document.getElementById('myAppsContainer');
+    const popup = document.getElementById('popup');
+    const popupText = document.getElementById('popupText');
+    const closeBtn = document.querySelector('.close');
+
+    //Appok betöltése
+    function renderApps(all) {
+        myAppsContainer.innerHTML = '';
+        apps.forEach(app => {
+	    if ((all==false && app.installed=='true') || (all==true && app.installed!='true')) {
+		    const appDiv = document.createElement('div');
+		    appDiv.className = 'app';
+		    appDiv.innerHTML = `
+			<img src="${app.image}" alt="${app.name}" title="${app.orig_name}">${app.orig_name}
+		    `;
+		    appDiv.addEventListener('click', () => {
+			popupText.textContent = `You clicked on ${app.name}!`;
+			if (app.installed=='true') reinstall(app.name, 'popupText');
+			else load_template(app.name,'popupText');
+			popup.classList.remove('hidden');
+		    });
+		    myAppsContainer.appendChild(appDiv);
+            }
+        });
+    }
+
+    //TODO: Ilyen függvényeket kell csinálni és a listenerekhez adni az egyes részeket
+    function renderText(title) {
+        //TODO: itt kell a buttont editálni és így kell hozzáadni hozzá mindent
+        myAppsContainer.innerHTML = `
+            <h1 style="text-align: center;">${title}</h1>
+
+            <div class="input-group">
+                <input type="text" placeholder="Írj be valamit..." id="textInput">
+                <button id="submitButton">Küldés</button>
+
+                <select id="myComboBox" class="custom-select">
+                    <option value="">Válassz egy lehetőséget...</option>
+                    <option value="1">Első opció</option>
+                    <option value="2">Második opció</option>
+                    <option value="3">Harmadik opció</option>
+                </select>
+
+                <label class="checkbox-container">
+                    <input type="checkbox" id="myCheckbox">
+                    <span class="checkmark"></span>
+                    Elfogadom a feltételeket
+                </label>
+            </div>
+        `;
+
+        const submitButton = document.getElementById('submitButton');
+        const textInput = document.getElementById('textInput');
+
+        if (submitButton && textInput) {
+            submitButton.addEventListener('click', () => {
+                const value = textInput.value.trim();
+                if (value) {
+                    alert(`Beírt szöveg: ${value}`);
+                    textInput.value = '';
+                } else {
+                    alert('Kérlek írj be valamit!');
+                }
+            });
+        }
+    }
+
+    myAppsBtn.addEventListener('click', () => renderApps(false));
+    installAppsBtn.addEventListener('click', () => renderApps(true));
+    backupBtn.addEventListener('click', () => renderText('Backup'));
+    diskBtn.addEventListener('click', () => renderText('Disk Management'));
+    monitorBtn.addEventListener('click', () => renderText('Monitor'));
+
+    closeBtn.addEventListener('click', () => {
+        popup.classList.add('hidden');
+    });
+
+    popup.addEventListener('click', (event) => {
+        if (event.target === popup) {
+            popup.classList.add('hidden');
+        }
+    });
+
+    renderApps(false);
+});
+</script>
+
+<script>
+    const profileSection = document.getElementById('profileSection');
+    profileSection.addEventListener('click', () => {
+        //TODO: profile szekcióra kattintott
+    });
+</script>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="common.js?t=3"></script>
+</body>
+</html>

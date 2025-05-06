@@ -134,46 +134,33 @@ switch ($_GET["op"]) {
 		else echo "ERROR";
 	break;
 	case "check_deployments":
+		$deployments = "";
 		$arr = check_response("deployments");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				if ($key=="deployments") {
 					if (count($data["DEPLOYMENTS"])) {
-						if ($data["DEPLOYMENTS"]["deployments"]=="NONE") echo "There are no deployments.<br>";
+						if ($data["DEPLOYMENTS"]["deployments"]=="NONE") $deployments = "There are no deployments.";
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
                                                                 $orig_service_name = $service_name;
                                                                 $service_name = strtolower($service_name);
                                                                 //echo base64_decode($content);
-								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) {
-                                                                        echo '<div><a href="#" onclick="reinstall(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.' - INSTALLED</div>';
-								}
-								else echo '<div><a href="#" onclick="load_template(\''.$service_name.'\')">'.$orig_service_name.'</a> - '.$content.'</div>';
-								echo '<div id="'.$service_name.'" class="deployment"></div>';
+								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) $installed = "true";
+								else $installed = "false";
+								if (!empty($deployments)) $deployments .= ", ";
+								$deployments .= '{"name": "'.$service_name.'", "orig_name": "'.$orig_service_name.'", "image": "image.png", "content": "'.$content.'", "installed": "'.$installed.'"}';
 							}
+							if (!empty($deployments)) $deployments = "[{$deployments}]";
 						}
 					}
-					else echo "There are no deployments.";
-					echo "<br>";
-/*
-					if (count($data["INSTALLED_SERVICES"])) {
-						echo "<br>Installed services:<br>";
-						if ($data["INSTALLED_SERVICES"]["services"]=="NONE") echo "There are no installed services.<br>";
-						else {
-							foreach ($data["INSTALLED_SERVICES"] as $service_name => $content) {
-								//echo base64_decode($content);
-								echo $service_name."<br>";
-							}
-							echo "<br>";
-						}
-					}
-					else echo "There are no installed services.<br>";
-*/
+					else $deployments = "There are no deployments.";
 					remove_response("$key");
 				}
 			}
 		}
-		else echo "WAIT";
+		else $deployments = "WAIT";
+		echo $deployments;
 	break;
 	case "deployment":
 		$arr = array("NAME" => $_GET["additional"], "ACTION" => "ask");
@@ -245,6 +232,7 @@ switch ($_GET["op"]) {
 	});
         jQuery('#cancel_{$template->name}_btn').click(function() {
                 $('div#{$template->name}').html('');
+    		document.getElementById('popup').classList.add('hidden'); // manage2 
         });
 </script>
 						";

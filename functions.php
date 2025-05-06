@@ -277,7 +277,8 @@ function set_output($op,$output) {
 		redis_set($op,$output);
 	}
 	else {
-		file_put_contents($SHARED_DIR."/input/".$op.".json",$output);
+		if (file_exists($SHARED_DIR."/input/".$op.".json")) return false;
+		else file_put_contents($SHARED_DIR."/input/".$op.".json",$output);
 	}
 
 	return true;
@@ -364,7 +365,7 @@ function remove_response($key) {
 	}
 	else {
 		copy($SHARED_DIR."/output/".$key.".json",$SHARED_DIR."/".$key.".json"); // DEBUG - last json
-		unlink($SHARED_DIR."/output/".$key.".json");
+		if (!unlink($SHARED_DIR."/output/".$key.".json")) echo "UNLINK ERROR";
 	}	
 }
 
