@@ -268,7 +268,7 @@ switch ($_GET["op"]) {
 		$arr = array($domain => array("status" => "requested"));
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		if (set_output("letsencrypt2",$json)) echo "LETSENCRYPT in progress for {$domain}.<br><br>";
+		if (set_output("letsencrypt",$json)) echo "LETSENCRYPT in progress for {$domain}.<br><br>";
 		else echo "ERROR";
 	break;
 	case "check_letsencrypt":
