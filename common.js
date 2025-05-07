@@ -259,7 +259,7 @@ function confirm_uninstall(additional) {
 }
 
 function request_letsencrypt(domain) {
-  var url  = 'scan.php?op=letsencrypt&domain='+domain;
+  var url  = 'scan.php?op=request_letsencrypt&domain='+domain;
   jQuery.get(url, function(data) {
       console.log('letsencrypt '+domain);
       if (data!="") {

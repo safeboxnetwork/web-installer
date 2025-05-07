@@ -263,12 +263,12 @@ switch ($_GET["op"]) {
 			else echo ""; // no deployment, finished
 		}
 	break;
-	case "letsencrypt":
+	case "request_letsencrypt":
 		$domain = $_GET["domain"];
-		$arr = array($domain => array("status" => "requested"));
+		$arr = array($domain => array("date" => date("Y-m-d H:i:s"), "status" => "requested"));
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-		if (set_output("letsencrypt",$json)) echo "LETSENCRYPT in progress for {$domain}.<br><br>";
+		if (set_output("request_letsencrypt",$json)) echo "LETSENCRYPT in progress for {$domain}.<br><br>";
 		else echo "ERROR";
 	break;
 	case "check_letsencrypt":
