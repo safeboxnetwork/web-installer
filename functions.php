@@ -305,6 +305,18 @@ function check_files($dir,$key) {
 	return $result;
 }
 
+function show_letsencrypt($letsencrypt, $domain) {
+	if (!empty($letsencrypt[$domain])) {
+		echo "LETSENCRYPT: ".$letsencrypt[$domain]["status"]." - ".$letsencrypt[$domain]["date"];
+		echo " - <a href=\"letsencrypt_log.php?domain={$domain}\" target=\"_blank\">LOG</a>";
+		if (date("Y-m-d",time()-60*24*3600)>substr($letsencrypt[$domain]["date"],0,10) || $letsencrypt[$domain]["status"]=="failed") {
+			echo " - <a href=\"#\" onclick=\"request_letsencrypt('{$domain}')\">Request new certificate</a>";
+		}
+		echo "<br><br>";
+	}
+	else echo "LETSENCRYPT in progress for {$domain}.<script>check_letsencrypt('{$domain}')</script>";
+}
+
 function check_letsencrypt() {
 
 	global $SHARED_DIR;
@@ -314,8 +326,7 @@ function check_letsencrypt() {
 		$json_data = file_get_contents($input_file);
 		$data = json_decode($json_data,true);
 		if ($data === null) {
-			echo "JSON read error...";
-			// TODO json error
+			return "ERROR";
 		}
 		else {
                         foreach ($data as $domain => $domain_data) {

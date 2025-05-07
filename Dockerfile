@@ -71,15 +71,10 @@ RUN apk --no-cache add php${PHP_VERSION} \
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /usr/share/nginx/html
-COPY index.html    /usr/share/nginx/html
-COPY scan.html   /usr/share/nginx/html
-COPY manage.html   /usr/share/nginx/html
-COPY scan.php   /usr/share/nginx/html
-COPY letsencrypt_log.php   /usr/share/nginx/html
-COPY functions.php   /usr/share/nginx/html
-COPY install.html  /usr/share/nginx/html
-COPY install.php   /usr/share/nginx/html
-COPY installer.css /usr/share/nginx/html
+COPY *.html    /usr/share/nginx/html
+COPY *.php   /usr/share/nginx/html
+COPY *.css /usr/share/nginx/html
+COPY *.js /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
 RUN mkdir -p /usr/share/nginx/html/shared

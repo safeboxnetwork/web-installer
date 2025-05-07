@@ -258,6 +258,28 @@ function confirm_uninstall(additional) {
   });
 }
 
+function request_letsencrypt(domain) {
+  var url  = 'scan.php?op=letsencrypt&domain='+domain;
+  jQuery.get(url, function(data) {
+      console.log('letsencrypt '+domain);
+      if (data!="") {
+          jQuery("#letsencrypt").html(data);
+      }
+      setTimeout(check_letsencrypt, 2000, domain);
+  });
+}
+
+function check_letsencrypt(domain) {
+  var url  = 'scan.php?op=check_letsencrypt&domain='+domain;
+  jQuery.get(url, function(data) {
+      console.log('check_letsencrypt '+domain);
+      if (data!="") {
+          jQuery("#letsencrypt").html(data);
+      }
+      //setTimeout(check_letsencrypt, 1500, domain);
+  });
+}
+
 function check_deployment(additional) {
   var url  = 'scan.php?op=check_deployment&additional='+additional;
   jQuery.get(url, function(data) {

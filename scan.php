@@ -179,22 +179,21 @@ switch ($_GET["op"]) {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
 						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\"><br>";
+						echo '<div id="letsencrypt">';
 						if ($reinstall) {
-                                                        //var_dump($template);
+							//var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
-							if (empty($letsencrypt)) echo "LETSENCRYPT in progress...";
+							if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...";
+							elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...";
 							else {
+								$domain = "";
 								foreach ($template->fields as $field) {
-									if ($field->key=="DOMAIN") {
-										if (!empty($letsencrypt[$field->value])) {
-											echo "LETSENCRYPT: ".$letsencrypt[$field->value]["status"]." - ".$letsencrypt[$field->value]["date"];
-											echo " - <a href=\"letsencrypt_log.php?domain={$field->value}\" target=\"_blank\">LOG</a><br><br>";
-										}
-										else echo "LETSENCRYPT in progress for {$field->value}.";
-									}
+									if ($field->key=="DOMAIN") $domain = $field->value;
 								}
+								if (!empty($domain)) show_letsencrypt($letsencrypt, $domain);
 							}
 						}
+						echo '</div>';
 						foreach ($template->fields as $field) {
 							if (isset($field->generated)) {
 								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
@@ -262,6 +261,23 @@ switch ($_GET["op"]) {
 				}
 			}
 			else echo ""; // no deployment, finished
+		}
+	break;
+	case "letsencrypt":
+		$domain = $_GET["domain"];
+		$arr = array($domain => array("status" => "requested"));
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		if (set_output("letsencrypt2",$json)) echo "LETSENCRYPT in progress for {$domain}.<br><br>";
+		else echo "ERROR";
+	break;
+	case "check_letsencrypt":
+		$domain = $_GET["domain"];
+		$letsencrypt = check_letsencrypt();
+		if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...";
+		elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...";
+		else {
+			show_letsencrypt($letsencrypt, $domain);
 		}
 	break;
 	case "redeploy":
