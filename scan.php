@@ -207,7 +207,7 @@ switch ($_GET["op"]) {
 
 
                                                 echo "
-                                                <div class=\"row\">
+                                                <div class=\"row buttons\">
                                                 <div class=\"mb-3\">
                                                 <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
                                                 </div>";

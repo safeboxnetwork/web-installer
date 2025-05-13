@@ -375,7 +375,6 @@ jQuery(document).ready(function(){
 
 	get_repositories();
 	get_system();
-	get_services();
 	check_vpn();
 
 	jQuery('#deployments_btn').click(function() {
@@ -384,6 +383,7 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery('#services_btn').click(function() {
+		get_services();
 		jQuery('#deployments').hide();
 		jQuery('#services').toggle();
 	});
