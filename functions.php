@@ -148,7 +148,7 @@ function show_service_update($name, $update, $uptodate, $error) {
 	if (!empty($update)) {
 		$arr = explode(" ",$update);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>UPDATE AVAILABLE</td><td><a href=\"#\" onclick=\"upgrade('{$name}')\">UPDATE</a></td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">UPDATE AVAILABLE</div></td><td><a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">UPDATE</a></td></tr>";
 		}
 	}
 
@@ -156,7 +156,7 @@ function show_service_update($name, $update, $uptodate, $error) {
 	if (!empty($uptodate)) {
 		$arr = explode(" ",$uptodate);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>Already up to date</td><td><a href=\"#\" onclick=\"upgrade('{$name}')\">FORCE UPDATE</a></td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">Already up to date</div></td><td><a href=\"javacript:void(0)\" onclick=\"upgrade('{$name}')\">FORCE UPDATE</a></td></tr>";
 		}
 	}
 
@@ -165,7 +165,7 @@ function show_service_update($name, $update, $uptodate, $error) {
                 $arr = explode(" ",$error);
                 foreach ($arr as $container) {
                         //$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>N/A</td><td></td></tr>";
-                        $str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>N/A</td><td><a href=\"#\" onclick=\"upgrade('{$name}')\">TRY UPDATE</a></td></tr>";
+                        $str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">N/A</div></td><td><a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">TRY UPDATE</a></td></tr>";
                 }
         }
 

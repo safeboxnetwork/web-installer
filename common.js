@@ -155,27 +155,35 @@ function get_updates() {
   });
 }
 
-function check_upgrade() {
-  var url  = 'scan.php?op=check_upgrade';
+function check_upgrade(service) {
+  var url  = 'scan.php?op=check_upgrade&service='+service;
   jQuery.get(url, function(data) {
-        console.log('check_upgrade: '+data);
-      if (data=="WAIT" || data=="") {
-        setTimeout(check_upgrade, 1000);
+        console.log('check_upgrade '+service+': '+data);
+      if (data!="") {
+              jQuery("#status_"+service).html(data);
+      }
+      if (data!="OK") {
+              setTimeout(check_upgrade, 1000, service);
       }
       else {
-              // TODO
+          console.log('upgrade end: '+service);
+	  jQuery("#status_"+service).html('Upgrade has finished');
+	  //get_updates();
       }
   });
+
 }
 
 function upgrade(service) {
   var url  = 'scan.php?op=upgrade&service='+service;
+  jQuery("#status_"+service).html('Upgrade has started');
   console.log('upgrade start: '+service);
   jQuery.get(url, function(data) {
-        console.log('upgrade end: '+service);
+          console.log('check_upgrade '+service+': '+data);
           if (data=="OK") {
-                setTimeout(check_upgrade, 1000);
+                setTimeout(check_upgrade, 1000, service);
           }
+	  else jQuery("#status_"+service).html(data);
   });
 }
 

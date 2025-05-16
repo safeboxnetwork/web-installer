@@ -380,23 +380,51 @@ switch ($_GET["op"]) {
                 echo $text;
         break;
         case "check_upgrade":
-                $arr = check_response("upgrade");
-                if (!empty($arr)) {
+                $arr = check_deploy($_GET["service"]);
+                if (!empty($arr)) { // deployment in progress
                         foreach ($arr as $key=>$data) {
-                                if ($key=="upgrade") {
-                                        var_dump($arr);
-                                        //remove_response("$key");
+                                if ($key=="deploy-".$_GET["service"]) {
+                                        if ($data["STATUS"]=="1") {
+                                                echo "Install in progress... You can't uninstall while in progress...";
+                                        }
+                                        elseif ($data["STATUS"]=="2") {
+                                                echo "Install has finished... You can upgrade now.";
+						//echo "<script>get_deployments();</script>";
+                                                remove_response("$key");
+                                        }
                                 }
                         }
                 }
-                else echo "WAIT";
+		else { // no upgrade in progress -> upgrade
+                        $key = "upgrade-".$_GET["service"];
+                        $arr = check_response($key);
+                        if (!empty($arr)) {
+                                $data = $arr[$key];
+                                if ($data["STATUS"]=="1") {
+                                        echo "Upgrade in progress... Please wait... ".date("Y-m-d H:i:s");
+                                }
+                                elseif ($data["STATUS"]=="2") {
+                                        echo "OK";
+                                        remove_response("$key");
+                                }
+                        }
+                        else echo "Upgrade in progress... Please wait...";
+                }
         break;
         case "upgrade":
-                $arr = array("NAME" => $_GET["service"], "ACTION" => "upgrade");
-                $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+                if ($key=check_deploy($_GET["service"])) {
+                        $text="Deploy/uninstall of {$_GET["service"]} has started. Please wait...";
+                }
+                else {
+                        //$text="Deploy/uninstall of {$_GET["service"]} in progress... Please wait...";
 
-                if (set_output("upgrade",$json)) echo "OK";
-                else echo "ERROR";
+			$arr = array("NAME" => $_GET["service"], "ACTION" => "upgrade");
+			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+			if (set_output("upgrade",$json)) $text = "OK";
+			else $text = "ERROR";
+                }
+                echo $text;
         break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
