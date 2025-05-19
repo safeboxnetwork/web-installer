@@ -434,6 +434,11 @@
 	<!--<img src="image.png" alt="Profilkép">-->
         <div id="vpnBtn">Pro</div>
     </div>
+    <div style="text-align:center">
+	Proxy&nbsp;status
+	<span id="vpn_on" class="hidden green"><b>ON</b></span>
+	<span id="vpn_off" class="hidden red"><b>OFF</b></span>
+    </div>
 	<div class="buttons">
 	 	<button id="servicesBtn">Services</button>
 	</div>
@@ -599,48 +604,11 @@
 
     function renderVPN() {
         myAppsContainer.innerHTML = `
-	<fieldset>
-	<legend>Enable proxy</legend>
-	<form class="form-install" action="#" method="post" id="save_vpn">
-		<div class="row">
-		    <div class="mb-3">
-				<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://portal.safebox.network):</label>
-				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network">
-				<div class="invalid-feedback">
-				Please enter a valid domain.
-				</div>
-		    </div>
-		</div>
-		<div class="row">
-		    <div class="mb-3">
-				<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
-				<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
-		    </div>
-		</div>
-		<div class="row">
-		    <div class="mb-3">
-				<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
-				<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
-				<div class="invalid-feedback">
-				Please enter a valid email.
-				</div>
-		    </div>
-		</div>
-		<div class="row">
-		    <div class="mb-3">
-				<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-				<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
-		    </div>
-		</div>
-		<div class="row">
-		    <div class="mb-3">
-			<button class="btn btn-lg btn-primary btn-block" type="submit" id="vpn_save_btn"> Save </button> &nbsp;
-			<button class="btn btn-lg btn-primary btn-block" type="button" id="vpn_cancel_btn"> Cancel </button>
-		    </div>
-		</div>
-	</form>
-	</fieldset>
+            <div id="vpn">
+	    Loading...
+            </div>
         `;
+	get_proxy_html();
     }
 
     function renderServices() {
@@ -743,6 +711,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-<script src="common.js?t=4"></script>
+<script src="common.js?t=7"></script>
 </body>
 </html>

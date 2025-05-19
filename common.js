@@ -358,6 +358,61 @@ function get_services() {
   });
 }
 
+function get_proxy_html() {
+        proxy_html = `
+	<fieldset>
+	<legend>Enable proxy</legend>
+        <div class="input-group">
+	<form class="form-install" action="#" method="post" id="save_vpn">
+		<div class="row">
+		    <div class="mb-3">
+				<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://portal.safebox.network):</label>
+				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network">
+				<div class="invalid-feedback">
+				Please enter a valid domain.
+				</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
+				<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+				<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
+				<div class="invalid-feedback">
+				Please enter a valid email.
+				</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="mb-3">
+				<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+				<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
+		    </div>
+		</div>
+		<div class="row buttons">
+		    <div class="mb-3">
+			<button class="btn btn-lg btn-primary btn-block" type="button" id="vpn_save_btn"> Save </button>
+		    </div>
+		</div>
+	</form>
+	</div>
+	</fieldset>
+	<script>
+	jQuery('#vpn_save_btn').click(function() {
+		console.log('vpn save');
+		jQuery('#vpn').html('Loading...');
+		save_vpn();
+	});
+	</script>
+        `;
+	jQuery("#vpn").html(proxy_html);
+}
+
 function check_containers() {
   var url  = 'scan.php?op=check_containers';
   jQuery.get(url, function(data) {
