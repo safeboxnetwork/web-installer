@@ -194,14 +194,27 @@ switch ($_GET["op"]) {
 							}
 						}
 						echo '</div>';
+						if (!empty($template->icon)) echo "<div class=\"row\"><img src=\"".$template->icon."\"></div>";
+						if (!empty($template->description)) echo "<div class=\"row\"><label>".$template->description."</label></div>";
 						foreach ($template->fields as $field) {
+							if (!empty($field->title)) echo "<div class=\"row\"><b>".$field->title."</b></div>";
 							if (isset($field->generated)) {
 								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
 							}
 							else {
-							echo "<div class=\"row\"><div class=\"mb-3\"><label>".$field->description."</label>
-								<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">
-							</div></div>";
+								echo "<div class=\"row\">";
+								echo "<div>
+									<label>".$field->description."</label>
+									<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">
+									</div>";
+								if (!empty($field->info)) echo "
+									<div class=\"info-container\">
+									  <span class=\"info-icon\">i</span>
+									  <div class=\"tooltip\">{$field->info}</div>
+									</div>
+								";
+								echo "</div>";
+								if (!empty($field->details)) echo "<div class=\"row\"><i>".$field->details."</i></div>";
 							}
 						}
 

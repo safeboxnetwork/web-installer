@@ -132,3 +132,55 @@ body#scan{
     transform: rotate(135deg);
   }
 }
+
+    .info-container {
+      position: relative;
+      display: inline-block;
+      font-family: Arial, sans-serif;
+    }
+
+    .info-icon {
+      background-color: #007BFF;
+      color: white;
+      border-radius: 50%;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      background-color: #333;
+      color: #fff;
+      text-align: left;
+      border-radius: 4px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* above the icon */
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%; /* bottom of tooltip */
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .info-container:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
