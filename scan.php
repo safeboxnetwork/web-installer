@@ -227,7 +227,7 @@ switch ($_GET["op"]) {
 						if ($reinstall) {
 							echo "
 							<div class=\"mb-3\">
-							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"update_{$template->name}_btn\" onclick=\"update_deployment('{$template->name}')\">Update</button>
+							<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"update_{$template->name}_btn\" onclick=\"update_deployment('{$template->name}')\">Update</button>
 							</div>";
 						}
 						echo "

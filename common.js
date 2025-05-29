@@ -267,13 +267,20 @@ function confirm_uninstall(additional) {
 }
 
 function update_deployment(additional) {
-  jQuery("#"+additional).html('Loading...');
-  var url  = 'scan.php?op=edit&additional='+additional;
+  //jQuery("#"+additional).html('Loading...');
+  pars = '';
+  jQuery('input.additional_'+additional).each(function(index) {
+	console.log('Field ' + $(this).attr('name') + ': ' + $(this).val());
+	//pars += '&'+$(this).attr('id') + '=' + $(this).val();
+	pars += '&'+$(this).attr('name') + '=' + $(this).val();
+  });
+  //console.log(pars);
+  var url  = 'scan.php?op=edit&additional='+additional+pars;
   jQuery.get(url, function(data) {
         console.log('edit '+additional+': '+data);
           if (data!="") {
                 jQuery("#"+additional).html(data);
-                setTimeout(check_reinstall, 1000, additional);
+                setTimeout(check_deployment, 1000, additional);
           }
   });
 }
