@@ -39,6 +39,9 @@
 	label {text-align: left !important;}
 	a, a:hover, a:visited {color: orange}
 
+	fieldset {border: 1px solid  #ffffff; padding-left: 20px; padding-right: 20px; border-radius: 10px;}
+	legend {width: auto;text-align: left !important; padding: 10px; color: #ffffff;}
+
         .profile {
             display: flex;
             flex-direction: column;
@@ -101,6 +104,11 @@
         .toggle.active::after {
             transform: translateX(20px);
         }
+        div#themeToggle {
+		position: fixed;
+		top: 10px;
+		right: 10px;
+        }
         .buttons {
             display: flex;
             justify-content: center;
@@ -109,7 +117,8 @@
             cursor: pointer;
         }
         .buttons button {
-            padding: 10px 20px;
+            min-width: 150px;
+            padding: 10px 10px;
             background: none;
             border: 1px solid var(--button-border);
             border-radius: 10px;
@@ -123,6 +132,10 @@
         .container {
 		clear:both;
 		float:none;
+		border: 1px solid;
+            	border-radius: 10px;
+		padding-bottom: 10px;
+		margin: 5px;
         }
         .leftside {
 		float:left;
@@ -131,6 +144,9 @@
         .rightside {
 		float:right;
 		width:80%;
+		display: flex;
+		flex-direction: column;
+		height: 88vh;
         }
         .my-apps {
             flex: 1;
@@ -147,6 +163,11 @@
             border-radius: 10px;
             box-sizing: border-box;
         }
+        .my-apps-container {
+            width:100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
         .app {
             display: flex;
             flex-direction: column;
@@ -160,13 +181,21 @@
             object-fit: contain;
             margin-bottom: 10px;
         }
+        .innerDiv {
+            width:100%;
+        }
         footer {
+	    position: fixed;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
             font-size: 14px;
-        }
+	    z-index: 1000;
+	}
         .footer-links {
             display: flex;
             gap: 15px;
@@ -265,6 +294,7 @@
         }
 
         .input-group input {
+		min-width:260px;
             margin-top: 5px;
             margin-bottom: 5px;
             padding: 5px;
@@ -368,11 +398,21 @@
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpolyline points='1 1 7 7 13 1' style='fill:none;stroke:white;stroke-width:2' /%3E%3C/svg%3E");
         }
 
-    .info-container {
-      position: relative;
-      display: inline-block;
-      font-family: Arial, sans-serif;
-    }
+
+        #popup .input-group {
+            display: block;
+        }
+
+        #popup .row {
+            display: flex;
+        }
+
+	.info-container {
+		position: relative;
+		display: inline-block;
+		font-family: Arial, sans-serif;
+		margin: 5px 0px 0px 5px;
+	}
 
     .info-icon {
       background-color: #007BFF;
@@ -507,10 +547,10 @@
 	<br>
 	<br>
 		<div style="text-align:center;">
-		<a href="manage.html" id="refresh_btn">REFRESH</a>
+		<a href="manage2.html" id="refresh_btn">REFRESH</a>
 		<br>
 		<br>
-		<a href="manage2.html" id="old_btn">OLD DESIGN</a>
+		<a href="manage.html" id="old_btn">OLD DESIGN</a>
 		</div>
 </div>
 
@@ -524,7 +564,7 @@
 	    <div class="toggle" id="themeToggle"></div>
 	</div>
 
-	<div class="my-apps" id="myAppsContainer"></div>
+	<div class="my-apps"><div id="myAppsContainer" class="my-apps-container"></div></div>
 </div>
 </div>
 
@@ -600,10 +640,10 @@
 		    const appDiv = document.createElement('div');
 		    appDiv.className = 'app';
 		    appDiv.innerHTML = `
-			<img src="${app.image}" alt="${app.name}" title="${app.orig_name}">${app.orig_name}
+			<img src="${app.image}" alt="${app.name}" title="${app.orig_name} ${app.version}">${app.orig_name}
 		    `;
 		    appDiv.addEventListener('click', () => {
-			popupText.textContent = `You clicked on ${app.name}!`;
+			    popupText.textContent = `You clicked on ${app.name} ${app.version}!`;
 			if (app.installed=='true') reinstall(app.name, 'popupText');
 			else load_template(app.name,'popupText');
 			popup.classList.remove('hidden');
@@ -656,7 +696,7 @@
 
     function renderVPN() {
         myAppsContainer.innerHTML = `
-            <div id="vpn">
+            <div id="vpn" class="innerDiv">
 	    Loading...
             </div>
         `;
@@ -665,7 +705,7 @@
 
     function renderServices() {
         myAppsContainer.innerHTML = `
-            <div id="services">
+            <div id="services" class="innerDiv">
 	    Loading...
             </div>
         `;
@@ -674,7 +714,7 @@
 
     function renderUpdates() {
         myAppsContainer.innerHTML = `
-            <div id="updates">
+            <div id="updates" class="innerDiv">
 	    Looking for updates... Please wait...
             </div>
         `;

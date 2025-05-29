@@ -144,12 +144,14 @@ switch ($_GET["op"]) {
 						else {
 							foreach ($data["DEPLOYMENTS"] as $service_name => $content) {
                                                                 $orig_service_name = $service_name;
-                                                                $service_name = strtolower($service_name);
-                                                                //echo base64_decode($content);
+								$service_name = strtolower($service_name);
+								$version = $content["version"];
+								$icon = $content["icon"];
+								if (empty($icon) || $icon == "null") $icon = "image.png"; // default icon image
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) $installed = "true";
 								else $installed = "false";
 								if (!empty($deployments)) $deployments .= ", ";
-								$deployments .= '{"name": "'.$service_name.'", "orig_name": "'.$orig_service_name.'", "image": "image.png", "content": "'.$content.'", "installed": "'.$installed.'"}';
+								$deployments .= '{"name": "'.$service_name.'", "orig_name": "'.$orig_service_name.'", "image": "'.$icon.'", "version": "'.$version.'", "installed": "'.$installed.'"}';
 							}
 							if (!empty($deployments)) $deployments = "[{$deployments}]";
 						}
@@ -183,8 +185,8 @@ switch ($_GET["op"]) {
 						if ($reinstall) {
 							//var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
-							if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...";
-							elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...";
+							if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...<br><br>";
+							elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...<br><br>";
 							else {
 								$domain = "";
 								foreach ($template->fields as $field) {
@@ -194,10 +196,12 @@ switch ($_GET["op"]) {
 							}
 						}
 						echo '</div>';
-						if (!empty($template->icon)) echo "<div class=\"row\"><img src=\"".$template->icon."\"></div>";
-						if (!empty($template->description)) echo "<div class=\"row\"><label>".$template->description."</label></div>";
+						echo "<div class=\"row\">";
+						if (!empty($template->icon)) echo "<img src=\"".$template->icon."\">";
+						if (!empty($template->description)) echo "<label style='padding: 10px'>".$template->description."</label>";
+						echo "</div>";
 						foreach ($template->fields as $field) {
-							if (!empty($field->title)) echo "<div class=\"row\"><b>".$field->title."</b></div>";
+							if (!empty($field->title)) echo "<div class=\"row\"><h3>".$field->title."</h3></div>";
 							if (isset($field->generated)) {
 								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
 							}

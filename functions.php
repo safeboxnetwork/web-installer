@@ -141,23 +141,24 @@ function show_service($name, $containers) {
 }
 
 function show_service_update($name, $update, $uptodate, $error) {
-	$str = '<table id="update_'.$name.'">';
-	$str .= "<tr><th>{$name}</th></tr>";
 
+	$str = "";
 	$update = trim($update);
 	if (!empty($update)) {
 		$arr = explode(" ",$update);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">UPDATE AVAILABLE</div></td><td><a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">UPDATE</a></td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">UPDATE AVAILABLE</div></td><td>&nbsp;</td></tr>";
 		}
+		$update_str = "<a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">UPDATE</a>";
 	}
 
 	$uptodate = trim($uptodate);
 	if (!empty($uptodate)) {
 		$arr = explode(" ",$uptodate);
 		foreach ($arr as $container) {
-			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">Already up to date</div></td><td><a href=\"javacript:void(0)\" onclick=\"upgrade('{$name}')\">FORCE UPDATE</a></td></tr>";
+			$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">Already up to date</div></td><td>&nbsp;</td></tr>";
 		}
+		$update_str = "<a href=\"javacript:void(0)\" onclick=\"upgrade('{$name}')\">FORCE UPDATE</a>";
 	}
 
         $error = trim($error);
@@ -165,13 +166,15 @@ function show_service_update($name, $update, $uptodate, $error) {
                 $arr = explode(" ",$error);
                 foreach ($arr as $container) {
                         //$str .= "<tr><td>&nbsp;</td><td>".$container."</td><td>N/A</td><td></td></tr>";
-                        $str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">N/A</div></td><td><a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">TRY UPDATE</a></td></tr>";
+                        $str .= "<tr><td>&nbsp;</td><td>".$container."</td><td><div id=\"status_".$name."\">N/A</div></td><td>&nbsp;</td></tr>";
                 }
+		$update_str = "<a href=\"javascript:void(0)\" onclick=\"upgrade('{$name}')\">TRY UPDATE</a>";
         }
 
-	$str .= '</table>';
-
+	echo '<table id="update_'.$name.'">';
+	echo "<tr><th>{$name}</th><th>&nbsp;</th><th>&nbsp;</th><th>{$update_str}</th></tr>";
 	echo $str;
+	echo '</table>';
 }
 
 // not in use

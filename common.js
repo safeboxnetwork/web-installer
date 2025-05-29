@@ -18,13 +18,13 @@ function check_deployments() {
 		console.log(data[k]);
 		service_name = data[k].name;
 		orig_service_name = data[k].orig_name;
-		content = data[k].content;
+		version = data[k].version;
 		installed = data[k].installed;
 		if (installed=='true') {
-			html_data += '<div><a href="#" onclick="reinstall(\''+service_name+'\',\''+service_name+'\')">'+orig_service_name+'</a> - '+content+' - INSTALLED</div>';
+			html_data += '<div><a href="#" onclick="reinstall(\''+service_name+'\',\''+service_name+'\')">'+orig_service_name+'</a> - '+version+' - INSTALLED</div>';
 		}
 		else {
-			html_data += '<div><a href="#" onclick="load_template(\''+service_name+'\',\''+service_name+'\')">'+orig_service_name+'</a> - '+content+'</div>';
+			html_data += '<div><a href="#" onclick="load_template(\''+service_name+'\',\''+service_name+'\')">'+orig_service_name+'</a> - '+version+'</div>';
 		}
 		html_data += '<div id="'+service_name+'" class="deployment"></div>';
 	}
