@@ -266,6 +266,18 @@ function confirm_uninstall(additional) {
   });
 }
 
+function update_deployment(additional) {
+  jQuery("#"+additional).html('Loading...');
+  var url  = 'scan.php?op=edit&additional='+additional;
+  jQuery.get(url, function(data) {
+        console.log('edit '+additional+': '+data);
+          if (data!="") {
+                jQuery("#"+additional).html(data);
+                setTimeout(check_reinstall, 1000, additional);
+          }
+  });
+}
+
 function request_letsencrypt(domain) {
   var url  = 'scan.php?op=request_letsencrypt&domain='+domain;
   jQuery.get(url, function(data) {

@@ -203,7 +203,7 @@ switch ($_GET["op"]) {
 						foreach ($template->fields as $field) {
 							if (!empty($field->title)) echo "<div class=\"row\"><h3>".$field->title."</h3></div>";
 							if (isset($field->generated)) {
-								echo "<input type=\"hidden\" value=\"generated:{$field->generated}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
+								echo "<input type=\"hidden\" value=\"generated:{$field->generated}:{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
 							}
 							else {
 								echo "<div class=\"row\">";
@@ -223,9 +223,15 @@ switch ($_GET["op"]) {
 						}
 
 
-                                                echo "
-                                                <div class=\"row buttons\">
-                                                <div class=\"mb-3\">
+                                                echo "<div class=\"row buttons\">";
+						if ($reinstall) {
+							echo "
+							<div class=\"mb-3\">
+							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"update_{$template->name}_btn\" onclick=\"update_deployment('{$template->name}')\">Update</button>
+							</div>";
+						}
+						echo "
+                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
                                                 <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
                                                 </div>";
 						if ($reinstall) {
@@ -234,7 +240,7 @@ switch ($_GET["op"]) {
 							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
 							</div>";
 						}
-						echo "<div class=\"mb-3\" style=\"margin-left:30px;\">
+						echo "<div class=\"mb-3\" style=\"margin-left:230px;float:\">
 						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
 						</div>";
                                                 echo "
@@ -297,6 +303,7 @@ switch ($_GET["op"]) {
 			show_letsencrypt($letsencrypt, $domain);
 		}
 	break;
+	case "edit": // update deployment after edit
 	case "redeploy":
 	case "deploy":
 		if ($key=check_deploy($_GET["additional"])) { 
@@ -311,6 +318,11 @@ switch ($_GET["op"]) {
 			foreach ($fields as $field_key => $field_value) {
 				$field_arr = explode(":",$field_value);
 				if ($field_arr[0]=="generated") {
+					if ($_GET["op"]=="edit") {
+						$fields[$field_key] = $field_arr[2]; // replace with previously stored value
+						continue; // do NOT regenerate values
+					}
+
 					if (intval($field_arr[3])==0) $len = 10; // default length
 					else $len = $field_arr[3];
 
