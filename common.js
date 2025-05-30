@@ -111,10 +111,14 @@ function check_vpn() {
         if (data=="2") {
           $('#vpn_off').hide();
           $('#vpn_on').show();
+          $('#pro_off').hide();
+          $('#pro_on').show();
         }
         else {
           $('#vpn_on').hide();
           $('#vpn_off').show();
+          $('#pro_on').hide();
+          $('#pro_off').show();
         }
         setTimeout(check_vpn, 10000);
   });
