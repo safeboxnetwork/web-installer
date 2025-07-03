@@ -75,7 +75,7 @@ COPY *.html    /usr/share/nginx/html
 COPY *.php   /usr/share/nginx/html
 COPY *.css /usr/share/nginx/html
 COPY *.js /usr/share/nginx/html
-RUN cp -r img /usr/share/nginx/html/
+COPY img /usr/share/nginx/html/
 RUN chown -R nginx:nginx /usr/share/nginx/html
 
 RUN mkdir -p /usr/share/nginx/html/shared
