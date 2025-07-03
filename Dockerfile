@@ -69,7 +69,6 @@ RUN apk --no-cache add php${PHP_VERSION} \
     rm -rf /var/cache/apk/*
 
 COPY nginx.conf /etc/nginx/nginx.conf
-
 RUN mkdir -p /usr/share/nginx/html
 COPY *.html    /usr/share/nginx/html
 COPY *.php   /usr/share/nginx/html
