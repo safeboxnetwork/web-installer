@@ -148,7 +148,7 @@
 	  display: flex;
 	  flex-wrap: wrap;
 	  gap: 16px;
-	  padding: 20px;
+	  padding: 0px;
 	}
 
 	.app {
@@ -203,6 +203,92 @@
 	  width: 100%;
 	}
 
+	.app-details {
+		padding: 0px 50px;
+	}
+
+	.app-fields {
+	  border: 1px solid #41464f;
+	  border-radius: 15px;
+	  text-align: left;
+	  padding: 20px;
+	  margin: 30px 0px 10px 0px;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: left;
+	}
+
+	.app-fields .row {
+            display: block;
+	      justify-content: space-between;
+	      align-items: center;
+	      padding: 5px 20px;
+	      border-radius: 10px;
+	      gap: 10px;
+	}
+
+	#letsencrypt {
+		padding-top: 20px;
+	}
+
+.header-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 0px;
+}
+
+.logo-and-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.applogo img {
+  border-radius: 15px;
+  background-color: #101214;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  padding: 40px;
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  margin: 4px 0;
+  color: #999;
+}
+
+.description {
+  font-size: 12px;
+  margin: 20px 0 0;
+  color: #999;
+}
+
+.notification-btn {
+      background-color: var(--highlight-color);
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+}
+
     .main-header {
       display: flex;
       justify-content: space-between;
@@ -249,7 +335,9 @@
     }
 
     .input-row input,
-    .input-row select {
+    .input-row select,
+    .row input, 
+    .row select {
       background: transparent;
       border: 1px solid #41464f;
       padding: 8px 30px 8px 8px;
@@ -260,14 +348,23 @@
       box-sizing: border-box;
     }
 
+    .row input, 
+    .row select {
+      padding: 12px 30px 12px 12px;
+      font-size: 16px;
+    }
+
     .input-row input:focus,
-    .input-row select:focus {
+    .input-row select:focus,
+    .row input,
+    .row select {
       outline: none;
       background-color: black;
       color: var(--highlight-color);
     }
 
-    .input-row select {
+    .input-row select,
+    .row select {
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -276,6 +373,62 @@
       background-position: right 8px center;
       background-size: 16px;
       padding-right: 32px;
+    }
+
+	.info-container {
+		position: relative;
+		left: -18px;
+		top: -22px;
+		display: inline-block;
+		font-family: Arial, sans-serif;
+		margin: 0px;
+		width: 0px;
+	}
+
+    .info-icon {
+      background-color: var(--highlight-color);
+      color: black;
+      border-radius: 50%;
+      padding: 1px 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 10px;
+      text-align: center;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      background-color: #333;
+      border-radius: 5px;
+      padding: 4px 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 100%; /* above the icon */
+      left: 50%;
+      transform: translateX(-78%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      /*white-space: nowrap;*/
+      text-align: right;
+      width: 300px;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%; /* bottom of tooltip */
+      left: 80%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .info-container:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
     }
 
     .clear-btn {
@@ -311,44 +464,35 @@
       background-color: #f5c300;
     }
 
-        .popup.hidden {
+    .buttons .btn {
+      background-color: black;
+      border: 1px solid #999;
+      color: #999;
+      padding: 10px 15px;
+      font-size: 14px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      align-self: flex-start;
+    }
+
+    .buttons .btn:hover {
+      border: 1px solid #f5c300;
+      color: #f5c300;
+    }
+
+        .hidden {
             display: none;
         }
 
         .popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
+	    width: 100%;
         }
 
         .popup-content {
-            background: var(--bg-color);
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
+            width: 100%;
             text-align: left;
-            position: relative;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .popup-content .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #popup .input-group {
-		background-color: #101214;
-		display: block;
         }
 
         #popup .row {
@@ -437,55 +581,50 @@
   </div>
   <div class="main" >
     <div id="myAppsContainer">
-    <div class="main-header">
-      <h1>Settings</h1>
-      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
+	    <div class="main-header">
+	      <h1>Settings</h1>
+	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
+	    </div>
+	    <div class="input-row">
+	      <label>Docker registry name</label>
+	      <div class="input-container">
+		<input type="text" placeholder="Enter name" />
+		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Enable logging</label>
+	      <div class="input-container">
+		<select>
+		  <option>Yes</option>
+		  <option>No</option>
+		</select>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Backup folder</label>
+	      <div class="input-container">
+		<input type="text" placeholder="Path to backup" />
+		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Send alerts</label>
+	      <div class="input-container">
+		<select>
+		  <option>Yes</option>
+		  <option>No</option>
+		</select>
+	      </div>
+	    </div>
+	    <button class="save-button">Save Settings</button>
     </div>
-    <div class="input-row">
-      <label>Docker registry name</label>
-      <div class="input-container">
-        <input type="text" placeholder="Enter name" />
-        <button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
-      </div>
-    </div>
-    <div class="input-row">
-      <label>Enable logging</label>
-      <div class="input-container">
-        <select>
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-      </div>
-    </div>
-    <div class="input-row">
-      <label>Backup folder</label>
-      <div class="input-container">
-        <input type="text" placeholder="Path to backup" />
-        <button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
-      </div>
-    </div>
-    <div class="input-row">
-      <label>Send alerts</label>
-      <div class="input-container">
-        <select>
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-      </div>
-    </div>
-    <button class="save-button">Save Settings</button>
-  </div>
-  </div>
-
-
-<div id="popup" class="popup hidden">
-  <div class="popup-content">
-    <span class="close">&times;</span>
-    <div class="input-group">
-    <div id="popupText" class="deployment">Load app template here</div>
+    <div id="popup" class="popup hidden">
+	<div class="popup-content">
+		<div id="popupText" class="deployment"></div>
+	</div>
     </div>
   </div>
-</div>
 
 <script>
     // apps array beállítása common.js-ben
@@ -542,6 +681,7 @@
 			if (app.installed=='true') reinstall(app.name, 'popupText');
 			else load_template(app.name,'popupText');
 			popup.classList.remove('hidden');
+			myAppsContainer.classList.add('hidden');
 		    });
 		    appsContainer.appendChild(appDiv);
             //}

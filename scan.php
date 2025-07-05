@@ -180,9 +180,25 @@ switch ($_GET["op"]) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
-						echo "<fieldset><form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\"><br>";
-						echo '<div id="letsencrypt">';
+
+						echo '
+						<div class="app-details">
+							<div class="header-block">
+							  <div class="logo-and-text">
+							    <div class="applogo">
+								<img src="'.$template->icon.'">
+							    </div>
+							    <div class="text-content">
+							      <h1 class="title">'.$template->name.'</h1>
+							      <h2 class="subtitle">'.$template->title.'</h2>
+							      <p class="description">'.$template->description.'</p>
+							    </div>
+							  </div>
+							  <button id="updatesBtn" class="notification-btn"><i class="fas fa-bell"></i> Notification</button>
+							</div>
+						';
 						if ($reinstall) {
+							echo '<div id="letsencrypt">';
 							//var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
 							if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...<br><br>";
@@ -194,12 +210,10 @@ switch ($_GET["op"]) {
 								}
 								if (!empty($domain)) show_letsencrypt($letsencrypt, $domain);
 							}
+							echo '</div>';
 						}
-						echo '</div>';
-						echo "<div class=\"row\">";
-						if (!empty($template->icon)) echo "<img src=\"".$template->icon."\">";
-						if (!empty($template->description)) echo "<label style='padding: 10px'>".$template->description."</label>";
-						echo "</div>";
+						echo "<form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\">";
+						echo "<div class=\"app-fields\">";
 						foreach ($template->fields as $field) {
 							if (!empty($field->title)) echo "<div class=\"row\"><h3>".$field->title."</h3></div>";
 							if (isset($field->generated)) {
@@ -207,21 +221,20 @@ switch ($_GET["op"]) {
 							}
 							else {
 								echo "<div class=\"row\">";
-								echo "<div>
-									<label>".$field->description."</label>
-									<input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">
-									</div>";
+								echo "<label>".$field->description."</label>
+								<div class=\"input-container\"><input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\"></div>
+								<div class=\"info-container\">
+								";
 								if (!empty($field->info)) echo "
-									<div class=\"info-container\">
 									  <span class=\"info-icon\">i</span>
 									  <div class=\"tooltip\">{$field->info}</div>
-									</div>
 								";
+								echo "</div>";
 								echo "</div>";
 								if (!empty($field->details)) echo "<div class=\"row\"><i>".$field->details."</i></div>";
 							}
 						}
-
+						echo "</div>";
 
                                                 echo "<div class=\"row buttons\">";
 						if ($reinstall) {
@@ -242,10 +255,11 @@ switch ($_GET["op"]) {
 						}
 						echo "<div class=\"mb-3\" style=\"margin-left:230px;float:\">
 						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
-						</div>";
+						</div>"; // buttons
                                                 echo "
                                                 </div>
-                                                </form></fieldset>
+						</form>
+						</div>
 <script>
 	jQuery('#deploy_{$template->name}_form').submit(function() {
 		".($reinstall ? "redeploy" : "deploy")."('{$template->name}');
@@ -253,7 +267,8 @@ switch ($_GET["op"]) {
 	});
         jQuery('#cancel_{$template->name}_btn').click(function() {
                 $('div#{$template->name}').html('');
-    		document.getElementById('popup').classList.add('hidden'); // manage2 
+    		document.getElementById('myAppsContainer').classList.remove('hidden'); // manage3
+    		document.getElementById('popup').classList.add('hidden'); // manage2
         });
 </script>
 						";
