@@ -147,7 +147,7 @@ switch ($_GET["op"]) {
 								$service_name = strtolower($service_name);
 								$version = $content["version"];
 								$icon = $content["icon"];
-								if (empty($icon) || $icon == "null") $icon = "image.png"; // default icon image
+								if (empty($icon) || $icon == "null") $icon = "img/default_logo.png"; // default icon image
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) $installed = "true";
 								else $installed = "false";
 								if (!empty($deployments)) $deployments .= ", ";
@@ -215,6 +215,7 @@ switch ($_GET["op"]) {
 						echo "<form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\">";
 						echo "<div class=\"app-fields\">";
 						foreach ($template->fields as $field) {
+							echo "<div class=\"app-field ".($field->advanced ? "advanced" : "")."\">";
 							if (!empty($field->title)) echo "<div class=\"row\"><h3>".$field->title."</h3></div>";
 							if (isset($field->generated)) {
 								echo "<input type=\"hidden\" value=\"generated:{$field->generated}:{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
@@ -233,13 +234,18 @@ switch ($_GET["op"]) {
 								echo "</div>";
 								if (!empty($field->details)) echo "<div class=\"row\"><i>".$field->details."</i></div>";
 							}
+							echo "</div>";
 						}
 						echo "</div>";
 
                                                 echo "<div class=\"row buttons\">";
+						echo "
+						<div class=\"mb-3\">
+						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"more_{$template->name}_btn\">More</button>
+						</div>";
 						if ($reinstall) {
 							echo "
-							<div class=\"mb-3\">
+                                                	<div class=\"mb-3\" style=\"margin-left:30px;\">
 							<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"update_{$template->name}_btn\" onclick=\"update_deployment('{$template->name}')\">Update</button>
 							</div>";
 						}
@@ -261,12 +267,20 @@ switch ($_GET["op"]) {
 						</form>
 						</div>
 <script>
+        jQuery('.advanced').each(function() {
+                jQuery(this).hide();
+        });
+        jQuery('#more_{$template->name}_btn').click(function() {
+		jQuery('.advanced').each(function() {
+			jQuery(this).toggle();
+		});
+        });
 	jQuery('#deploy_{$template->name}_form').submit(function() {
 		".($reinstall ? "redeploy" : "deploy")."('{$template->name}');
 		return false;
 	});
         jQuery('#cancel_{$template->name}_btn').click(function() {
-                $('div#{$template->name}').html('');
+                jQuery('div#{$template->name}').html('');
     		document.getElementById('myAppsContainer').classList.remove('hidden'); // manage3
     		document.getElementById('popup').classList.add('hidden'); // manage2
         });

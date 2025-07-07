@@ -63,6 +63,16 @@
       padding: 0 10px;
     }
 
+    .vpn-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      color: white;
+      transition: color 0.3s;
+    }
+
     .menu-item {
       display: flex;
       align-items: center;
@@ -100,6 +110,73 @@
     .menu-item.active:hover {
       color: black;
     }
+
+/* Switch container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 26px;
+}
+
+/* Hide native checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slider background */
+.slider-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 26px;
+  transition: background-color 0.3s;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end; /* default: OFF on the right */
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Circle */
+.slider-text::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 2px;
+  top: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+/* Checked: move dot, change background and text alignment */
+.switch input:checked + .slider-text {
+  background-color: #4CAF50;
+  justify-content: flex-start;
+}
+
+/* Dot animation */
+.switch input:checked + .slider-text::before {
+  transform: translateX(34px);
+}
+
+
+/* Status label */
+.status-label {
+  font-size: 12px;
+  color: #888;
+  min-width: 28px;
+  text-align: left;
+}
 
     .details {
       color: white;
@@ -553,6 +630,17 @@
         <span>Safebox</span>
       </div>
       <div class="menu">
+	    <div class="menu-item" style="margin-bottom:20px">
+		<img src="/img/globe.png" data-src="/img/globe.png" data-hover="/img/globe.png" alt="VPN" />
+		<div class="menu-label">
+		    <span id="vpnBtn">VPN</span>
+		    <label class="switch">
+		      <input type="checkbox" id="vpnToggle">
+		      <span class="slider-text"><span class="switch-label">OFF</span></span>
+		    </label>
+		</div>
+	    </div>
+
 <!--
 	<div class="menu-item"><i class="fas fa-th"></i><span>Applications</span></div>
         <div class="menu-item"><i class="fas fa-hdd"></i><span>Disk Management</span></div>
@@ -581,43 +669,6 @@
   </div>
   <div class="main" >
     <div id="myAppsContainer">
-	    <div class="main-header">
-	      <h1>Settings</h1>
-	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
-	    </div>
-	    <div class="input-row">
-	      <label>Docker registry name</label>
-	      <div class="input-container">
-		<input type="text" placeholder="Enter name" />
-		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
-	      </div>
-	    </div>
-	    <div class="input-row">
-	      <label>Enable logging</label>
-	      <div class="input-container">
-		<select>
-		  <option>Yes</option>
-		  <option>No</option>
-		</select>
-	      </div>
-	    </div>
-	    <div class="input-row">
-	      <label>Backup folder</label>
-	      <div class="input-container">
-		<input type="text" placeholder="Path to backup" />
-		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
-	      </div>
-	    </div>
-	    <div class="input-row">
-	      <label>Send alerts</label>
-	      <div class="input-container">
-		<select>
-		  <option>Yes</option>
-		  <option>No</option>
-		</select>
-	      </div>
-	    </div>
-	    <button class="save-button">Save Settings</button>
     </div>
     <div id="popup" class="popup hidden">
 	<div class="popup-content">
@@ -661,6 +712,9 @@
 
     //Appok betöltése
     function renderApps(all) {
+    	myAppsContainer.classList.remove('hidden');
+        popup.classList.add('hidden');
+
 	myAppsContainer.innerHTML = '<div class="main-header"><h1>Applications</h1><button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button></div><div id="appsContainer"></div>';
     	const appsContainer = document.getElementById('appsContainer');
     	const updatesBtn = document.getElementById('updatesBtn');
@@ -687,6 +741,7 @@
             //}
         });
     }
+
 
     //TODO: Ilyen függvényeket kell csinálni és a listenerekhez adni az egyes részeket
     function renderText(title) {
@@ -788,6 +843,40 @@
 	<button id="repositoriesBtn" class="save-button">Repositories</button>
 	<button id="systemservicesBtn" class="save-button">System services</button>
     </div>
+
+	    <div class="input-row">
+	      <label>Docker registry name</label>
+	      <div class="input-container">
+		<input type="text" placeholder="Enter name" />
+		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Enable logging</label>
+	      <div class="input-container">
+		<select>
+		  <option>Yes</option>
+		  <option>No</option>
+		</select>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Backup folder</label>
+	      <div class="input-container">
+		<input type="text" placeholder="Path to backup" />
+		<button class="clear-btn" onclick="this.previousElementSibling.value = ''">×</button>
+	      </div>
+	    </div>
+	    <div class="input-row">
+	      <label>Send alerts</label>
+	      <div class="input-container">
+		<select>
+		  <option>Yes</option>
+		  <option>No</option>
+		</select>
+	      </div>
+	    </div>
+	    <button class="save-button">Save Settings</button>
         `;
 	const servicesBtn = document.getElementById('servicesBtn');
 	const repositoriesBtn = document.getElementById('repositoriesBtn');
@@ -848,19 +937,22 @@
 	monitorBtn.addEventListener('click', () => {renderText('Monitor'); activate(monitorBtn)});
     	settingsBtn.addEventListener('click', () => {renderSettings(); activate(settingsBtn)});
 
-//    vpnBtn.addEventListener('click', () => renderVPN());
-/*
-    closeBtn.addEventListener('click', () => {
-        popup.classList.add('hidden');
-    });
+	vpnBtn.addEventListener('click', () => renderVPN());
 
-    popup.addEventListener('click', (event) => {
-        if (event.target === popup) {
-            popup.classList.add('hidden');
-        }
-    });
-*/
-//    renderApps(false);
+//	renderApps(true);
+
+	const vpnToggle = document.getElementById("vpnToggle");
+  	const vpnLabel = document.querySelector(".switch-label");
+
+	function updateStatus() {
+    		vpnLabel.textContent = vpnToggle.checked ? "ON" : "OFF";
+	}
+
+	vpnToggle.addEventListener("change", updateStatus);
+
+	// Alapállapot beállítása
+	updateStatus();
+
 });
 </script>
 
