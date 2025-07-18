@@ -29,6 +29,7 @@ function check_deployments() {
 		html_data += '<div id="'+service_name+'" class="deployment"></div>';
 	}
 	jQuery("#deployments").html(html_data);
+	document.getElementById('installAppsBtn').click();
 
       }
   });
@@ -109,12 +110,16 @@ function check_vpn() {
   jQuery.get(url, function(data) {
         console.log('check_vpn: '+data);
         if (data=="2") {
+		document.getElementById('vpnToggle').checked = true;
+  		document.querySelector(".switch-label").textContent = "ON";
           $('#vpn_off').hide();
           $('#vpn_on').show();
           $('#pro_off').hide();
           $('#pro_on').show();
         }
         else {
+		document.getElementById('vpnToggle').checked = false;
+  		document.querySelector(".switch-label").textContent = "OFF";
           $('#vpn_on').hide();
           $('#vpn_off').show();
           $('#pro_on').hide();
