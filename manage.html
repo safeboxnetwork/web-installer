@@ -684,6 +684,7 @@
   </div>
   <div class="main" >
     <div id="myAppsContainer">
+	    Loading applications...
     </div>
     <div id="popup" class="popup hidden">
 	<div class="popup-content">
@@ -743,7 +744,7 @@
 		    else more = 'More';
 		    appDiv.innerHTML = `
 			<div class="app-img"><img src="${app.image}" alt="${app.name}" title="${app.orig_name} ${app.version}"></div>
-			<div class="app-label">${app.name} ${app.version}</div>
+			<div class="app-label">${app.subtitle}</div>
 			<div class="app-name">${app.orig_name}</div>
 			<button class="more-btn">${more}</button>
 		    `;
@@ -973,7 +974,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-<script src="common.js?t=12"></script>
+<script src="common.js?t=17"></script>
 </body>
 </html>
 

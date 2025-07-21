@@ -10,6 +10,7 @@ function check_deployments() {
 	apps.length = 0; // reset
 	apps.push(...JSON.parse(data)); // push each element
 	console.log(apps);
+	document.getElementById('installAppsBtn').click();
 
 	// manage
 	html_data = '';
@@ -19,6 +20,7 @@ function check_deployments() {
 		service_name = data[k].name;
 		orig_service_name = data[k].orig_name;
 		version = data[k].version;
+		subtitle = data[k].subtitle;
 		installed = data[k].installed;
 		if (installed=='true') {
 			html_data += '<div><a href="#" onclick="reinstall(\''+service_name+'\',\''+service_name+'\')">'+orig_service_name+'</a> - '+version+' - INSTALLED</div>';
@@ -29,7 +31,6 @@ function check_deployments() {
 		html_data += '<div id="'+service_name+'" class="deployment"></div>';
 	}
 	jQuery("#deployments").html(html_data);
-	document.getElementById('installAppsBtn').click();
 
       }
   });
@@ -433,8 +434,8 @@ function get_proxy_html() {
 	<script>
 	jQuery('#vpn_save_btn').click(function() {
 		console.log('vpn save');
-		jQuery('#vpn').html('Loading...');
 		save_vpn();
+		jQuery('#vpn').html('Loading...');
 	});
 	</script>
         `;

@@ -146,12 +146,14 @@ switch ($_GET["op"]) {
                                                                 $orig_service_name = $service_name;
 								$service_name = strtolower($service_name);
 								$version = $content["version"];
+								$subtitle = $content["subtitle"];
+								if (empty($subtitle) || $subtitle == "null") $subtitle = "";
 								$icon = $content["icon"];
 								if (empty($icon) || $icon == "null") $icon = "img/default_logo.png"; // default icon image
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) $installed = "true";
 								else $installed = "false";
 								if (!empty($deployments)) $deployments .= ", ";
-								$deployments .= '{"name": "'.$service_name.'", "orig_name": "'.$orig_service_name.'", "image": "'.$icon.'", "version": "'.$version.'", "installed": "'.$installed.'"}';
+								$deployments .= '{"name": "'.$service_name.'", "orig_name": "'.$orig_service_name.'", "image": "'.$icon.'", "version": "'.$version.'", "subtitle": "'.$subtitle.'", "installed": "'.$installed.'"}';
 							}
 							if (!empty($deployments)) $deployments = "[{$deployments}]";
 						}
@@ -190,7 +192,7 @@ switch ($_GET["op"]) {
 							    </div>
 							    <div class="text-content">
 							      <h1 class="title">'.$template->name.'</h1>
-							      <h2 class="subtitle">'.$template->title.'</h2>
+							      <h2 class="subtitle">'.$template->subtitle.'</h2>
 							      <p class="description">'.$template->description.'</p>
 							    </div>
 							  </div>
