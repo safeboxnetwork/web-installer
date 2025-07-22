@@ -244,11 +244,13 @@ function check_uninstall(additional) {
         console.log('check_uninstall '+additional+': '+data);
       if (data!="") {
               jQuery("#"+additional).html(data);
+	      jQuery("#popupText").html(data); // manage2
       }
       if (data!="OK") {
               setTimeout(check_uninstall, 1000, additional);
       }
       else {
+	  jQuery("#popupText").html('Uninstall has finished'); // manage2
 	  jQuery("#"+additional).html('Uninstall has finished');
 	  get_deployments();
       }
@@ -262,15 +264,18 @@ function uninstall(additional) {
   });
 	data = '<fieldset><form action="#" method="post"><div class="row">YOU ARE GOING TO UNINSTALL '+additional.toUpperCase()+'.<br>ARE YOU SURE? IF YES, PLEASE CLICK ON THE BUTTON BELOW.<br><br></div><div class="row"><div class="mb-3"><button class="btn btn-lg btn-primary btn-block" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div></div></form></fieldset>';
 	jQuery("#"+additional).html(data);
+	jQuery("#popupText").html(data); // manage2
 }
 
 function confirm_uninstall(additional) {
   jQuery("#"+additional).html('Loading...');
+  jQuery("#popupText").html('Loading'); // manage2
   var url  = 'scan.php?op=uninstall&additional='+additional;
   jQuery.get(url, function(data) {
         console.log('uninstall '+additional+': '+data);
           if (data!="") {
                 jQuery("#"+additional).html(data);
+	        jQuery("#popupText").html(data); // manage2
                 setTimeout(check_uninstall, 1000, additional);
           }
   });
@@ -290,6 +295,7 @@ function update_deployment(additional) {
         console.log('edit '+additional+': '+data);
           if (data!="") {
                 jQuery("#"+additional).html(data);
+	        jQuery("#popupText").html(data); // manage2
                 setTimeout(check_deployment, 1000, additional);
           }
   });
@@ -321,7 +327,7 @@ function check_deployment(additional) {
   var url  = 'scan.php?op=check_deployment&additional='+additional;
   jQuery.get(url, function(data) {
       console.log('check_deployment '+additional);
-      //console.log('check_deployment data: '+data);
+      console.log('check_deployment data: '+data);
       if (data!="") {
 	      jQuery("#"+additional).html(data);
 	      jQuery("#popupText").html(data); // manage2
@@ -343,6 +349,7 @@ function deploy(additional) {
 	console.log('deploy '+additional+': '+data);
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
+	        jQuery("#popupText").html(data); // manage2
       		setTimeout(check_deployment, 1000, additional);
 	  }
   });
@@ -361,6 +368,7 @@ function redeploy(additional) {
 	console.log('redeploy '+additional+': '+data);
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
+		jQuery("#popupText").html(data); // manage2
       		setTimeout(check_deployment, 1000, additional);
 	  }
   });
