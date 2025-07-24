@@ -90,7 +90,7 @@ function get_repositories() {
 	console.log('repositories: '+data);
 	if (data=="OK") {
 		setTimeout(check_repositories, 500);
-		get_deployments();
+		//get_deployments();
 	}
 	else alert(data);
   });
@@ -110,7 +110,15 @@ function check_vpn() {
   var url  = 'scan.php?op=check_vpn';
   jQuery.get(url, function(data) {
         console.log('check_vpn: '+data);
-        if (data=="2") {
+        if (data=="1") { // save_vpn has finished
+	  const vpn_div = document.getElementById("vpn");
+	  console.log(vpn_div);
+	  if (vpn_div) {
+	  	vpn_div.innerHTML = 'VPN start process has finished';
+		//document.getElementById('installAppsBtn').click();
+	  }
+	}
+	else if (data=="2") {
 		document.getElementById('vpnToggle').checked = true;
   		document.querySelector(".switch-label").textContent = "ON";
           $('#vpn_off').hide();
@@ -136,6 +144,7 @@ function save_vpn() {
   jQuery.get(url, function(data) {
 	console.log('save_vpn: '+data);
 	  if (data=="OK") {
+		check_vpn();
 	  }
 	//get_vpn();
   });
@@ -443,7 +452,7 @@ function get_proxy_html() {
 	jQuery('#vpn_save_btn').click(function() {
 		console.log('vpn save');
 		save_vpn();
-		jQuery('#vpn').html('Loading...');
+		jQuery('#vpn').html('VPN start process in progress. Please wait...');
 	});
 	</script>
         `;
@@ -474,6 +483,7 @@ function get_containers() {
 jQuery(document).ready(function(){
 
 	get_repositories();
+	get_deployments();
 	get_system();
 	check_vpn();
 

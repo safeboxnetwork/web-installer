@@ -519,21 +519,29 @@ switch ($_GET["op"]) {
 		else echo "ERROR";
 	break;
         case "check_vpn":
-                $key = "check_vpn";
-                $arr = array("STATUS" => 0);
-                $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-                set_output($key,$json);
-                sleep(1);
-                $arr = check_response($key);
-                if (!empty($arr)) {
-                        $data = $arr[$key];
-                        echo $data["STATUS"];
-                        remove_response("$key");
-                }
-                else echo "NO";
+                $arr = check_response("save_vpn");
+		if (!empty($arr)) {
+			$data = $arr["save_vpn"];
+			echo $data["STATUS"];
+			if ($data["STATUS"]=="1") remove_response("save_vpn"); // vpn start has finished
+		}
+		else {
+			$key = "check_vpn";
+			$arr = array("STATUS" => 0);
+			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+			set_output($key,$json);
+			sleep(1);
+			$arr = check_response($key);
+			if (!empty($arr)) {
+				$data = $arr[$key];
+				echo $data["STATUS"];
+				remove_response("$key");
+			}
+			else echo "NO";
+		}
         break;
 	case "save_vpn":
-		remove_response("save_repository");
+		//remove_response("save_repository"); // ???
 
 		$arr = array(
 			"VPN_DOMAIN" => $_GET["vpn_domain"],

@@ -104,12 +104,43 @@
       color: black;
       border-radius: 10px;
       font-weight: bold;
-      margin: 4px;
     }
 
     .menu-item.active:hover {
       color: black;
     }
+
+.menu-item span.arrow {
+  margin-left: auto;
+  color: gray;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.menu-item.open .arrow {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  display: none;
+  margin-left: 40px;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.submenu-item {
+  padding: 5px 14px;
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.submenu-item:hover {
+  color: #000000;
+  background-color: var(--highlight-color);
+}
+
 
 /* Switch container */
 .switch {
@@ -343,21 +374,22 @@
 }
 
 .title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: bold;
   margin: 0;
 }
 
 .subtitle {
-  font-size: 16px;
+  font-size: 20px;
   margin: 4px 0;
   color: #999;
 }
 
 .description {
-  font-size: 14px;
+  font-size: 16px;
   margin: 20px 0 0;
   color: #999;
+  line-height: 1.5;
 }
 
 .notification-btn {
@@ -654,11 +686,16 @@
         <div class="menu-item"><i class="fas fa-chart-line"></i><span>Monitor</span></div>
         <div class="menu-item active"><i class="fas fa-cog"></i><span>Settings</span></div>
 -->
-	<div class="menu-item" id="installAppsBtn"><img src="/img/app.png" data-src="/img/app.png" data-hover="/img/app2.png" alt="Applications" /><span>Applications</span></div>
-        <div class="menu-item" id="backupBtn"><img src="/img/disk.png" data-src="/img/disk.png" data-hover="/img/disk2.png" alt="Backup" /><span>Backup</span></div>
-        <div class="menu-item" id="diskBtn"><img src="/img/disk.png" data-src="/img/disk.png" data-hover="/img/disk2.png" alt="Disk Management" /><span>Disk Management</span></div>
-        <div class="menu-item" id="monitorBtn"><img src="/img/monitor.png" data-src="/img/monitor.png" data-hover="/img/monitor2.png" alt="Monitor" /><span>Monitor</span></div>
-	<div class="menu-item" id="settingsBtn"><img src="/img/settings.png" data-src="/img/settings.png" data-hover="/img/settings2.png" alt="Settings" /><span>Settings</span></div>
+	<div class="menu-item" id="installAppsBtn"><img src="/img/apps1.svg" data-src="/img/apps1.svg" data-hover="/img/apps2.svg" alt="Applications" /><span>Applications</span></div>
+        <div class="menu-item" id="backupBtn"><img src="/img/backup1.svg" data-src="/img/backup1.svg" data-hover="/img/backup2.svg" alt="Backup" /><span>Backup</span></div>
+        <div class="menu-item" id="diskBtn"><img src="/img/disk1.svg" data-src="/img/disk1.svg" data-hover="/img/disk2.svg" alt="Disk Management" /><span>Disk Management</span></div>
+        <div class="menu-item" id="monitorBtn"><img src="/img/monitor1.svg" data-src="/img/monitor1.svg" data-hover="/img/monitor2.svg" alt="Monitor" /><span>Monitor</span></div>
+	<div class="menu-item has-submenu" id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" /><span>Settings</span><span class="arrow">&#9662;</span></div>
+	<div class="submenu" id="settingsSubmenu">
+	  <div id="servicesBtn" class="submenu-item">Services</div>
+	  <div id="repositoriesBtn" class="submenu-item">Repositories</div>
+	  <div id="systemservicesBtn" class="submenu-item">System services</div>
+	</div>
       </div>
     </div>
     <div class="yellow-row">
@@ -684,7 +721,7 @@
   </div>
   <div class="main" >
     <div id="myAppsContainer">
-	    Loading applications...
+	    Loading applications. Please wait...
     </div>
     <div id="popup" class="popup hidden">
 	<div class="popup-content">
@@ -699,18 +736,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
 
-	  document.querySelectorAll('.menu-item.active').forEach(item => {
-	    const img = item.querySelector('img');
-	      img.src = img.dataset.hover;
-	/*
-	    item.addEventListener('mouseenter', () => {
-	      img.src = img.dataset.hover;
-	    });
-	    item.addEventListener('mouseleave', () => {
-	      img.src = img.dataset.src;
-	    });
-	*/
-	  });
+	    updateActive();
 
     const myAppsBtn = document.getElementById('myAppsBtn');
     const installAppsBtn = document.getElementById('installAppsBtn');
@@ -725,6 +751,18 @@
     const popup = document.getElementById('popup');
     const popupText = document.getElementById('popupText');
     const closeBtn = document.querySelector('.close');
+
+
+	function updateActive() {
+		document.querySelectorAll('.menu-item').forEach(item => {
+			const img = item.querySelector('img');
+			img.src = img.dataset.src;
+		});
+		document.querySelectorAll('.menu-item.active').forEach(item => {
+			const img = item.querySelector('img');
+			img.src = img.dataset.hover;
+		});
+	}
 
     //Appok betöltése
     function renderApps(all) {
@@ -843,6 +881,13 @@
     }
 
     function renderSettings() {
+
+	const submenu = document.getElementById("settingsSubmenu");
+	const isVisible = submenu.style.display === "flex";
+
+	submenu.style.display = isVisible ? "none" : "flex";
+	settingsBtn.classList.toggle("open", !isVisible);
+
     	myAppsContainer.classList.remove('hidden');
         popup.classList.add('hidden');
 
@@ -850,11 +895,6 @@
     <div class="main-header">
       <h1>Settings</h1>
       <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
-    </div>
-    <div class="input-row">
-	<button id="servicesBtn" class="save-button">Services</button>
-	<button id="repositoriesBtn" class="save-button">Repositories</button>
-	<button id="systemservicesBtn" class="save-button">System services</button>
     </div>
 
 	    <div class="input-row">
@@ -941,6 +981,8 @@
 		monitorBtn.classList.remove('active');
 		settingsBtn.classList.remove('active');
 		btn.classList.add('active');
+	    
+		updateActive();
 	}
 
     //myAppsBtn.addEventListener('click', () => {renderApps(false); activate(myAppsBtn);});
@@ -974,7 +1016,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-<script src="common.js?t=23"></script>
+<script src="common.js?t=30"></script>
 </body>
 </html>
 
