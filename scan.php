@@ -214,9 +214,11 @@ switch ($_GET["op"]) {
 							}
 							echo '</div>';
 						}
+						$more = 0;
 						echo "<form action=\"#\" method=\"post\" id=\"deploy_{$template->name}_form\">";
 						echo "<div class=\"app-fields\">";
 						foreach ($template->fields as $field) {
+							if ($field->advanced) $more = 1;
 							echo "<div class=\"app-field ".($field->advanced ? "advanced" : "")."\">";
 							if (!empty($field->title)) echo "<div class=\"row\"><h3>".$field->title."</h3></div>";
 							if (isset($field->generated)) {
@@ -241,27 +243,29 @@ switch ($_GET["op"]) {
 						echo "</div>";
 
                                                 echo "<div class=\"row buttons\">";
-						echo "
-						<div class=\"mb-3\">
-						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"more_{$template->name}_btn\">More</button>
-						</div>";
+						if ($more) {
+							echo "
+							<div class=\"mb-3\" style=\"margin-right:30px;\">
+							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"more_{$template->name}_btn\">More</button>
+							</div>";
+						}
 						if ($reinstall) {
 							echo "
-                                                	<div class=\"mb-3\" style=\"margin-left:30px;\">
+                                                	<div class=\"mb-3\" style=\"margin-right:30px;\">
 							<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"update_{$template->name}_btn\" onclick=\"update_deployment('{$template->name}')\">Update</button>
 							</div>";
 						}
 						echo "
-                                                <div class=\"mb-3\" style=\"margin-left:30px;\">
+                                                <div class=\"mb-3\" style=\"margin-right:30px;\">
                                                 <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" id=\"deploy_{$template->name}_btn\">".($reinstall ? "Reinstall" : "Install")."</button>
                                                 </div>";
 						if ($reinstall) {
 							echo "
-							<div class=\"mb-3\" style=\"margin-left:30px;\">
+							<div class=\"mb-3\" style=\"margin-right:30px;\">
 							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
 							</div>";
 						}
-						echo "<div class=\"mb-3\" style=\"margin-left:230px;float:\">
+						echo "<div class=\"mb-3\" style=\"margin-left:200px;float:\">
 						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
 						</div>"; // buttons
                                                 echo "
@@ -273,6 +277,8 @@ switch ($_GET["op"]) {
                 jQuery(this).hide();
         });
         jQuery('#more_{$template->name}_btn').click(function() {
+		currentText = jQuery(this).text();
+		jQuery(this).text(currentText === 'More' ? 'Less' : 'More');
 		jQuery('.advanced').each(function() {
 			jQuery(this).toggle();
 		});
