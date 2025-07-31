@@ -203,7 +203,7 @@ switch ($_GET["op"]) {
 							echo '<div id="letsencrypt">';
 							//var_dump($template);
                                                         $letsencrypt = check_letsencrypt();
-							if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...<br><br>";
+							if (empty($letsencrypt)) echo ""; //echo "LETSENCRYPT file doesn't exists...<br><br>";
 							elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...<br><br>";
 							else {
 								$domain = "";
@@ -334,7 +334,7 @@ switch ($_GET["op"]) {
 	case "check_letsencrypt":
 		$domain = $_GET["domain"];
 		$letsencrypt = check_letsencrypt();
-		if (empty($letsencrypt)) echo "LETSENCRYPT file doesn't exists...";
+		if (empty($letsencrypt)) echo ""; //echo "LETSENCRYPT file doesn't exists...";
 		elseif ($letsencrypt=="ERROR") echo "LETSENCRYPT file: read JSON error...";
 		else {
 			show_letsencrypt($letsencrypt, $domain);
