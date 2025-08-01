@@ -1,51 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>INSTALLER TOOL</title>
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<!-- Custom styles for this template -->
-<link href="installer.css?t=1" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Safebox - INSTALLER TOOL</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css?t=3" />
 </head>
 <body id="scan" class="text-center">
-<div class="container-fluid">
-<div class="col-md-12">
-	<h1>Scanning your device for any previous installed versions</h1>
-	<div class="row d-flex justify-content-center mt-100">
-	       <div class="progress blue" data-value="100">
-		 <span class="progress-left">
-		   <span class="progress-bar"></span>
-		 </span>
-		 <span class="progress-right">
-		   <span class="progress-bar"></span>
-		 </span>
-		 <div class="progress-value"></div>
-	       </div>
+  <div class="main">
+    <div id="myAppsContainer">
+	<div class="logo" style="margin-top:100px">
+		<img src="/img/logo.png" alt="Safebox"/>
+		<span>Safebox</span>
 	</div>
-	<div><a href="install.html" class="stop">STOP AND START INSTALL</a></div>
-	<br>
-	<br>
-	<div id="redis"></div>
-	<div id="previous"></div>
-</div>
-</div>
+	<div class="progress-box">
+		<div class="progress-title">Scanning your device</div>
+		<div class="progress-description" id="info">Looking for any previously installed version</div>
+		<div class="progress-container-shadow">
+		</div>
+		<div class="progress-container">
+			<div class="progress-bar" id="progressBar"></div>
+			<div class="progress-text" id="progressText">0%</div>
+		</div>
+	</div>
+
+    <div class="controls">
+        <button onclick="document.location='install.html'" class="save-button">STOP AND START INSTALL</button>
+    </div>
+
+    </div>
+  </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
 <script>
-$(function() {
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+let currentProgress = 0;
+let progressInterval;
+
+function updateProgress(percentage) {
+    // Clamp percentage between 0 and 99.9 (never reach 100)
+    percentage = Math.max(0, Math.min(99.9, percentage));
+    
+    progressBar.style.width = percentage + '%';
+    progressText.textContent = Math.round(percentage) + '%';
+    currentProgress = percentage;
+}
+
+function setProgress(percentage) {
+    clearInterval(progressInterval);
+    updateProgress(percentage);
+    startProgress();
+}
+
+function startProgress() {
+    clearInterval(progressInterval);
+    const duration = 60000; // 60 seconds
+    const startTime = Date.now() - (currentProgress / 100) * duration;
+    
+    progressInterval = setInterval(() => {
+	const elapsed = Date.now() - startTime;
+	// Use exponential approach to 100% - gets slower as it approaches
+	let progress = (1 - Math.exp(-4 * elapsed / duration)) * 100;
+	
+	// Ensure it never reaches 100%
+	progress = Math.min(progress, 99.9);
+	
+	updateProgress(progress);
+	
+	// Stop when we've been running for 60+ seconds
+	if (elapsed >= duration) {
+	    clearInterval(progressInterval);
+	}
+    }, 100); // Update every 100ms
+}
+
+function resetProgress() {
+    clearInterval(progressInterval);
+    updateProgress(0);
+}
+
+// Example: Simulate loading with custom speeds
+function simulateLoading(duration = 3000) {
+    clearInterval(progressInterval);
+    const startTime = Date.now();
+    
+    progressInterval = setInterval(() => {
+	const elapsed = Date.now() - startTime;
+	const progress = Math.min((elapsed / duration) * 100, 99.9);
+	
+	updateProgress(progress);
+	
+	if (elapsed >= duration) {
+	    clearInterval(progressInterval);
+	}
+    }, 16); // ~60fps
+}
 
 function redirectToInstall() {
-    window.location.href = 'install.html';
+	setProgress(100);
+	window.location.href = 'install.html';
 }
 
 function redirectToManage() {
-    window.location.href = 'manage.html';
+	setProgress(100);
+	window.location.href = 'manage.html';
 }
 
 function start_system() {
@@ -53,11 +118,11 @@ function start_system() {
   $.get(url, function(data){
     console.log('start_system: '+data);
     if (data=='OK') {
-      $("#previous").html('Scanning for previous install. Please wait...');
+      $("#info").html('Scanning for previous install. Please wait...');
       check_system();
     }
     else {
-      $("#previous").html('Scanning for previous install has aborted...');
+      $("#info").html('Scanning for previous install has aborted...');
     }
   });
 }
@@ -67,11 +132,12 @@ function check_system() {
   $.get(url, function(data){
     console.log('check_system: '+data);
     if (data=='NEW') {
-      $("#previous").html('No previous install has found...');
+      $("#info").html('No previous install has found...');
       setTimeout(redirectToInstall, 3000);
     }
     else if (data=='EXISTS') {
-      $("#previous").html('Previous install has found...');
+      $("#info").html('Previous install has found...');
+      setProgress(80);
       setTimeout(redirectToManage, 3000);
     }
     else if (data=='WAIT') {
@@ -89,11 +155,11 @@ function check_redis() {
   $.get(url, function(data){
     console.log('check_redis: '+data);
     if (data=='OK') {
-      $("#redis").html('Redis server - OK');
+      $("#info").html('Redis server - OK');
       start_system();
     }
     else {
-      $("#redis").html('Redis server is not available...');
+      $("#info").html('Redis server is not available...');
       setTimeout(check_redis, 1000);
     }
   });
@@ -105,11 +171,11 @@ function check_directory() {
   $.get(url, function(data){
     console.log('check_directory: '+data);
     if (data=='OK') {
-      $("#redis").html('Connection is ready - OK');
+      $("#info").html('Connection is ready - OK');
       start_system();
     }
     else {
-      $("#redis").html('Shared directory is not available...');
+      $("#info").html('Shared directory is not available...');
     }
   });
 }
@@ -126,73 +192,17 @@ function check_interface() {
   	check_directory();
     }
     else {
-	$("#redis").html('Invalid interface definition...');
+	$("#info").html('Invalid interface definition...');
     }
   });
 }
 
-  check_interface();
+// Initialize
+updateProgress(0);
+startProgress();
 
-  //setTimeout(redirectToManage, 10000);
+check_interface();
 
-  $(".progress").each(function() {
-
-    var value = $(this).attr('data-value');
-    var left = $(this).find('.progress-left .progress-bar');
-    var right = $(this).find('.progress-right .progress-bar');
-
-    if (value > 0) {
-/*
-	angle1 = getRotationDegrees(right);
-	angle2 = getRotationDegrees(left);
-		console.log(angle1);
-		console.log(angle2);
-	idx=1
-	while (idx < 50) {
-		angle1 = getRotationDegrees(right);
-		angle2 = getRotationDegrees(left);
-		console.log(angle1);
-		console.log(angle2);
-		$('div.progress-value').html(angle2);
-		idx++;
-	}
-*/
-/*
-      if (value <= 50) {
-        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-      } else {
-        right.css('transform', 'rotate(180deg)')
-        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-      }
-*/
-    }
-
-  })
-
-  function percentageToDegrees(percentage) {
-    return percentage / 100 * 360
-  }
-
-	/**
-	 * Returns rotation in degrees when obtaining transform-styles using javascript
-	 * http://stackoverflow.com/questions/8270612/get-element-moz-transformrotate-value-in-jquery
-	 */
-	function getRotationDegrees(obj) {
-	    var matrix = obj.css("-webkit-transform") ||
-	    obj.css("-moz-transform")    ||
-	    obj.css("-ms-transform")     ||
-	    obj.css("-o-transform")      ||
-	    obj.css("transform");
-	    if(matrix !== 'none') {
-		var values = matrix.split('(')[1].split(')')[0].split(',');
-		var a = values[0];
-		var b = values[1];
-		var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-	    } else { var angle = 0; }
-	    return angle;
-	}
-
-});
 </script>
 </body>
 </html>
