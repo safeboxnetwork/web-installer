@@ -493,6 +493,14 @@ switch ($_GET["op"]) {
                 }
                 echo $text;
         break;
+	case "version":
+		$arr = check_response("version");
+		if (!empty($arr)) {
+			$data = $arr["version"];
+			echo $data["VERSION"];
+		}
+		else echo "Version not found";
+	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);

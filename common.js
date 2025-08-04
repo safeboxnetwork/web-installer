@@ -271,7 +271,7 @@ function uninstall(additional) {
   jQuery("div.deployment").each(function(index) {
         $(this).html('');
   });
-	data = '<fieldset><form action="#" method="post"><div class="row">YOU ARE GOING TO UNINSTALL '+additional.toUpperCase()+'.<br>ARE YOU SURE? IF YES, PLEASE CLICK ON THE BUTTON BELOW.<br><br></div><div class="row"><div class="mb-3"><button class="btn btn-lg btn-primary btn-block" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div></div></form></fieldset>';
+	data = '<form action="#" method="post"><div class="row">YOU ARE GOING TO UNINSTALL '+additional.toUpperCase()+'.<br>ARE YOU SURE? IF YES, PLEASE CLICK ON THE BUTTON BELOW.<br><br></div><div class="row"><div class="mb-3"><button class="save-button" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div></div></form>';
 	jQuery("#"+additional).html(data);
 	jQuery("#popupText").html(data); // manage2
 }
@@ -480,8 +480,17 @@ function get_containers() {
   });
 }
 
+function get_version() {
+  var url  = 'scan.php?op=version';
+  jQuery.get(url, function(data) {
+	console.log('version: '+data);
+	jQuery('#logo').attr('title',data);
+  });
+}
+
 jQuery(document).ready(function(){
 
+	get_version();
 	get_repositories();
 	get_deployments();
 	get_system();
