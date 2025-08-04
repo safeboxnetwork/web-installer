@@ -11,12 +11,11 @@ function updateProgress(percentage) {
 function setProgress(percentage) {
     clearInterval(progressInterval);
     updateProgress(percentage);
-    startProgress();
+    startProgress(60000);
 }
 
-function startProgress() {
+function startProgress(duration) {
     clearInterval(progressInterval);
-    const duration = 60000; // 60 seconds
     const startTime = Date.now() - (currentProgress / 100) * duration;
     
     progressInterval = setInterval(() => {
@@ -65,7 +64,7 @@ function redirectToInstall() {
 
 function redirectToManage() {
 	setProgress(100);
-//	window.location.href = 'manage.html';
+	window.location.href = 'manage.html';
 }
 
 function start_system() {

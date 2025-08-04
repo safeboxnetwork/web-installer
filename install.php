@@ -105,7 +105,7 @@ let install = 1;
 
 // Initialize
 updateProgress(0);
-startProgress();
+startProgress(90000);// 90 seconds
 
 check_interface();
 counter=0;
