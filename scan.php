@@ -182,6 +182,7 @@ switch ($_GET["op"]) {
 				if ($key=="deployment") {
 					if ($data["STATUS"]=="0") { // ask
 						$template = json_decode(base64_decode($data["TEMPLATE"]));
+						$template->name = strtolower($template->name);
 
 						echo '
 						<div class="app-details">
@@ -191,7 +192,7 @@ switch ($_GET["op"]) {
 								<img src="'.$template->icon.'">
 							    </div>
 							    <div class="text-content">
-							      <h1 class="title">'.$template->name.'</h1>
+							      <h1 class="title">'.$template->title.'</h1>
 							      <h2 class="subtitle">'.$template->subtitle.'</h2>
 							      <p class="description">'.$template->description.'</p>
 							    </div>
