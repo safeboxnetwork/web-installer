@@ -6,7 +6,7 @@
   <title>Safebox</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?t=4" />
+  <link rel="stylesheet" href="style.css?t=5" />
 </head>
 <body>
   <div class="sidebar">
@@ -16,17 +16,6 @@
         <span>Safebox</span>
       </div>
       <div class="menu">
-	    <div class="menu-item" style="margin-bottom:20px">
-		<img src="/img/globe.png" data-src="/img/globe.png" data-hover="/img/globe.png" alt="VPN" />
-		<div class="menu-label">
-		    <span id="vpnBtn">VPN</span>
-		    <label class="switch">
-		      <input type="checkbox" id="vpnToggle">
-		      <span class="slider-text"><span class="switch-label">OFF</span></span>
-		    </label>
-		</div>
-	    </div>
-
 <!--
 	<div class="menu-item"><i class="fas fa-th"></i><span>Applications</span></div>
         <div class="menu-item"><i class="fas fa-hdd"></i><span>Disk Management</span></div>
@@ -46,24 +35,29 @@
       </div>
     </div>
     <div class="yellow-row">
+	<div id="pro_off">
 	    <div class="yellow-box">
-		<div id="pro_off">
 		      <h4>Safebox Pro</h4>
 		      <p>Enjoy benefits and unlock more feature such as remote access, geo-redundant backups etc. <br><br>
 		      <a href="" class="details">Read details</a><br><br>
 			<img src="/img/upgrade.png" alt="Upgrade now" width="100%"/>	
 		      </p>
-		</div>
-		<div id="pro_on" class="hidden">
-		      <h4>Login</h4>
-		      <p>Enjoy benefits and unlock more feature such as remote access, geo-redundant backups etc. <br><br>
-		      <a href="" class="details">Read details</a><br><br>
+	    </div>
+	</div>
+	<div id="pro_on" class="hidden">
+	    <div class="grey-box">
+		      <h4><img src="/img/globe.png" data-src="/img/globe.png" data-hover="/img/globe.png" alt="VPN" /> Remote access</h4>
+		      <p>It allows you to connect your installed apps to a custom domain (your own or one registered through us), so you can securely log in from any browser, anywhere in the world.
 		      </p>
-		</div>
+			<div class="vpn-item">
+			    <span id="vpnBtn">VPN</span>
+			    <label class="switch">
+			      <input type="checkbox" id="vpnToggle" onclick="return false">
+			      <span class="slider-text"><span class="switch-label">OFF</span></span>
+			    </label>
+			</div>
 	    </div>
-	    <div class="yellow-corner">
-		<img src="img/yellow_corner.png" alt=""/>
-	    </div>
+	</div>
     </div>
   </div>
   <div class="main" >
@@ -351,6 +345,9 @@
 	}
 
 	vpnToggle.addEventListener("change", updateStatus);
+	vpnToggle.addEventListener('click', function (e) {
+		e.preventDefault();
+	});
 
 	// Alapállapot beállítása
 	updateStatus();
