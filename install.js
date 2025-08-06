@@ -155,7 +155,7 @@ function check_install() {
 
     console.log('install: '+install);
     if (install==1) {
-	  var url  = 'scan.php?op=check_install&key=<?php echo $key;?>';
+	  var url  = 'scan.php?op=check_install';
 	  $.get(url, function(data){
 	    console.log('check_install:'+data+' counter: '+counter);
 	    if (data=='INSTALLED') {

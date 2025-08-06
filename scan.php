@@ -64,7 +64,7 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				//echo $key."-".$_GET["key"];
-				if ($key==$_GET["key"]) { // if install key moved to web_out
+				if ($key=="install") { // if install key moved to web_out
 					if ($data["INSTALL_STATUS"]>0) {
 						remove_response("$key");
 						echo "INSTALLED";
