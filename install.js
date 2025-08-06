@@ -163,7 +163,7 @@ function check_install() {
 	    }
 	    else {
 	      counter+=1
-	      $("#info").html('Please wait ... ' + counter);
+	      $("#info").html('Please wait ...');
 	      setTimeout(check_install, 1000);
 	    }
 	  });

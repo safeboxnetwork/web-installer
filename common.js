@@ -122,6 +122,8 @@ function check_vpn() {
 	  else {
 		$('#pro_off').hide();
 		$('#pro_on').show();
+		$('#vpn_off').hide();
+		$('#vpn_on').show();
 		document.getElementById('vpnToggle').checked = true;
 		document.querySelector(".switch-label").textContent = "ON";
 	  }
@@ -129,6 +131,8 @@ function check_vpn() {
 	else if (data=="2") {
 		$('#pro_off').hide();
 		$('#pro_on').show();
+		$('#vpn_on').hide();
+		$('#vpn_off').show();
 		document.getElementById('vpnToggle').checked = false;
 		document.querySelector(".switch-label").textContent = "OFF";
         }
@@ -213,7 +217,8 @@ function load_template(additional, block) {
   jQuery("div.deployment").each(function(index) {
         $(this).html('');
   });
-  jQuery("#"+block).html('Loading '+additional+' template...');
+  //jQuery("#"+block).html('Loading '+additional+' template...');
+  jQuery("#"+block).html('<div class="loading">Loading...</div>');
   var url  = 'scan.php?op=deployment&additional='+additional;
   jQuery.get(url, function(data) {
 	console.log('load_template: '+data);
@@ -239,7 +244,8 @@ function reinstall(additional, block) {
   jQuery("div.deployment").each(function(index) {
         $(this).html('');
   });
-  jQuery("#"+block).html('Loading '+additional+' template...');
+  //jQuery("#"+block).html('Loading '+additional+' template...');
+  jQuery("#"+block).html('<div class="loading">Loading...</div>');
   var url  = 'scan.php?op=reinstall&additional='+additional;
   jQuery.get(url, function(data) {
 	console.log('reinstall '+additional+': '+data);
@@ -279,8 +285,8 @@ function uninstall(additional) {
 }
 
 function confirm_uninstall(additional) {
-  jQuery("#"+additional).html('Loading...');
-  jQuery("#popupText").html('Loading'); // manage2
+  jQuery("#"+additional).html('<div class="loading">Loading...</div>');
+  jQuery("#popupText").html('<div class="loading">Loading...</div>'); // manage2
   var url  = 'scan.php?op=uninstall&additional='+additional;
   jQuery.get(url, function(data) {
         console.log('uninstall '+additional+': '+data);
@@ -408,53 +414,52 @@ function get_services() {
 
 function get_proxy_html() {
         proxy_html = `
-	<fieldset>
-	<legend>Enable proxy</legend>
-        <div class="input-group">
 	<form class="form-install" action="#" method="post" id="save_vpn">
+        <div class="app-fields">
+        	<div class="app-field">
 		<div class="row">
-		    <div class="mb-3">
-				<label for="vpn_domain">Please add domain url to download the VPN hash from (default: https://portal.safebox.network):</label>
-				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network">
-				<div class="invalid-feedback">
-				Please enter a valid domain.
-				</div>
+			<label for="vpn_domain">Please add domain url to download the VPN hash from:</label>
+		    <div class="input-container">
+				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network" size="40">
 		    </div>
 		</div>
+		</div>
+        	<div class="app-field">
 		<div class="row">
-		    <div class="mb-3">
-				<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
+			<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
+		    <div class="input-container">
 				<input type="text" class="form-control" name="VPN_PASS" id="vpn_pass" value="" maxlength="8" size="10">
 		    </div>
 		</div>
+		</div>
+        	<div class="app-field">
 		<div class="row">
-		    <div class="mb-3">
-				<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+			<label for="letsencrypt_mail">Please add the letsencrypt mail address:</label>
+		    <div class="input-container">
 				<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
-				<div class="invalid-feedback">
-				Please enter a valid email.
-				</div>
 		    </div>
 		</div>
+		</div>
+        	<div class="app-field">
 		<div class="row">
-		    <div class="mb-3">
-				<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+		    <div class="input-container">
 				<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt">
 		    </div>
 		</div>
-		<div class="row buttons">
-		    <div class="mb-3">
-			<button class="btn btn-lg btn-primary btn-block" type="button" id="vpn_save_btn"> Save </button>
-		    </div>
 		</div>
-	</form>
 	</div>
-	</fieldset>
+	<div class="row buttons">
+	    <div class="mb-3">
+		<button class="btn btn-lg btn-primary btn-block" type="button" id="vpn_save_btn"> Save </button>
+	    </div>
+	</div>
+	</form>
 	<script>
 	jQuery('#vpn_save_btn').click(function() {
 		console.log('vpn save');
 		save_vpn();
-		jQuery('#vpn').html('VPN start process in progress. Please wait...');
+		jQuery('#vpn').html('<div class="loading">VPN start process in progress. Please wait...</div>');
 	});
 	</script>
         `;
@@ -525,19 +530,19 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery('#update_btn').click(function() {
-		jQuery('#updates').html('Looking for updates... Please wait...');
+		jQuery('#updates').html('<div class="loading">Looking for updates...</div>');
 		get_updates();
 	});
 
 	jQuery('#add_repo').submit(function() {
-		jQuery('#repositories').html('Loading...');
+		jQuery('#repositories').html('<div class="loading">Loading...</div>');
 		add_repository();
 		return false;
 	});
 
 	jQuery('#save_vpn').submit(function() {
 		save_vpn();
-		jQuery('#vpn').html('Loading...');
+		jQuery('#vpn').html('<div class="loading">Loading...</div>');
 		return false;
 	});
 

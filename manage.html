@@ -6,7 +6,7 @@
   <title>Safebox</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?t=7" />
+  <link rel="stylesheet" href="style.css?t=10" />
 </head>
 <body>
   <div class="sidebar">
@@ -55,10 +55,14 @@
 		      <p>It allows you to connect your installed apps to a custom domain (your own or one registered through us), so you can securely log in from any browser, anywhere in the world.
 		      </p>
 			<div class="vpn-item">
+<!--
 			    <label class="switch">
 			      <input type="checkbox" id="vpnToggle" onclick="return false">
 			      <span class="slider-text"><span class="switch-label">OFF</span></span>
 			    </label>
+-->
+				<span id="vpn_on" class="hidden"><img src="/img/on.png" alt="on" /></span>
+				<span id="vpn_ff" class="hidden"><img src="/img/off.png" alt="off" /></span>
 			</div>
 	    </div>
 	</div>
@@ -66,7 +70,7 @@
   </div>
   <div class="main" >
     <div id="myAppsContainer">
-	    Loading applications. Please wait...
+	    <div class="loading">Loading applications...</div>
     </div>
     <div id="popup" class="popup hidden">
 	<div class="popup-content">
@@ -180,10 +184,10 @@
 
         myAppsContainer.innerHTML = `
 	    <div class="main-header">
-	      <h1>VPN</h1>
+	      <h1>VPN - enable proxy</h1>
 	    </div>
             <div id="vpn" class="innerDiv">
-	    Loading...
+	    <div class="loading">Loading...</div>
             </div>
         `;
 	get_proxy_html();
@@ -195,7 +199,7 @@
 	      <h1>Services</h1>
 	    </div>
             <div id="services" class="innerDiv">
-	    Loading...
+	    <div class="loading">Loading...</div>
             </div>
         `;
 	get_services();
@@ -207,7 +211,7 @@
 	      <h1>Updates</h1>
 	    </div>
             <div id="updates" class="innerDiv">
-	    Looking for updates... Please wait...
+	    <div class="loading">Looking for updates...</div>
             </div>
         `;
 	get_updates();
@@ -219,7 +223,7 @@
 	      <h1>System services</h1>
 	    </div>
             <div id="system" class="innerDiv">
-	    Loading...
+	    <div class="loading">Loading...</div>
             </div>
         `;
 	get_system();
@@ -291,7 +295,7 @@
 	    <div class="main-header">
 	      <h1>Repositories</h1>
 	    </div>
-		<div id="repositories" style="text-align:left">Loading...</div>
+		<div id="repositories" style="text-align:left">Loading repositories...</div>
 		<br>
 		<form class="form-install" action="#" method="post" id="add_repo">
 		<div class="input-row">
@@ -364,6 +368,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-<script src="common.js?t=37"></script>
+<script src="common.js?t=40"></script>
 </body>
 </html>

@@ -348,7 +348,7 @@ switch ($_GET["op"]) {
 			$text="A deployment ({$_GET["additional"]}) has already started.<br>Please wait and do not start a new one...";
 		}
 		else {
-			$text="Install in progress... Please wait...";
+			$text="Install in progress...";
 			$fields = $_GET;
 			unset($fields["op"]);
 			unset($fields["additional"]);

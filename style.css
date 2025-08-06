@@ -126,6 +126,11 @@
       height: 30px;
     }
 
+    .loading {
+	    text-align:center;
+	    margin-top:300px;
+    }
+
     .menu {
       display: flex;
       flex-direction: column;
@@ -139,7 +144,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
       color: white;
       transition: color 0.3s;
     }
@@ -439,7 +443,7 @@
 	}
 
 	.app-fields .row {
-            display: block;
+            display: flex;
 	      justify-content: space-between;
 	      align-items: center;
 	      padding: 5px 20px;

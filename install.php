@@ -46,7 +46,7 @@ else {
 	$header_text="Installing in progress... Please wait...";
 	//$key = "install:".date("YmdHis");
 	$key = "install";
-	if (set_output($key,$json)) echo "OK";
+	if (set_output($key,$json)) echo "";
 	else echo "ERROR";
 }
 
@@ -74,7 +74,7 @@ echo "<pre>".$output."</pre>";
 <body id="install" class="text-center">
   <div class="main">
     <div id="myAppsContainer">
-	<div class="logo" style="margin-top:100px">
+	<div class="logo" style="margin:100px 0px 20px 0px;">
 		<img src="/img/logo.png" alt="Safebox"/>
 		<span>Safebox</span>
 	</div>
