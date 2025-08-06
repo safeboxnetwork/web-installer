@@ -59,8 +59,8 @@ switch ($_GET["op"]) {
 		}
 		else echo "WAIT";
 	break;
-	case "check_install": // called in install.php - check if install process has finished
-		$arr = check_response($_GET["key"]); // TODO - replace key with "install", key can be "install*"
+	case "check_install": // called in install.js - check if install process has finished
+		$arr = check_response("install");
 		if (!empty($arr)) {
 			foreach ($arr as $key=>$data) {
 				//echo $key."-".$_GET["key"];

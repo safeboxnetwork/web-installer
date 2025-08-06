@@ -104,7 +104,7 @@
     }
 
 .sidebar-top {
-      padding: 20px 0;
+      padding: 20px 0px 0px 0px;
 	overflow-y: auto;
 	flex: 1 1 auto;
 	display: flex;
@@ -139,7 +139,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 20px;
       cursor: pointer;
       color: white;
       transition: color 0.3s;
@@ -237,7 +236,7 @@
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  border-radius: 26px;
+  border-radius: 8px;
   transition: background-color 0.3s;
   display: flex !important;
   align-items: center;
@@ -245,7 +244,7 @@
   padding: 0 8px;
   font-size: 12px;
   font-weight: bold;
-  color: #fff;
+  color: #000;
 }
 
 /* Circle */
@@ -263,7 +262,7 @@
 
 /* Checked: move dot, change background and text alignment */
 .switch input:checked + .slider-text {
-  background-color: #4CAF50;
+  background-color: var(--highlight-color);
   justify-content: flex-start;
 }
 
@@ -298,14 +297,18 @@
     }
 
     .yellow-box {
-      background-color: var(--highlight-color);
+      background-image: url('img/yellow-box.png');
+      background-repeat: no-repeat;
+      /*background-color: var(--highlight-color);
+      border-radius: 20px 20px 0px 20px;*/
       color: black;
       text-align: left;
       margin: 0px;
-      padding: 10px 18px;
-      border-radius: 20px 20px 0px 20px;
+      padding: 20px 18px;
       font-weight: bold;
       font-size: 12px;
+      width: 156px;
+      height: 176px;
     }
 
     .yellow-corner {
@@ -317,19 +320,34 @@
 	align-items: flex-end;
     }
 
+.pro-text {
+	font-size: 16px;
+	color: black;
+}
+
     .grey-box {
-      border: 2px solid #41464f;
+      background-image: url('img/grey-box.png');
+      background-repeat: no-repeat;
+ /*     border: 2px solid #41464f;  */
       border-radius: 20px 20px 0px 20px;
       color: #999;
       text-align: left;
       margin: 0px;
-      padding: 10px 18px;
+      padding: 20px 18px;
       font-weight: bold;
       font-size: 12px;
+      width: 158px;
+      height: 178px;
     }
-    .grey-box h4 {
-      color: var(--highlight-color);
-    }
+
+.vpn-text {
+	display: flex;
+	align-items: center;  /* Ez igazítja középre függőlegesen a tartalmat */
+	gap: 10px;            /* Távolság kép és szöveg között (opcionális) */
+	font-size: 16px;
+	color: var(--highlight-color);
+	cursor: pointer;
+}
 
     .main {
       flex: 1;
