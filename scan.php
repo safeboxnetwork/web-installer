@@ -500,7 +500,7 @@ switch ($_GET["op"]) {
 			echo "Framework version: ".$data["VERSION"]."\n";
 		}
 		else echo "Framework version not found\n";
-		echo "Frontend version: 1.1.15";
+		echo "Frontend version: ".file_get_contents("version.html");
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
