@@ -45,7 +45,7 @@
 		</div>
 		      <p>Enjoy benefits and unlock more feature such as remote access, geo-redundant backups etc. <br><br>
 		      <a href="" class="details">Read details</a><br><br>
-			<img src="/img/upgrade.png" alt="Upgrade now" width="80%" id="vpnBtn" style="cursor:pointer"/>	
+			<img src="/img/upgrade.png" alt="Upgrade now" width="80%" id="upgradeBtn" style="cursor:pointer"/>	
 		      </p>
 	    </div>
 	</div>
@@ -98,6 +98,7 @@
     const settingsBtn = document.getElementById('settingsBtn');
 
     const vpnBtn = document.getElementById('vpnBtn');
+    const upgradeBtn = document.getElementById('upgradeBtn');
 
     const myAppsContainer = document.getElementById('myAppsContainer');
     const popup = document.getElementById('popup');
@@ -359,6 +360,7 @@
     	settingsBtn.addEventListener('click', () => {renderSettings(); activate(settingsBtn)});
 
 	vpnBtn.addEventListener('click', () => renderVPN());
+	upgradeBtn.addEventListener('click', () => renderVPN());
 
 //	renderApps(true);
 
