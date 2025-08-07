@@ -498,9 +498,9 @@ switch ($_GET["op"]) {
 		if (!empty($arr)) {
 			$data = $arr["version"];
 			echo "Framework version: ".$data["VERSION"]."\n";
-			echo "Frontend version: 1.1.13";
 		}
 		else echo "Version not found";
+		echo "Frontend version: 1.1.14";
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
