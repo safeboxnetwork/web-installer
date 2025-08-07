@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="style.css?t=1" />
 </head>
 <body id="installer">
-  <div class="main" >
+  <div class="main" style="max-width:1000px;margin:0px auto;">
     <div id="myAppsContainer">
 	      <div class="logo">
 		<img src="/img/logo.svg" alt="Safebox"/>
@@ -65,13 +65,7 @@
 		</select>
 	</div>
 </div>
-<div id="div_vpn" class="hidden">
-	<div class="input-row">
-		<label for="vpn_domain">Please add domain url to download the VPN hash from:</label>
-		<div class="input-container">
-			<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network" placeholder="https://portal.safebox.network" size="40">
-		</div>
-	</div>
+<div id="div_vpn1" class="hidden">
 	<div class="input-row">
 		<label for="vpn_pass">Please type in the generated VPN passkey (8 digits):</label>
 		<div class="input-container">
@@ -83,12 +77,6 @@
 		<div class="input-container">
 			<input type="email" class="form-control" name="LETSENCRYPT_MAIL" id="letsencrypt_mail" value="">
 		</div>
-	</div>
-	<div class="input-row">
-		<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
-		<div class="input-container">
-			<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt" placeholder="letsencrypt">
-	   	</div>
 	</div>
 </div>
 <div class="input-row">
@@ -108,6 +96,20 @@
 		</div>
 <!-- advanced settings -->
 <div id="advanced_div" style="display:none">
+	<div id="div_vpn2" class="hidden">
+		<div class="input-row">
+			<label for="vpn_domain">Please add domain url to download the VPN hash from:</label>
+			<div class="input-container">
+				<input type="text" class="form-control" name="VPN_DOMAIN" id="vpn_domain" value="https://portal.safebox.network" placeholder="https://portal.safebox.network" size="40">
+			</div>
+		</div>
+		<div class="input-row">
+			<label for="letsencrypt_servername">Please add letsencrypt server name (default is letsencrypt but you can add zerossl too):</label>
+			<div class="input-container">
+				<input type="text" class="form-control" name="LETSENCRYPT_SERVERNAME" id="letsencrypt_servername" value="letsencrypt" placeholder="letsencrypt">
+			</div>
+		</div>
+	</div>
 	<div class="input-row">
 		<label for="registry">Please fill in the docker registry name (default:safebox):</label>
 		<div class="input-container">
@@ -199,8 +201,14 @@ jQuery(document).ready(function(){
 		else jQuery('#div_user_auth').hide();
 	});
 	jQuery('select#vpn').click(function() {
-		if (jQuery(this).val()=='yes') jQuery('#div_vpn').show();
-		else jQuery('#div_vpn').hide();
+		if (jQuery(this).val()=='yes') {
+			jQuery('#div_vpn1').show();
+			jQuery('#div_vpn2').show();
+		}
+		else {
+			jQuery('#div_vpn1').hide();
+			jQuery('#div_vpn2').hide();
+		}
 	});
 	jQuery('select#discovery').click(function() {
 		if (jQuery(this).val()=='yes') jQuery('#div_discover').show();
