@@ -75,7 +75,7 @@ echo "<pre>".$output."</pre>";
   <div class="main">
     <div id="myAppsContainer">
 	<div class="logo" style="margin:100px 0px 20px 0px;">
-		<img src="/img/logo.png" alt="Safebox"/>
+		<img src="/img/logo.svg" alt="Safebox"/>
 		<span>Safebox</span>
 	</div>
 	<div class="progress-box">

@@ -149,7 +149,7 @@ switch ($_GET["op"]) {
 								$subtitle = $content["subtitle"];
 								if (empty($subtitle) || $subtitle == "null") $subtitle = "";
 								$icon = $content["icon"];
-								if (empty($icon) || $icon == "null") $icon = "img/default_logo.png"; // default icon image
+								if (empty($icon) || $icon == "null") $icon = "img/logo.svg"; // default icon image
 								if (array_key_exists($service_name,$data["INSTALLED_SERVICES"])) $installed = "true";
 								else $installed = "false";
 								if (!empty($deployments)) $deployments .= ", ";
