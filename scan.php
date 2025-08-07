@@ -497,7 +497,8 @@ switch ($_GET["op"]) {
 		$arr = check_response("version");
 		if (!empty($arr)) {
 			$data = $arr["version"];
-			echo $data["VERSION"];
+			echo "Framework version: ".$data["VERSION"]."\n";
+			echo "Frontend version: 1.1.13";
 		}
 		else echo "Version not found";
 	break;
