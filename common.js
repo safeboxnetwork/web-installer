@@ -124,8 +124,8 @@ function check_vpn() {
 		$('#pro_on').show();
 		$('#vpn_off').hide();
 		$('#vpn_on').show();
-		document.getElementById('vpnToggle').checked = true;
-		document.querySelector(".switch-label").textContent = "ON";
+		//document.getElementById('vpnToggle').checked = true;
+		//document.querySelector(".switch-label").textContent = "ON";
 	  }
 	}
 	else if (data=="2") {
@@ -133,8 +133,8 @@ function check_vpn() {
 		$('#pro_on').show();
 		$('#vpn_on').hide();
 		$('#vpn_off').show();
-		document.getElementById('vpnToggle').checked = false;
-		document.querySelector(".switch-label").textContent = "OFF";
+		//document.getElementById('vpnToggle').checked = false;
+		//document.querySelector(".switch-label").textContent = "OFF";
         }
         else { // data == 0
 		$('#pro_on').hide();
