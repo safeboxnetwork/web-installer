@@ -59,12 +59,12 @@ function simulateLoading(duration = 3000) {
 
 function redirectToInstall() {
 	setProgress(100);
-	window.location.href = 'install.html';
+	window.location.href = 'install.html?t='+Date.now();
 }
 
 function redirectToManage() {
 	setProgress(100);
-	window.location.href = 'manage.html';
+	window.location.href = 'manage.html?t='+Date.now();
 }
 
 function start_system() {
