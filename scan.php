@@ -268,7 +268,7 @@ switch ($_GET["op"]) {
 						}
 						echo "<div class=\"mb-3\" style=\"margin-left:200px;float:\">
 						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
-						</div>"; // buttons
+						</div>";
                                                 echo "
                                                 </div>
 						</form>
@@ -499,8 +499,8 @@ switch ($_GET["op"]) {
 			$data = $arr["version"];
 			echo "Framework version: ".$data["VERSION"]."\n";
 		}
-		else echo "Version not found";
-		echo "Frontend version: 1.1.14";
+		else echo "Framework version not found\n";
+		echo "Frontend version: 1.1.15";
 	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);

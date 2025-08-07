@@ -279,7 +279,7 @@ function uninstall(additional) {
   jQuery("div.deployment").each(function(index) {
         $(this).html('');
   });
-	data = '<form action="#" method="post"><div class="row">YOU ARE GOING TO UNINSTALL '+additional.toUpperCase()+'.<br>ARE YOU SURE? IF YES, PLEASE CLICK ON THE BUTTON BELOW.<br><br></div><div class="row"><div class="mb-3"><button class="save-button" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div></div></form>';
+	data = '<div class="confirm"><form action="#" method="post"><div class="row">You are going to uninstall '+additional.toUpperCase()+'.<br>Are you sure? If yes, please click on the Uninstall button below.<br><br></div><div class="row buttons"><div class="mb-3"><button class="btn" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div><div class="mb-3" style="margin-left:200px;float:"><button class="btn" onclick="reinstall(\''+additional+'\',\''+additional+'\')">Cancel</button></div></div></form></div>';
 	jQuery("#"+additional).html(data);
 	jQuery("#popupText").html(data); // manage2
 }
