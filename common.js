@@ -106,9 +106,12 @@ function add_repository() {
   });
 }
 
-function check_vpn() {
-  var url  = 'scan.php?op=check_vpn';
-  jQuery.get(url, function(data) {
+function check_vpn(service) {
+  var url = 'scan.php?op=check_vpn';
+  jQuery.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
         console.log('check_vpn: '+data);
         if (data=="1") { // save_vpn has finished or VPN ON
 	  const vpn_div = document.getElementById("vpn");
@@ -141,6 +144,11 @@ function check_vpn() {
 		$('#pro_off').show();
         }
         setTimeout(check_vpn, 10000);
+    },
+    error: function(xhr, status, error) {
+      console.warn('check_vpn error: ' + status + ' - ' + error);
+      setTimeout(check_vpn, 10000, service);
+    }
   });
 }
 
@@ -181,22 +189,27 @@ function get_updates() {
 }
 
 function check_upgrade(service) {
-  var url  = 'scan.php?op=check_upgrade&service='+service;
-  jQuery.get(url, function(data) {
-        console.log('check_upgrade '+service+': '+data);
-      if (data!="") {
-              jQuery("#status_"+service).html(data);
+  var url = 'scan.php?op=check_upgrade&service=' + service;
+  jQuery.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
+      console.log('check_upgrade ' + service + ': ' + data);
+      if (data !== "") {
+        jQuery("#status_" + service).html(data);
       }
-      if (data!="OK") {
-              setTimeout(check_upgrade, 1000, service);
+      if (data !== "OK") {
+        setTimeout(check_upgrade, 1000, service);
+      } else {
+        console.log('upgrade end: ' + service);
+        jQuery("#status_" + service).html('Upgrade has finished');
       }
-      else {
-          console.log('upgrade end: '+service);
-	  jQuery("#status_"+service).html('Upgrade has finished');
-	  //get_updates();
-      }
+    },
+    error: function(xhr, status, error) {
+      console.warn('check_upgrade error: ' + status + ' - ' + error);
+      setTimeout(check_upgrade, 5000, service);
+    }
   });
-
 }
 
 function upgrade(service) {
