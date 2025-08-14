@@ -361,23 +361,25 @@ switch ($_GET["op"]) {
 						continue; // do NOT regenerate values
 					}
 
-					if (intval($field_arr[3])==0) $len = 10; // default length
-					else $len = $field_arr[3];
+					$gen_arr = explode("|",$field_arr[1]);
 
-					if ($field_arr[1]=="openssl") {
-						if ($field_arr[2]=="hex") $command = "openssl rand -hex $len";
-						elseif ($field_arr[2]=="base64") $command = "openssl rand -base64 $len";
+					if (intval($gen_arr[2])==0) $len = 10; // default length
+					else $len = $gen_arr[2];
+
+					if ($gen_arr[0]=="openssl") {
+						if ($gen_arr[1]=="hex") $command = "openssl rand -hex $len";
+						elseif ($gen_arr[1]=="base64") $command = "openssl rand -base64 $len";
 						else $command = "openssl rand $len"; // raw
 						$output = shell_exec($command);
 						if ($output === null) $output = "OPENSSL_ERROR";
 					}
 					else {
-						if ($field_arr[1]=="random") $base = rand(100000,999999);
-						elseif ($field_arr[1]=="time") $base = time();
-						elseif ($field_arr[1]!="") $base = $field_arr[1]; // fix string
+						if ($gen_arr[0]=="random") $base = rand(100000,999999);
+						elseif ($gen_arr[0]=="time") $base = time();
+						elseif ($gen_arr[0]!="") $base = $gen_arr[0]; // fix string
 						else $base = rand(100000,999999); // default
 
-						if (in_array($field_arr[2],$algos)) $base = hash($field_arr[2],$base);
+						if (in_array($gen_arr[1],$algos)) $base = hash($gen_arr[1],$base);
 						else $base = hash("md5",$base); // default alg
 
 						$output = substr($base,0,$len);
@@ -385,6 +387,8 @@ switch ($_GET["op"]) {
 					$fields["$field_key"] = $output;
 				}
 			}
+			//var_dump($fields); exit; // TEMP - test generated values
+
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => $_GET["op"], "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
