@@ -297,7 +297,7 @@ switch ($_GET["op"]) {
 						";
 					}
 					elseif ($data["STATUS"]=="2") { // deploy
-						echo "Install has finished.";
+						echo '<div class="loading">Install has finished.</div>';
 						echo "<script>get_deployments();</script>";
 					}
 					remove_response("$key");
@@ -314,7 +314,7 @@ switch ($_GET["op"]) {
 							echo "";
 						}
 						elseif ($data["STATUS"]=="2") { 
-							echo "Install has finished.";
+							echo '<div class="loading">Install has finished.';
 							echo "<script>get_deployments();</script>";
 							remove_response("$key"); // remove from output if finished so reinstall can start
 						}
@@ -392,8 +392,8 @@ switch ($_GET["op"]) {
 			$payload = base64_encode(json_encode($fields, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
 			$arr = array("NAME" => $_GET["additional"], "ACTION" => $_GET["op"], "PAYLOAD" => $payload);
 			$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-			if (set_output("deployment",$json)) echo "OK";
-			else echo "ERROR";
+			if (set_output("deployment",$json)) echo "";
+			else $text .= " - ERROR";
 		}
 		echo $text;
 	break;
@@ -426,14 +426,15 @@ switch ($_GET["op"]) {
                         if (!empty($arr)) {
                                 $data = $arr[$key];
                                 if ($data["STATUS"]=="1") {
-                                        echo "Uninstall in progress... Please wait... ".date("Y-m-d H:i:s");
+                                        //echo "Uninstall in progress... Please wait... ".date("Y-m-d H:i:s");
+					echo "Uninstall in progress... ";
                                 }
                                 elseif ($data["STATUS"]=="2") {
                                         echo "OK";
                                         remove_response("$key");
                                 }
                         }
-                        else echo "Uninstall in progress... Please wait...";
+                        else echo "Uninstall in progress...";
                 }
         break;
         case "uninstall":
@@ -441,12 +442,12 @@ switch ($_GET["op"]) {
                         $text="Deploy/uninstall process has already started.<br>Please wait and do not start a new one...";
                 }
                 else {
-                        $text="Uninstall in progress... Please wait...";
+                        $text="Uninstall in progress...";
                         $arr = array("NAME" => $_GET["additional"], "ACTION" => "uninstall");
                         $json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 
-                        if (set_output("deployment",$json)) echo "OK";
-                        else echo "ERROR";
+                        if (set_output("deployment",$json)) echo "";
+                        else $text .= " - ERROR";
                 }
                 echo $text;
         break;

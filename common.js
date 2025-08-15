@@ -274,13 +274,13 @@ function check_uninstall(additional) {
         console.log('check_uninstall '+additional+': '+data);
       if (data!="") {
               jQuery("#"+additional).html(data);
-	      jQuery("#popupText").html(data); // manage2
+	      jQuery("#popupText").html('<div class="loading">'+data+'</div>'); // manage2
       }
       if (data!="OK") {
               setTimeout(check_uninstall, 1000, additional);
       }
       else {
-	  jQuery("#popupText").html('Uninstall has finished'); // manage2
+	  jQuery("#popupText").html('<div class="loading">Uninstall has finished</div>'); // manage2
 	  jQuery("#"+additional).html('Uninstall has finished');
 	  get_deployments();
       }
@@ -292,7 +292,7 @@ function uninstall(additional) {
   jQuery("div.deployment").each(function(index) {
         $(this).html('');
   });
-	data = '<div class="confirm"><form action="#" method="post"><div class="row">You are going to uninstall '+additional.toUpperCase()+'.<br>Are you sure? If yes, please click on the Uninstall button below.<br><br></div><div class="row buttons"><div class="mb-3"><button class="btn" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div><div class="mb-3" style="margin-left:200px;float:"><button class="btn" onclick="reinstall(\''+additional+'\',\''+additional+'\')">Cancel</button></div></div></form></div>';
+	data = '<div class="confirm"><form action="#" method="post"><div class="row">You are going to uninstall '+additional.toUpperCase()+'.<br>Are you sure? If you click on Uninstall button below then all your data will be deleted.<br><br></div><div class="row buttons"><div class="mb-3"><button class="btn" type="button" onclick="confirm_uninstall(\''+additional+'\')">Uninstall</button></div><div class="mb-3" style="margin-left:200px;float:"><button class="btn" onclick="reinstall(\''+additional+'\',\''+additional+'\')">Cancel</button></div></div></form></div>';
 	jQuery("#"+additional).html(data);
 	jQuery("#popupText").html(data); // manage2
 }
@@ -305,7 +305,7 @@ function confirm_uninstall(additional) {
         console.log('uninstall '+additional+': '+data);
           if (data!="") {
                 jQuery("#"+additional).html(data);
-	        jQuery("#popupText").html(data); // manage2
+	        jQuery("#popupText").html('<div class="loading">'+data+'</div>'); // manage2
                 setTimeout(check_uninstall, 1000, additional);
           }
   });
@@ -379,7 +379,7 @@ function deploy(additional) {
 	console.log('deploy '+additional+': '+data);
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
-	        jQuery("#popupText").html(data); // manage2
+	        jQuery("#popupText").html('<div class="loading">'+data+'</div>'); // manage2
       		setTimeout(check_deployment, 1000, additional);
 	  }
   });
@@ -398,7 +398,7 @@ function redeploy(additional) {
 	console.log('redeploy '+additional+': '+data);
 	  if (data!="") {
 	        jQuery("#"+additional).html(data);
-		jQuery("#popupText").html(data); // manage2
+		jQuery("#popupText").html('<div class="loading">'+data+'</div>'); // manage2
       		setTimeout(check_deployment, 1000, additional);
 	  }
   });
