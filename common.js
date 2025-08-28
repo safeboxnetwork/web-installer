@@ -113,23 +113,13 @@ function check_vpn(service) {
     method: 'GET',
     success: function(data) {
         console.log('check_vpn: '+data);
-        if (data=="1") { // save_vpn has finished or VPN ON
-	  const vpn_div = document.getElementById("vpn");
-	  console.log('vpn_div: '+vpn_div);
-	  if (vpn_div) {
-	  	vpn_div.innerHTML = 'VPN start process has finished';
-		setTimeout(function() {
-			document.getElementById('installAppsBtn').click();
-		}, 2000);
-	  }
-	  else {
+        if (data=="1") { // VPN ON
 		$('#pro_off').hide();
 		$('#pro_on').show();
 		$('#vpn_off').hide();
 		$('#vpn_on').show();
 		//document.getElementById('vpnToggle').checked = true;
 		//document.querySelector(".switch-label").textContent = "ON";
-	  }
 	}
 	else if (data=="2") {
 		$('#pro_off').hide();
@@ -152,13 +142,38 @@ function check_vpn(service) {
   });
 }
 
+function check_save_vpn(service) {
+  var url = 'scan.php?op=check_vpn';
+  jQuery.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
+        console.log('check_save_vpn: '+data);
+        if (data=="1") { // save_vpn has finished or VPN ON
+	  const vpn_div = document.getElementById("vpn");
+	  if (vpn_div) {
+	  	vpn_div.innerHTML = '<div class="loading">VPN start process has finished</div>';
+		setTimeout(function() {
+			document.getElementById('installAppsBtn').click();
+		}, 2000);
+	  }
+	}
+	else setTimeout(check_save_vpn, 1000);
+    },
+    error: function(xhr, status, error) {
+      console.warn('check_save_vpn error: ' + status + ' - ' + error);
+      setTimeout(check_save_vpn, 1000);
+    }
+  });
+}
+
 function save_vpn() {
   var url  = 'scan.php?op=save_vpn&vpn_domain='+jQuery('#vpn_domain').val()+'&vpn_pass='+jQuery('#vpn_pass').val()+'&letsencrypt_mail='+jQuery('#letsencrypt_mail').val()+'&letsencrypt_servername='+jQuery('#letsencrypt_servername').val();
 
   jQuery.get(url, function(data) {
 	console.log('save_vpn: '+data);
 	  if (data=="OK") {
-		check_vpn();
+		check_save_vpn();
 	  }
 	//get_vpn();
   });

@@ -227,9 +227,21 @@ switch ($_GET["op"]) {
 							}
 							else {
 								echo "<div class=\"row\">";
-								echo "<label>".$field->description."</label>
-								<div class=\"input-container\"><input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\"></div>
-								<div class=\"info-container\">
+								echo "<label>".$field->description."</label>";
+								if ($field->type=="select") {
+									echo "<div class=\"input-container\">
+										<select ".($field->required=="true" ? "required" : "")." name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\">";
+									$values = explode(",",$field->value);
+									foreach ($values as $value) {
+										$v_arr = explode(":",$value);
+										if (empty($v_arr[1])) $v_arr[1] = $v_arr[0];
+										echo "<option value=\"{$v_arr[0]}\">{$v_arr[1]}</option>";
+									}
+									echo "	</select>
+									</div>";
+								}
+								else echo "<div class=\"input-container\"><input ".($field->required=="true" ? "required" : "")." type=\"".(!empty($field->type) ? $field->type : "text")."\" value=\"{$field->value}\" name=\"{$field->key}\" id=\"{$template->name}_{$field->key}\" class=\"additional_{$template->name}\"></div>";
+								echo "<div class=\"info-container\">
 								";
 								if (!empty($field->info)) echo "
 									  <span class=\"info-icon\">i</span>
