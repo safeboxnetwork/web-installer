@@ -69,14 +69,13 @@ echo "<pre>".$output."</pre>";
   <title>Safebox - INSTALLER TOOL</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?t=4" />
+  <link rel="stylesheet" href="style.css?t=17" />
 </head>
 <body id="install" class="text-center">
   <div class="main">
     <div id="myAppsContainer">
 	<div class="logo" style="margin:100px 0px 20px 0px;">
-		<img src="/img/logo.svg" alt="Safebox"/>
-		<span>Safebox</span>
+        	<img src="/img/safebox_orange_white.svg" alt="Safebox"/>
 	</div>
 	<div class="progress-box">
 		<div class="progress-title"><?php echo $header_text?></div>
