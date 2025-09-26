@@ -9,7 +9,7 @@
 <title>Safebox</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<link rel="stylesheet" href="style.css?t=17" />
+<link rel="stylesheet" href="style.css?t=20" />
 </head>
 <body>
   <div class="sidebar">
@@ -28,12 +28,14 @@
         <div class="menu-item" id="backupBtn"><img src="/img/backup1.svg" data-src="/img/backup1.svg" data-hover="/img/backup2.svg" alt="Backup" /><span>Backup</span></div>
         <div class="menu-item" id="diskBtn"><img src="/img/disk1.svg" data-src="/img/disk1.svg" data-hover="/img/disk2.svg" alt="Disk Management" /><span>Disk Management</span></div>
         <div class="menu-item" id="monitorBtn"><img src="/img/monitor1.svg" data-src="/img/monitor1.svg" data-hover="/img/monitor2.svg" alt="Monitor" /><span>Monitor</span></div>
+<!--
 	<div class="menu-item has-submenu" id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" /><span>Settings</span><span class="arrow">&#9662;</span></div>
 	<div class="submenu" id="settingsSubmenu">
 	  <div id="servicesBtn" class="submenu-item">Services</div>
 	  <div id="repositoriesBtn" class="submenu-item">Repositories</div>
 	  <div id="systemservicesBtn" class="submenu-item">System services</div>
 	</div>
+-->
       </div>
     </div>
     <div class="yellow-row">
@@ -94,7 +96,6 @@
     const backupBtn = document.getElementById('backupBtn');
     const diskBtn = document.getElementById('diskBtn');
     const monitorBtn = document.getElementById('monitorBtn');
-    const settingsBtn = document.getElementById('settingsBtn');
 
     const vpnBtn = document.getElementById('vpnBtn');
     const upgradeBtn = document.getElementById('upgradeBtn');
@@ -121,10 +122,12 @@
     	myAppsContainer.classList.remove('hidden');
         popup.classList.add('hidden');
 
-	myAppsContainer.innerHTML = '<div class="main-header"><h1>Applications</h1><button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button></div><div id="appsContainer"></div>';
+	    myAppsContainer.innerHTML = '<div class="main-header"><h1>Applications</h1><div class="buttons"><button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button><button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button></div></div><div id="appsContainer"></div>';
     	const appsContainer = document.getElementById('appsContainer');
     	const updatesBtn = document.getElementById('updatesBtn');
+    	const settingsBtn = document.getElementById('settingsBtn');
 	updatesBtn.addEventListener('click', () => renderUpdates());
+    	settingsBtn.addEventListener('click', () => {renderSettings();});
 
         apps.forEach(app => {
 	    //if ((all==false && app.installed=='true') || (all==true && app.installed!='true')) {
@@ -160,7 +163,10 @@
         myAppsContainer.innerHTML = `
 	    <div class="main-header">
 	      <h1>${title}</h1>
+	      <div class="buttons">
 	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
+	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+	      </div>
 	    </div>
 	    <label>Under development...</label>
         `;
@@ -189,7 +195,10 @@
         myAppsContainer.innerHTML = `
 	    <div class="main-header">
 	      <h1>Monitor</h1>
+	      <div class="buttons">
 	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
+	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+	      </div>
 	    </div>
 	    <label>Under development...</label><br>
         	<img src="/img/monitor.jpg" alt="Under development..." width="1000" />
@@ -253,7 +262,7 @@
 	const isVisible = submenu.style.display === "flex";
 
 	submenu.style.display = isVisible ? "none" : "flex";
-	settingsBtn.classList.toggle("open", !isVisible);
+//	settingsBtn.classList.toggle("open", !isVisible);
 
     	myAppsContainer.classList.remove('hidden');
         popup.classList.add('hidden');
@@ -261,7 +270,10 @@
 	myAppsContainer.innerHTML = `
     <div class="main-header">
       <h1>Settings</h1>
+      <div class="buttons">
       <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
+      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+      </div>
     </div>
 
 	    <div class="input-row">
@@ -346,7 +358,7 @@
 		backupBtn.classList.remove('active');
 		diskBtn.classList.remove('active');
 		monitorBtn.classList.remove('active');
-		settingsBtn.classList.remove('active');
+		//settingsBtn.classList.remove('active');
 		btn.classList.add('active');
 	    
 		updateActive();
@@ -357,7 +369,7 @@
 	backupBtn.addEventListener('click', () => {renderText('Backup'); activate(backupBtn);});
 	diskBtn.addEventListener('click', () => {renderText('Disk Management'); activate(diskBtn)});
 	monitorBtn.addEventListener('click', () => {renderMonitor(); activate(monitorBtn)});
-    	settingsBtn.addEventListener('click', () => {renderSettings(); activate(settingsBtn)});
+    	//settingsBtn.addEventListener('click', () => {renderSettings(); activate(settingsBtn)});
 
 	vpnBtn.addEventListener('click', () => renderVPN());
 	upgradeBtn.addEventListener('click', () => renderVPN());

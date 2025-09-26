@@ -197,8 +197,8 @@ switch ($_GET["op"]) {
 							      <p class="description">'.$template->description.'</p>
 							    </div>
 							  </div>
-							  <button id="updatesBtn" class="notification-btn"><i class="fas fa-bell"></i> Notification</button>
-							</div>
+<!--							  <button id="updatesBtn" class="notification-btn"><i class="fas fa-bell"></i> Notification</button>
+-->							</div>
 						';
 						if ($reinstall) {
 							echo '<div id="letsencrypt">';
@@ -278,7 +278,7 @@ switch ($_GET["op"]) {
 							<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"uninstall_{$template->name}_btn\" onclick=\"uninstall('{$template->name}')\">Uninstall</button>
 							</div>";
 						}
-						echo "<div class=\"mb-3\" style=\"margin-left:200px;float:\">
+						echo "<div class=\"mb-3\">
 						<button class=\"btn btn-lg btn-primary btn-block\" type=\"button\" id=\"cancel_{$template->name}_btn\">Cancel</button>
 						</div>";
                                                 echo "

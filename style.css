@@ -375,8 +375,9 @@
 	#appsContainer {
 	  display: flex;
 	  flex-wrap: wrap;
-	  gap: 16px;
+	  gap: 15px;
 	  padding: 0px;
+      	  max-width: 1105px;
 	}
 
 	.app {
@@ -424,8 +425,8 @@
 	  background-color: inherit;
 	  color: #cccccc;
 	  border: 1px solid #cccccc;
-	  border-radius: 15px;
-	  padding: 18px;
+	  border-radius: 10px;
+	  padding: 10px 20px;
 	  font-size: 16px;
 	  font-weight: 400;
 	  cursor: pointer;
@@ -530,6 +531,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+      max-width: 1105px;
     }
 
     .main-header h1 {
@@ -537,17 +539,30 @@
       font-size: 28px;
     }
 
+    .main-header .buttons {
+	display: flex;
+	gap: 20px;
+    }
+
     .main-header button {
-      background-color: var(--highlight-color);
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
       display: flex;
+      padding: 10px 20px;
+      background-color: black;
+      border: 1px solid #999;
+      border-radius: 10px;
+      color: #999;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      align-self: flex-start;
       align-items: center;
       gap: 10px;
+    }
+
+    .main-header button:hover {
+      border: 1px solid #f5c300;
+      color: #f5c300;
     }
 
     .input-row, .input-group {
@@ -616,7 +631,6 @@
 		left: -18px;
 		top: -22px;
 		display: inline-block;
-		font-family: Arial, sans-serif;
 		margin: 0px;
 		width: 0px;
 	}
@@ -704,9 +718,9 @@
       background-color: black;
       border: 1px solid #999;
       color: #999;
-      padding: 10px 15px;
-      font-size: 14px;
-      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
       margin-top: 10px;
