@@ -122,12 +122,20 @@
     	myAppsContainer.classList.remove('hidden');
         popup.classList.add('hidden');
 
-	    myAppsContainer.innerHTML = '<div class="main-header"><h1>Applications</h1><div class="buttons"><button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button><button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button></div></div><div id="appsContainer"></div>';
+	    myAppsContainer.innerHTML = '<div class="main-header"><h1>Applications</h1><div class="buttons"><button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button><button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" width="18" height="18" />Settings</button></div></div><div id="appsContainer"></div>';
     	const appsContainer = document.getElementById('appsContainer');
     	const updatesBtn = document.getElementById('updatesBtn');
     	const settingsBtn = document.getElementById('settingsBtn');
 	updatesBtn.addEventListener('click', () => renderUpdates());
-    	settingsBtn.addEventListener('click', () => {renderSettings();});
+    	settingsBtn.addEventListener('click', () => renderSettings());
+
+	  const img = settingsBtn.querySelector("img");
+	  settingsBtn.addEventListener("mouseover", () => {
+	    img.src = img.dataset.hover;
+	  });
+	  settingsBtn.addEventListener("mouseout", () => {
+	    img.src = img.dataset.src;
+	  });
 
         apps.forEach(app => {
 	    //if ((all==false && app.installed=='true') || (all==true && app.installed!='true')) {
@@ -165,7 +173,7 @@
 	      <h1>${title}</h1>
 	      <div class="buttons">
 	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
-	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" width="18" height="18" />Settings</button>
 	      </div>
 	    </div>
 	    <label>Under development...</label>
@@ -197,7 +205,7 @@
 	      <h1>Monitor</h1>
 	      <div class="buttons">
 	      <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
-	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+	      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" width="18" height="18" />Settings</button>
 	      </div>
 	    </div>
 	    <label>Under development...</label><br>
@@ -259,9 +267,9 @@
     function renderSettings() {
 
 	const submenu = document.getElementById("settingsSubmenu");
-	const isVisible = submenu.style.display === "flex";
+//	const isVisible = submenu.style.display === "flex";
 
-	submenu.style.display = isVisible ? "none" : "flex";
+//	submenu.style.display = isVisible ? "none" : "flex";
 //	settingsBtn.classList.toggle("open", !isVisible);
 
     	myAppsContainer.classList.remove('hidden');
@@ -272,7 +280,7 @@
       <h1>Settings</h1>
       <div class="buttons">
       <button id="updatesBtn"><i class="fas fa-bell"></i> Notification</button>
-      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" />Settings</button>
+      <button id="settingsBtn"><img src="/img/settings1.svg" data-src="/img/settings1.svg" data-hover="/img/settings2.svg" alt="Settings" width="18" height="18" />Settings</button>
       </div>
     </div>
 
@@ -314,9 +322,9 @@
 	const repositoriesBtn = document.getElementById('repositoriesBtn');
 	const systemservicesBtn = document.getElementById('systemservicesBtn');
     	const updatesBtn = document.getElementById('updatesBtn');
-	servicesBtn.addEventListener('click', () => renderServices());
-	repositoriesBtn.addEventListener('click', () => renderRepositories());
-	systemservicesBtn.addEventListener('click', () => renderSystemServices());
+//	servicesBtn.addEventListener('click', () => renderServices());
+//	repositoriesBtn.addEventListener('click', () => renderRepositories());
+//	systemservicesBtn.addEventListener('click', () => renderSystemServices());
 	updatesBtn.addEventListener('click', () => renderUpdates());
     }
 
