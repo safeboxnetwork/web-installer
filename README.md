@@ -5,8 +5,6 @@ The WebInstaller is a component of the Safebox project, designed to manage and s
 
 ## Description
 
-## Description
-
 The WebInstaller provides a comprehensive web-based interface for installing, configuring, and managing the Safebox containerized platform. It simplifies the deployment process through an intuitive step-by-step installation wizard that guides users through:
 
 - **Initial Setup**: Configure authentication credentials, proxy settings, and VPN connectivity
