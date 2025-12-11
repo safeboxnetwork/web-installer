@@ -169,6 +169,7 @@ function check_install() {
 	  $.get(url, function(data){
 	    console.log('check_install:'+data+' counter: '+counter);
 	    if (data=='INSTALLED') {
+      		check_system();
 		redirectToManage();
 	    }
 	    else {

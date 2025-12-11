@@ -529,7 +529,6 @@ function check_session() {
 		console.log('check_session: '+data);
 		if (data=="") {
 			document.location='signin.html';
-			exit;
 		}
 	});
 }
