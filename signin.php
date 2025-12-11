@@ -15,11 +15,12 @@ if ($user == $_POST["AUTH_USERNAME"]) {
 	if (password_verify($pass_input, $pass_hash)) {
 		//echo "OK – jelszó jó!";
 		$_SESSION["username"] = $_POST["AUTH_USERNAME"];
+		header('Location: manage.html');
 	} else {
 		//echo "ROSSZ – jelszó hibás!";
 		unset($_SESSION["username"]);
+		header('Location: signin.html');
 	}
-	header('Location: manage.html');
 
 }
 else header('Location: signin.html');
