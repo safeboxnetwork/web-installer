@@ -3,6 +3,8 @@ FROM alpine
 ENV NGINX_VERSION=1.29.4
 ARG PHP_VERSION="83"
 
+
+
 RUN \
   build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" && \
   runtime_pkgs="ca-certificates openssl pcre zlib tzdata " && \
@@ -64,18 +66,42 @@ RUN apk --no-cache add php${PHP_VERSION} \
 
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /usr/share/nginx/html
-COPY *.html    /usr/share/nginx/html
+COPY *.html  /usr/share/nginx/html
 COPY *.php   /usr/share/nginx/html
-COPY *.css /usr/share/nginx/html
-COPY *.js /usr/share/nginx/html
-COPY img /usr/share/nginx/html/img
-RUN chown -R nginx:nginx /usr/share/nginx/html
+COPY *.css   /usr/share/nginx/html
+COPY *.js    /usr/share/nginx/html
+COPY img     /usr/share/nginx/html/img
 
-RUN mkdir -p /usr/share/nginx/html/shared
-RUN chown -R nobody:nobody /usr/share/nginx/html/shared
+RUN \
+    chown -R nginx:nginx /usr/share/nginx/html && \
+    rm /var/log/nginx/*.log && \
+    touch /var/log/nginx/access.log && \
+    touch /var/log/nginx/error.log && \
+    chown -R nginx:nginx /var/log/nginx
+
+RUN sed -i 's,listen       80;,listen       8080;,' /etc/nginx/conf.d/default.conf \
+    && sed -i '/user  nginx;/d' /etc/nginx/nginx.conf \
+    && sed -i 's,^.*pid,pid /tmp/nginx.pid,' /etc/nginx/nginx.conf \
+    && sed -i "/^http {/a \    proxy_temp_path /tmp/proxy_temp;\n    client_body_temp_path /tmp/client_temp;\n    fastcgi_temp_path /tmp/fastcgi_temp;\n    uwsgi_temp_path /tmp/uwsgi_temp;\n    scgi_temp_path /tmp/scgi_temp;\n" /etc/nginx/nginx.conf \
+    && sed -i 's#"\$http_x_forwarded_for"#\$http_x_forwarded_for#g' /etc/nginx/nginx.conf
+
+RUN \
+    mkdir -p /usr/share/nginx/html/ && \
+    chown -R nginx:nginx /usr/share/nginx/html/ && \
+    && chown -R :nginx /var/cache/nginx \
+    && chmod -R g+w /var/cache/nginx \
+    && chown -R :nginx /etc/nginx \
+    && chmod -R g+w /etc/nginx \
+    && chown -R :nginx /usr/share/nginx \
+    && chmod -R g+w /usr/share/nginx \
+    && chmod -R o-rwx /usr/share/nginx && \
+    mkdir -p /var/log/php83 && \
+    chown -R nginx: /var/log/php83
 
 VOLUME ["/var/cache/nginx"]
 
-EXPOSE 80
+EXPOSE 8080
+
+USER nginx
 
 CMD php-fpm83 & nginx
