@@ -75,7 +75,6 @@ COPY img     /usr/share/nginx/html/img
 RUN \
     chown -R nginx:nginx /usr/share/nginx/html && \
     mkdir -p /var/log/nginx && \
-    rm /var/log/nginx/* && \
     touch /var/log/nginx/access.log && \
     touch /var/log/nginx/error.log && \
     chown -R nginx:nginx /var/log/nginx
