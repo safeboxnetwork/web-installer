@@ -79,22 +79,23 @@ RUN \
     touch /var/log/nginx/error.log && \
     chown -R nginx:nginx /var/log/nginx
 
-RUN sed -i 's,listen       80;,listen       8080;,' /etc/nginx/nginx.conf \
-    && sed -i '/user  nginx;/d' /etc/nginx/nginx.conf \
-    && sed -i 's,^.*pid,pid /tmp/nginx.pid,' /etc/nginx/nginx.conf \
-    && sed -i "/^http {/a \    proxy_temp_path /tmp/proxy_temp;\n    client_body_temp_path /tmp/client_temp;\n    fastcgi_temp_path /tmp/fastcgi_temp;\n    uwsgi_temp_path /tmp/uwsgi_temp;\n    scgi_temp_path /tmp/scgi_temp;\n" /etc/nginx/nginx.conf \
-    && sed -i 's#"\$http_x_forwarded_for"#\$http_x_forwarded_for#g' /etc/nginx/nginx.conf
+RUN \
+    sed -i 's,listen       80;,listen       8080;,' /etc/nginx/nginx.conf && \
+    sed -i '/user  nginx;/d' /etc/nginx/nginx.conf && \
+    sed -i 's,^.*pid,pid /tmp/nginx.pid,' /etc/nginx/nginx.conf && \
+    sed -i "/^http {/a \    proxy_temp_path /tmp/proxy_temp;\n    client_body_temp_path /tmp/client_temp;\n    fastcgi_temp_path /tmp/fastcgi_temp;\n    uwsgi_temp_path /tmp/uwsgi_temp;\n    scgi_temp_path /tmp/scgi_temp;\n" /etc/nginx/nginx.conf && \
+    sed -i 's#"\$http_x_forwarded_for"#\$http_x_forwarded_for#g' /etc/nginx/nginx.conf
 
 RUN \
     mkdir -p /usr/share/nginx/html/ && \
     chown -R nginx:nginx /usr/share/nginx/html/ && \
-    && chown -R :nginx /var/cache/nginx \
-    && chmod -R g+w /var/cache/nginx \
-    && chown -R :nginx /etc/nginx \
-    && chmod -R g+w /etc/nginx \
-    && chown -R :nginx /usr/share/nginx \
-    && chmod -R g+w /usr/share/nginx \
-    && chmod -R o-rwx /usr/share/nginx && \
+    chown -R :nginx /var/cache/nginx && \
+    chmod -R g+w /var/cache/nginx && \
+    chown -R :nginx /etc/nginx && \
+    chmod -R g+w /etc/nginx && \
+    chown -R :nginx /usr/share/nginx && \
+    chmod -R g+w /usr/share/nginx && \
+    chmod -R o-rwx /usr/share/nginx && \
     mkdir -p /var/log/php83 && \
     chown -R nginx: /var/log/php83
 
