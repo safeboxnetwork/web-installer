@@ -18,8 +18,8 @@ steps:
     image: docker.io/owncloudci/drone-docker-buildx:4
     privileged: true
     settings:
-      cache-from: [ "safebox/framework-scheduler" ]
-      repo: safebox/framework-scheduler
+      cache-from: [ "safebox/web-installer" ]
+      repo: safebox/web-installer
       tags: latest
       username:
         from_secret: dockerhub-username
@@ -38,9 +38,9 @@ steps:
     #environment:
     #  DOCKER_PLUGIN_MIRROR: "https://mirror.dev.format.hu"
     settings:
-      cache-from: [ "registry.dev.format.hu/framework-scheduler" ]
+      cache-from: [ "registry.dev.format.hu/web-installer" ]
       registry: registry.dev.format.hu
-      repo: registry.dev.format.hu/framework-scheduler
+      repo: registry.dev.format.hu/web-installer
       tags: latest
       dockerfile: Dockerfile
       username:
