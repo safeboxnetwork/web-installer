@@ -169,8 +169,15 @@ function check_install() {
 	  $.get(url, function(data){
 	    console.log('check_install:'+data+' counter: '+counter);
 	    if (data=='INSTALLED') {
-      		check_system();
-		redirectToManage();
+		  var url  = 'scan.php?op=system';
+		  jQuery.get(url, function(data) {
+		  	console.log('installed');
+		  	console.log('system: '+data);
+			if (data=="OK") {
+				setTimeout(check_system, 500);
+			}
+		  });
+		//redirectToManage();
 	    }
 	    else {
 	      counter+=1
