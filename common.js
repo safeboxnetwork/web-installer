@@ -523,7 +523,20 @@ function get_version() {
   });
 }
 
+function check_session() {
+	var url  = 'check_session.php';
+	jQuery.get(url, function(data) {
+		console.log('check_session: '+data);
+		if (data=="") {
+			document.location='signin.html';
+			exit;
+		}
+	});
+}
+
 jQuery(document).ready(function(){
+
+	check_session();
 
 	get_version();
 	get_repositories();

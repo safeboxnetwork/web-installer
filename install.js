@@ -67,6 +67,11 @@ function redirectToManage() {
 	window.location.href = 'manage.html?t='+Date.now();
 }
 
+function redirectToAuth() {
+	setProgress(100);
+	window.location.href = 'signin.html?t='+Date.now();
+}
+
 function start_system() {
   var url  = 'scan.php?op=system';
   $.get(url, function(data){
@@ -93,6 +98,11 @@ function check_system() {
       $("#info").html('Previous install has found...');
       setProgress(80);
       setTimeout(redirectToManage, 3000);
+    }
+    else if (data=='AUTH') {
+      $("#info").html('Previous install has found... Please sign in.');
+      setProgress(80);
+      setTimeout(redirectToAuth, 3000);
     }
     else if (data=='WAIT') {
       setTimeout(check_system, 1000);
