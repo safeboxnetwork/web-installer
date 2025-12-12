@@ -10,6 +10,37 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <link rel="stylesheet" href="style.css?t=17" />
+<style>
+.input-row {
+    margin-bottom: 10px;
+}
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.toggle-eye {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.error {
+    color: red;
+    font-size: 0.9em;
+    display: none;
+    margin-top: 5px;
+}
+.input-error {
+    border-color: red !important;
+}
+.save-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+</style>
 </head>
 <body id="installer">
   <div class="main" style="max-width:1000px;margin:0px auto;">
@@ -41,10 +72,20 @@
 	    	</div>
 	</div>
 	<div class="input-row">
-		<label for="auth_password">Password:</label>
-		<div class="input-container">
-		<input type="text" class="form-control" name="AUTH_PASSWORD" id="auth_password" value="" maxlength="20" size="20">
-		</div>
+	    <label for="auth_password">Password:</label>
+	    <div class="input-container">
+		<input type="password" class="form-control" name="AUTH_PASSWORD" id="auth_password" maxlength="20" size="20">
+		<span class="toggle-eye" data-target="auth_password">👁️</span>
+	    </div>
+	</div>
+	<div class="input-row">
+	    <label for="auth_password2">Password again:
+	    <div id="pass_error" class="error">Passwords mismatch!</div>
+	    </label>
+	    <div class="input-container">
+		<input type="password" class="form-control" name="AUTH_PASSWORD2" id="auth_password2" maxlength="20" size="20">
+		<span class="toggle-eye" data-target="auth_password2">👁️</span>
+	    </div>
 	</div>
 	<div class="input-row">
 		<label for="auth_role">Role:</label>
@@ -161,7 +202,7 @@
 	</div>
 </div>
 <!-- advanced settings end -->
-	<button class="save-button" type="submit">Start install</button>
+	<button class="save-button" type="submit" id="submit_btn" disabled>Start install</button>
 </form>
     </div>
   </div>
@@ -241,6 +282,51 @@ jQuery(document).ready(function(){
 		if (jQuery(this).val()=='Y') jQuery('#div_roundcube').show();
 		else jQuery('#div_roundcube').hide();
 	});
+
+
+	document.querySelectorAll(".toggle-eye").forEach(icon => {
+	    icon.addEventListener("click", () => {
+		const targetId = icon.getAttribute("data-target");
+		const input = document.getElementById(targetId);
+		input.type = input.type === "password" ? "text" : "password";
+	    });
+	});
+
+	const pass1 = document.getElementById("auth_password");
+	const pass2 = document.getElementById("auth_password2");
+	const errorMsg = document.getElementById("pass_error");
+	const submitBtn = document.getElementById("submit_btn");
+
+	function checkPasswords() {
+	    const p1 = pass1.value;
+	    const p2 = pass2.value;
+
+	    let valid = false;
+
+	    if (p1.length === 0) {
+		valid = true;
+		errorMsg.style.display = "none";
+		pass1.classList.remove("input-error");
+		pass2.classList.remove("input-error");
+	    } else if (p1 === p2) {
+		valid = true;
+		errorMsg.style.display = "none";
+		pass1.classList.remove("input-error");
+		pass2.classList.remove("input-error");
+	    } else {
+		valid = false;
+		errorMsg.style.display = "block";
+		pass1.classList.add("input-error");
+		pass2.classList.add("input-error");
+	    }
+
+	    submitBtn.disabled = !valid;
+	}
+
+	//pass1.addEventListener("input", checkPasswords);
+	pass2.addEventListener("blur", checkPasswords);
+
+	checkPasswords();
 });
 </script>
 </body>
