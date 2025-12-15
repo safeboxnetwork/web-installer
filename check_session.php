@@ -1,8 +1,10 @@
 <?php
-
 session_start();
 
-if (isset($_SESSION["username"])) echo $_SESSION["username"];
-else echo "";
-       
+if (file_exists("/tmp/.htpasswd")) {
+        if (isset($_SESSION["username"])) echo $_SESSION["username"];
+        else echo "";
+}
+else echo "NOAUTH";
+
 ?>
