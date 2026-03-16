@@ -9,7 +9,7 @@
 <title>Safebox</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<link rel="stylesheet" href="style.css?t=22" />
+<link rel="stylesheet" href="style.css?t=23" />
 </head>
 <body>
   <div class="sidebar">
@@ -284,6 +284,68 @@
       </div>
     </div>
 
+
+	<!-- base settings -->
+	<div class="input-row">
+		<label for="remote_access">Enable remote access?</label>
+		<div class="input-container">
+			<select class="custom-select d-block w-100" name="REMOTE_ACCESS" id="remote_access">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+		</div>
+	</div>
+	<div id="div_remote_access" class="hidden">
+		<div class="input-row">
+			<label for="remote_access_domain">Remote access domain:</label>
+			<div class="input-container">
+			<input type="text" class="form-control" name="REMOTE_ACCESS_DOMAIN" id="remote_access_domain" value="" maxlength="20" size="20">
+			</div>
+		</div>
+	</div>
+	<div class="input-row">
+		<label for="user_auth">User auth (homeguard) enable?</label>
+		<div class="input-container">
+			<select class="custom-select d-block w-100" name="USER_AUTH" id="user_auth">
+			<option value="yes">Yes</option>
+			<option value="no" selected>No</option>
+			</select>
+		</div>
+	</div>
+	<div id="div_user_auth" class="hidden">
+		<div class="input-row">
+			<label for="auth_username">Username:</label>
+			<div class="input-container">
+			<input type="text" class="form-control" name="AUTH_USERNAME" id="auth_username" value="" maxlength="20" size="20">
+			</div>
+		</div>
+		<div class="input-row">
+		    <label for="auth_password">Password:</label>
+		    <div class="input-container">
+			<input type="password" class="form-control" name="AUTH_PASSWORD" id="auth_password" maxlength="20" size="20">
+			<span class="toggle-eye" data-target="auth_password">👁️</span>
+		    </div>
+		</div>
+		<div class="input-row">
+		    <label for="auth_password2">Password again:
+		    <div id="pass_error" class="error">Passwords mismatch!</div>
+		    </label>
+		    <div class="input-container">
+			<input type="password" class="form-control" name="AUTH_PASSWORD2" id="auth_password2" maxlength="20" size="20">
+			<span class="toggle-eye" data-target="auth_password2">👁️</span>
+		    </div>
+		</div>
+		<div class="input-row">
+			<label for="auth_role">Role:</label>
+			<div class="input-container">
+			<select class="custom-select d-block w-100" name="AUTH_ROLE" id="auth_role">
+			<option value="admin">Admin</option>
+			</select>
+			</div>
+		</div>
+	</div>
+
+<!--
 	    <div class="input-row">
 	      <label>Docker registry name</label>
 	      <div class="input-container">
@@ -316,6 +378,7 @@
 		</select>
 	      </div>
 	    </div>
+-->
 	    <button class="save-button">Save Settings</button>
         `;
 	const servicesBtn = document.getElementById('servicesBtn');
@@ -326,7 +389,61 @@
 //	repositoriesBtn.addEventListener('click', () => renderRepositories());
 //	systemservicesBtn.addEventListener('click', () => renderSystemServices());
 	updatesBtn.addEventListener('click', () => renderUpdates());
+
+	jQuery('select#user_auth').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_user_auth').show();
+		else jQuery('#div_user_auth').hide();
+	});
+	jQuery('select#remote_access').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_remote_access').show();
+		else jQuery('#div_remote_access').hide();
+	});
+
+	document.querySelectorAll(".toggle-eye").forEach(icon => {
+	    icon.addEventListener("click", () => {
+		const targetId = icon.getAttribute("data-target");
+		const input = document.getElementById(targetId);
+		input.type = input.type === "password" ? "text" : "password";
+	    });
+	});
+
+	const pass1 = document.getElementById("auth_password");
+	const pass2 = document.getElementById("auth_password2");
+	const errorMsg = document.getElementById("pass_error");
+	const submitBtn = document.getElementById("submit_btn");
+
+	//pass1.addEventListener("input", checkPasswords);
+	pass2.addEventListener("blur", checkPasswords);
+
+	checkPasswords();
+
     }
+
+	function checkPasswords() {
+	    const p1 = pass1.value;
+	    const p2 = pass2.value;
+
+	    let valid = false;
+
+	    if (p1.length === 0) {
+		valid = true;
+		errorMsg.style.display = "none";
+		pass1.classList.remove("input-error");
+		pass2.classList.remove("input-error");
+	    } else if (p1 === p2) {
+		valid = true;
+		errorMsg.style.display = "none";
+		pass1.classList.remove("input-error");
+		pass2.classList.remove("input-error");
+	    } else {
+		valid = false;
+		errorMsg.style.display = "block";
+		pass1.classList.add("input-error");
+		pass2.classList.add("input-error");
+	    }
+
+	    submitBtn.disabled = !valid;
+	}
 
     function renderRepositories() {
         myAppsContainer.innerHTML = `

@@ -9,7 +9,7 @@
 <title>Safebox - INSTALLER TOOL</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<link rel="stylesheet" href="style.css?t=17" />
+<link rel="stylesheet" href="style.css?t=23" />
 <style>
 .input-row {
     margin-bottom: 10px;
@@ -18,27 +18,6 @@
     position: relative;
     display: flex;
     align-items: center;
-}
-.toggle-eye {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    user-select: none;
-}
-.error {
-    color: red;
-    font-size: 0.9em;
-    display: none;
-    margin-top: 5px;
-}
-.input-error {
-    border-color: red !important;
-}
-.save-button:disabled {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-    opacity: 0.7;
 }
 </style>
 </head>
@@ -55,6 +34,23 @@
 
 <form class="form-install" action="install.php" method="post">
 <!-- base settings -->
+<div class="input-row">
+	<label for="remote_access">Enable remote access?</label>
+	<div class="input-container">
+		<select class="custom-select d-block w-100" name="REMOTE_ACCESS" id="remote_access">
+		<option value="yes">Yes</option>
+		<option value="no" selected>No</option>
+		</select>
+	</div>
+</div>
+<div id="div_remote_access" class="hidden">
+	<div class="input-row">
+		<label for="remote_access_domain">Remote access domain:</label>
+		<div class="input-container">
+		<input type="text" class="form-control" name="REMOTE_ACCESS_DOMAIN" id="remote_access_domain" value="" maxlength="20" size="20">
+	    	</div>
+	</div>
+</div>
 <div class="input-row">
 	<label for="user_auth">User auth (homeguard) enable?</label>
 	<div class="input-container">
@@ -239,6 +235,10 @@ jQuery(document).ready(function(){
 	jQuery('select#user_auth').click(function() {
 		if (jQuery(this).val()=='yes') jQuery('#div_user_auth').show();
 		else jQuery('#div_user_auth').hide();
+	});
+	jQuery('select#remote_access').click(function() {
+		if (jQuery(this).val()=='yes') jQuery('#div_remote_access').show();
+		else jQuery('#div_remote_access').hide();
 	});
 	jQuery('select#vpn').click(function() {
 		if (jQuery(this).val()=='yes') {
