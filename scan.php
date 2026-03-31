@@ -526,6 +526,22 @@ switch ($_GET["op"]) {
 		else echo "Framework version not found\n";
 		echo "Frontend version: ".file_get_contents("version.html");
 	break;
+	case "get_settings":
+		$arr = check_response("settings");
+		if (!empty($arr)) {
+			header('Content-Type: application/json; charset=utf-8');
+			echo json_encode($arr["settings"]);
+			exit;
+		}
+	break;
+	case "set_settings":
+		remove_response("add_repository");
+		$arr = array("STATUS" => 0);
+		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+		if (set_output("settings",$json)) echo "OK";
+		else echo "ERROR";
+	break;
 	case "repositories":
 		$arr = array("STATUS" => 0);
 		$json = json_encode($arr, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);

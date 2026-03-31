@@ -523,6 +523,14 @@ function get_version() {
   });
 }
 
+async function get_settings() {
+  var url  = 'scan.php?op=get_settings';
+  const data = await jQuery.get(url, null, null, 'json');
+	//console.log(data.AUTH_USERNAME);
+
+  return data;
+}
+
 function check_session() {
 	var url  = 'check_session.php';
 	jQuery.get(url, function(data) {
