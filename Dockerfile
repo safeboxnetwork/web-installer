@@ -95,8 +95,8 @@ RUN \
     chown -R :nginx /usr/share/nginx && \
     chmod -R g+w /usr/share/nginx && \
     chmod -R o-rwx /usr/share/nginx && \
-    mkdir -p /var/log/phpp${PHP_VERSION} && \
-    chown -R nginx: /var/log/phpp${PHP_VERSION}
+    mkdir -p /var/log/php${PHP_VERSION} && \
+    chown -R nginx: /var/log/php${PHP_VERSION}
 
 VOLUME ["/var/cache/nginx"]
 
@@ -104,4 +104,4 @@ EXPOSE 8080
 
 USER nginx
 
-CMD php-fpmp${PHP_VERSION} & nginx
+CMD php-fpm${PHP_VERSION} & nginx
