@@ -1,9 +1,7 @@
 FROM alpine
 
-ENV NGINX_VERSION=1.29.4
-ARG PHP_VERSION="83"
-
-
+ENV NGINX_VERSION=1.31.8
+ARG PHP_VERSION="85"
 
 RUN \
   build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" && \
@@ -97,8 +95,8 @@ RUN \
     chown -R :nginx /usr/share/nginx && \
     chmod -R g+w /usr/share/nginx && \
     chmod -R o-rwx /usr/share/nginx && \
-    mkdir -p /var/log/php83 && \
-    chown -R nginx: /var/log/php83
+    mkdir -p /var/log/phpp${PHP_VERSION} && \
+    chown -R nginx: /var/log/phpp${PHP_VERSION}
 
 VOLUME ["/var/cache/nginx"]
 
@@ -106,4 +104,4 @@ EXPOSE 8080
 
 USER nginx
 
-CMD php-fpm83 & nginx
+CMD php-fpmp${PHP_VERSION} & nginx
