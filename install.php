@@ -1,6 +1,14 @@
 <?php
 include "functions.php";
 
+// Remote access requires authentication credentials
+if ($_POST["REMOTE_ACCESS"] == "yes") {
+    if (trim($_POST["AUTH_USERNAME"]) == "" || trim($_POST["AUTH_PASSWORD"]) == ""  || trim($_POST["REMOTE_ACCESS_DOMAIN"]) == "" ) {
+        echo "Error: Username and password and domain are required when remote access is enabled.";
+        exit;
+    }
+}
+
 if ($_POST["SMARTHOST_PROXY"]=="Y") {
 	if ($_POST["DOMAIN"]=="") $_POST["DOMAIN"] = "localhost";
 	# if not FQDN

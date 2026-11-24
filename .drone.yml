@@ -3,7 +3,7 @@ type: kubernetes
 name: default
 
 node_selector:
-  zone: dev
+zone: dev
 
 trigger:
   event:
@@ -35,8 +35,6 @@ steps:
   - name: build multiarch from dev
     image: docker.io/owncloudci/drone-docker-buildx:4
     privileged: true
-    #environment:
-    #  DOCKER_PLUGIN_MIRROR: "https://mirror.dev.format.hu"
     settings:
       cache-from: [ "registry.dev.format.hu/web-installer" ]
       registry: registry.dev.format.hu

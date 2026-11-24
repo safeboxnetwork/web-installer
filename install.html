@@ -91,6 +91,7 @@
 		</select>
 		</div>
 	</div>
+	<div id="remote_auth_error" class="error" style="display:none;">Username and password are required when remote access is enabled.</div>
 </div>
 <div class="input-row">
 	<label for="vpn">Proxy enable?</label>
@@ -233,12 +234,25 @@ jQuery(document).ready(function(){
 		}
 	});
 	jQuery('select#user_auth').click(function() {
-		if (jQuery(this).val()=='yes') jQuery('#div_user_auth').show();
-		else jQuery('#div_user_auth').hide();
+		if (jQuery(this).val()=='yes') {
+			jQuery('#div_user_auth').show();
+		} else if (jQuery('#remote_access').val() === 'yes') {
+			jQuery(this).val('yes');
+			jQuery('#div_user_auth').show();
+		} else {
+			jQuery('#div_user_auth').hide();
+		}
+		validateForm();
 	});
 	jQuery('select#remote_access').click(function() {
-		if (jQuery(this).val()=='yes') jQuery('#div_remote_access').show();
-		else jQuery('#div_remote_access').hide();
+		if (jQuery(this).val()=='yes') {
+			jQuery('#div_remote_access').show();
+			jQuery('#div_user_auth').show();
+			jQuery('#user_auth').val('yes');
+		} else {
+			jQuery('#div_remote_access').hide();
+		}
+		validateForm();
 	});
 	jQuery('select#vpn').click(function() {
 		if (jQuery(this).val()=='yes') {
@@ -295,38 +309,64 @@ jQuery(document).ready(function(){
 	const pass1 = document.getElementById("auth_password");
 	const pass2 = document.getElementById("auth_password2");
 	const errorMsg = document.getElementById("pass_error");
+	const remoteErrorMsg = document.getElementById("remote_auth_error");
 	const submitBtn = document.getElementById("submit_btn");
 
-	function checkPasswords() {
-	    const p1 = pass1.value;
-	    const p2 = pass2.value;
+	function validateForm() {
+	    const remoteAccess = jQuery("#remote_access").val() === "yes";
+	    const username = document.getElementById("auth_username").value.trim();
+	    const password = pass1.value;
 
-	    let valid = false;
+	    let valid = true;
 
-	    if (p1.length === 0) {
-		valid = true;
+	    // Remote access requires username and password
+	    if (remoteAccess) {
+		if (username === "") {
+			valid = false;
+			document.getElementById("auth_username").classList.add("input-error");
+		} else {
+			document.getElementById("auth_username").classList.remove("input-error");
+		}
+		if (password === "") {
+			valid = false;
+			pass1.classList.add("input-error");
+		} else {
+			pass1.classList.remove("input-error");
+		}
+		remoteErrorMsg.style.display = valid ? "none" : "block";
+	} else {
+		document.getElementById("auth_username").classList.remove("input-error");
+		pass1.classList.remove("input-error");
+		remoteErrorMsg.style.display = "none";
+	}
+
+	    // Passwords must match (when a password is provided)
+	    let pwValid = false;
+	    if (password.length === 0) {
+		pwValid = true;
 		errorMsg.style.display = "none";
 		pass1.classList.remove("input-error");
 		pass2.classList.remove("input-error");
-	    } else if (p1 === p2) {
-		valid = true;
+	    } else if (password === pass2.value) {
+		pwValid = true;
 		errorMsg.style.display = "none";
 		pass1.classList.remove("input-error");
 		pass2.classList.remove("input-error");
 	    } else {
-		valid = false;
+		pwValid = false;
 		errorMsg.style.display = "block";
 		pass1.classList.add("input-error");
 		pass2.classList.add("input-error");
 	    }
 
-	    submitBtn.disabled = !valid;
+	    submitBtn.disabled = !(valid && pwValid);
 	}
 
-	//pass1.addEventListener("input", checkPasswords);
-	pass2.addEventListener("blur", checkPasswords);
+	document.getElementById("auth_username").addEventListener("input", validateForm);
+	pass1.addEventListener("input", validateForm);
+	pass2.addEventListener("input", validateForm);
 
-	checkPasswords();
+	validateForm();
 });
 </script>
 </body>
