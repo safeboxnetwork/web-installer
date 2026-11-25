@@ -3,11 +3,18 @@ include "functions.php";
 
 // Remote access requires authentication credentials
 if ($_POST["REMOTE_ACCESS"] == "yes") {
-    if (trim($_POST["AUTH_USERNAME"]) == "" || trim($_POST["AUTH_PASSWORD"]) == ""  || trim($_POST["REMOTE_ACCESS_DOMAIN"]) == "" ) {
-        echo "Error: Username and password and domain are required when remote access is enabled.";
+    if (trim($_POST["AUTH_USERNAME"]) == "" || trim($_POST["AUTH_PASSWORD"]) == "") {
+        echo "Error: Username and password are required when remote access is enabled.";
         exit;
     }
 }
+
+// Create the authentication file used by signin.php (format: username:hash)
+if (!empty($_POST["AUTH_USERNAME"]) && !empty($_POST["AUTH_PASSWORD"])) {
+    $htpasswd = $_POST["AUTH_USERNAME"] . ":" . password_hash($_POST["AUTH_PASSWORD"], PASSWORD_DEFAULT);
+    file_put_contents("/tmp/.htpasswd", $htpasswd);
+}
+
 
 if ($_POST["SMARTHOST_PROXY"]=="Y") {
 	if ($_POST["DOMAIN"]=="") $_POST["DOMAIN"] = "localhost";

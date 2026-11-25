@@ -10,12 +10,62 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Switzer:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <link rel="stylesheet" href="style.css?t=23" />
+<style>
+    /* Password change form inside the narrow sidebar */
+    #pwChangeBox .input-row {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #pwChangeBox .input-row label {
+      text-align: left;
+      margin-bottom: 5px;
+    }
+    #pwChangeBox .input-container {
+      justify-content: flex-start;
+      width: 100%;
+    }
+    #pwChangeBox .input-row input {
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #pwChangeBox .save-button {
+      margin-top: 5px;
+      padding: 10px 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="sidebar">
     <div class="sidebar-top">
       <div id="logo" class="logo">
         <img src="/img/safebox_orange_white.svg" alt="Safebox"/>
+      </div>
+      <div class="user-info" style="margin-top:10px; text-align:center;">
+        <span id="loggedInStatus" style="display:block; margin-bottom:4px; font-size:14px; opacity:0.9;">You are logged in as: '<span id="usernameDisplay" style="font-weight:bold; cursor:pointer; text-decoration:underline; color:var(--highlight-color);" title="Click to change your password"></span>'</span>
+        <a id="logoutBtn" href="logout.php" style="font-size:14px; color:#999; text-decoration:underline;">Logout</a>
+      </div>
+      <div id="pwChangeBox" class="hidden" style="margin:10px 10px 0px 10px; text-align:left;">
+        <form id="pwChangeForm" action="change_password.php" method="post">
+          <div class="input-row">
+            <label for="pw_new">New password:</label>
+            <div class="input-container">
+              <input type="password" class="form-control" name="AUTH_PASSWORD_NEW" id="pw_new" maxlength="20" size="12">
+              <span class="toggle-eye" data-target="pw_new">👁️</span>
+            </div>
+          </div>
+          <div class="input-row">
+            <label for="pw_new2">New password again:</label>
+            <div class="input-container">
+              <input type="password" class="form-control" name="AUTH_PASSWORD_NEW2" id="pw_new2" maxlength="20" size="12">
+              <span class="toggle-eye" data-target="pw_new2">👁️</span>
+            </div>
+          </div>
+          <button class="save-button" type="submit">Save</button>
+          <div id="pwMsg" class="error" style="margin-top:5px; text-align:left;"></div>
+        </form>
       </div>
       <div class="menu">
 <!--
@@ -90,6 +140,79 @@
     document.addEventListener('DOMContentLoaded', function() {
 
 	updateActive();
+	// Show logged-in user and handle logout
+	fetch('check_session.php')
+		.then(r => r.text())
+		.then(data => {
+			const user = data.trim();
+			if (user === '') {
+				// Authentication is configured but no session: require login
+				document.location = 'signin.html';
+				return;
+			}
+			const userDisplay = document.getElementById('usernameDisplay');
+			const status = document.getElementById('loggedInStatus');
+			if (user && user !== 'NOAUTH' && user !== '') {
+				if (userDisplay) userDisplay.textContent = user;
+				if (status) status.style.display = 'block';
+			}
+		});
+
+	// Password change form (shown by clicking on the username)
+	const usernameDisplay = document.getElementById('usernameDisplay');
+	const pwChangeBox = document.getElementById('pwChangeBox');
+	const pwChangeForm = document.getElementById('pwChangeForm');
+	const pwMsg = document.getElementById('pwMsg');
+
+	if (usernameDisplay && pwChangeBox) {
+		usernameDisplay.addEventListener('click', () => {
+			pwChangeBox.classList.toggle('hidden');
+		});
+	}
+
+	document.querySelectorAll('#pwChangeBox .toggle-eye').forEach(icon => {
+		icon.addEventListener('click', () => {
+			const input = document.getElementById(icon.getAttribute('data-target'));
+			if (input) input.type = input.type === 'password' ? 'text' : 'password';
+		});
+	});
+
+	if (pwChangeForm) {
+		pwChangeForm.addEventListener('submit', (e) => {
+			e.preventDefault();
+			const data = new FormData(pwChangeForm);
+			fetch('change_password.php', { method: 'POST', body: data })
+				.then(r => r.text())
+				.then(res => {
+					const msg = res.trim();
+					pwMsg.style.color = 'red';
+					if (msg === 'OK') {
+						pwMsg.style.color = 'lime';
+						pwMsg.style.display = 'block';
+						pwMsg.textContent = 'Password changed successfully!';
+						pwChangeForm.reset();
+						setTimeout(() => {
+							pwChangeBox.classList.add('hidden');
+							pwMsg.style.display = 'none';
+						}, 2500);
+					} else if (msg === 'ERROR') {
+						pwMsg.style.display = 'block';
+						pwMsg.textContent = 'Could not send the password change request!';
+					} else if (msg === 'MISMATCH') {
+						pwMsg.style.display = 'block';
+						pwMsg.textContent = 'New passwords do not match!';
+					} else if (msg === 'EMPTY') {
+						pwMsg.style.display = 'block';
+						pwMsg.textContent = 'New password cannot be empty!';
+					} else if (msg === 'NOAUTH') {
+						document.location = 'signin.html';
+					} else {
+						pwMsg.style.display = 'block';
+						pwMsg.textContent = 'Something went wrong!';
+					}
+				});
+		});
+	}
 
     const myAppsBtn = document.getElementById('myAppsBtn');
     const installAppsBtn = document.getElementById('installAppsBtn');
@@ -348,7 +471,6 @@
 			</select>
 			</div>
 		</div>
-		<div id="remote_auth_error" class="error" style="display:none;">Username and password are required when remote access is enabled.</div>
 	</div>
 
 <!--
@@ -446,30 +568,30 @@
 	function checkPasswords() {
 
 	    const remoteAccess = jQuery("#remote_access").val() === "yes";
-	    const username = document.getElementById("auth_username").value.trim();
-	    const password = document.getElementById("auth_password").value;
+	    const usernameInput = document.getElementById("auth_username");
+	    const username = usernameInput.value.trim();
+	    const passwordInput = document.getElementById("auth_password");
+	    const password = passwordInput.value;
 
 	    let valid = true;
 
-	    // Remote access requires username and password
+	    // Remote access requires username and password — highlight mandatory fields with yellow outline
 	    if (remoteAccess) {
 		if (username === "") {
 			valid = false;
-			document.getElementById("auth_username").classList.add("input-error");
+			usernameInput.classList.add("remote-required");
 		} else {
-			document.getElementById("auth_username").classList.remove("input-error");
+			usernameInput.classList.remove("remote-required");
 		}
 		if (password === "") {
 			valid = false;
-			document.getElementById("auth_password").classList.add("input-error");
+			passwordInput.classList.add("remote-required");
 		} else {
-			document.getElementById("auth_password").classList.remove("input-error");
+			passwordInput.classList.remove("remote-required");
 		}
-		document.getElementById("remote_auth_error").style.display = valid ? "none" : "block";
 	} else {
-		document.getElementById("auth_username").classList.remove("input-error");
-		document.getElementById("auth_password").classList.remove("input-error");
-		document.getElementById("remote_auth_error").style.display = "none";
+		usernameInput.classList.remove("remote-required");
+		passwordInput.classList.remove("remote-required");
 	}
 
 	    // Passwords must match (when a password is provided)

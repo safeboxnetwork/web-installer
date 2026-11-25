@@ -5,15 +5,15 @@ $SHARED_DIR = "/var/tmp/shared";
 $INTERFACE = "directory"; // redis OR directory
 //$INTERFACE = "redis";
 
-function ping_redis() {
+// function ping_redis() {
 
-	global $REDIS_HOST;
+// 	global $REDIS_HOST;
 
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-	if ($redis->ping()) return true;
-	else return false;
-}
+// 	$redis = new Redis();
+// 	$redis->connect($REDIS_HOST);
+// 	if ($redis->ping()) return true;
+// 	else return false;
+// }
 
 function check_install() { // is install in progress
 
@@ -33,90 +33,90 @@ function check_deploy($application) { // is an application deploy in progress
 	}
 }
 
-function check_redis($group="web_out", $key="") {
+// function check_redis($group="web_out", $key="") {
 
-	global $REDIS_HOST;
+// 	global $REDIS_HOST;
 
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-	if ($redis->ping()) {
-		$members = $redis->sMembers($group); // redis-cli -h redis-server smembers $group
-		//print_r($members);
+// 	$redis = new Redis();
+// 	$redis->connect($REDIS_HOST);
+// 	if ($redis->ping()) {
+// 		$members = $redis->sMembers($group); // redis-cli -h redis-server smembers $group
+// 		//print_r($members);
 
-		$result = array();
-		foreach ($members as $member) {
-			if ($key!="" && $member!=$key) continue; // find a specific key in a group
+// 		$result = array();
+// 		foreach ($members as $member) {
+// 			if ($key!="" && $member!=$key) continue; // find a specific key in a group
 
-			$value = $redis->get($member);
-			$json_data = base64_decode($value);
-			$data = json_decode($json_data,true);
-			if ($data === null) {
-				echo "JSON read error...";
-				// TODO json error
-			}
-			else { 
-				$result["$member"] = $data;
-			}
-		}
-		return $result;
-	}
-}
+// 			$value = $redis->get($member);
+// 			$json_data = base64_decode($value);
+// 			$data = json_decode($json_data,true);
+// 			if ($data === null) {
+// 				echo "JSON read error...";
+// 				// TODO json error
+// 			}
+// 			else { 
+// 				$result["$member"] = $data;
+// 			}
+// 		}
+// 		return $result;
+// 	}
+// }
 
-function redis_get($key) {
+// function redis_get($key) {
 
-	global $REDIS_HOST;
+// 	global $REDIS_HOST;
 
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-	if ($redis->ping()) {
-		//$arList = $redis->keys("*"); // ? redis-cli -h redis-server keys "*" 
-		//echo "Stored keys in redis:";
-		//print_r($arList);
-		if ($redis->exists($key)) {
-			$value = $redis->get($key);
-			//redis-cli -h redis-server get $key
-			return base64_decode($value);
-		} else {
-			echo "Key does not exist: $key";
-			// TODO
-		}
-	}
-}
+// 	$redis = new Redis();
+// 	$redis->connect($REDIS_HOST);
+// 	if ($redis->ping()) {
+// 		//$arList = $redis->keys("*"); // ? redis-cli -h redis-server keys "*" 
+// 		//echo "Stored keys in redis:";
+// 		//print_r($arList);
+// 		if ($redis->exists($key)) {
+// 			$value = $redis->get($key);
+// 			//redis-cli -h redis-server get $key
+// 			return base64_decode($value);
+// 		} else {
+// 			echo "Key does not exist: $key";
+// 			// TODO
+// 		}
+// 	}
+// }
 
-function redis_set($key, $value) {
+// function redis_set($key, $value) {
 
-	global $REDIS_HOST;
+// 	global $REDIS_HOST;
 
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-//	$redis->auth('password');
-	if ($redis->ping()) {
-		if (!$redis->exists($key)) {
-			//redis-cli -h redis set $key "$value"
-			//redis-cli -h redis sadd web_in $key
-			//redis-cli -h redis smembers web_in
-			$redis->set($key, base64_encode($value));
-			$redis->sAdd('web_in', $key);
-		} else {
-			//echo "Key already exist: $key";
-		}
-	}
-}
+// 	$redis = new Redis();
+// 	$redis->connect($REDIS_HOST);
+// //	$redis->auth('password');
+// 	if ($redis->ping()) {
+// 		if (!$redis->exists($key)) {
+// 			//redis-cli -h redis set $key "$value"
+// 			//redis-cli -h redis sadd web_in $key
+// 			//redis-cli -h redis smembers web_in
+// 			$redis->set($key, base64_encode($value));
+// 			$redis->sAdd('web_in', $key);
+// 		} else {
+// 			//echo "Key already exist: $key";
+// 		}
+// 	}
+// }
 
-function redis_remove($key) {
+// function redis_remove($key) {
 
-	global $REDIS_HOST;
+// 	global $REDIS_HOST;
 
-	$redis = new Redis();
-	$redis->connect($REDIS_HOST);
-//	$redis->auth('password');
-	if ($redis->ping()) {
-		//redis-cli -h redis srem web_out $key
-		//redis-cli -h redis del $key
-		$redis->srem("web_out", $key);
-		$redis->del($key);
-	}
-}
+// 	$redis = new Redis();
+// 	$redis->connect($REDIS_HOST);
+// //	$redis->auth('password');
+// 	if ($redis->ping()) {
+// 		//redis-cli -h redis srem web_out $key
+// 		//redis-cli -h redis del $key
+// 		$redis->srem("web_out", $key);
+// 		$redis->del($key);
+// 	}
+// }
 
 function get_vpn_url($domain,$passkey) {
 

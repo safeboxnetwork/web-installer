@@ -548,6 +548,8 @@
     <div class="profile" id="profileSection">
 	<!--<img src="image.png" alt="Profilkép">-->
         <div id="vpnBtn">Pro</div>
+        <div id="loggedInStatus" style="margin-top:10px; font-size:14px; opacity:0.9;">Logged in as: <span id="usernameDisplay" style="font-weight:bold;"></span></div>
+        <button id="logoutBtn" style="margin-top:8px; padding:6px 14px; font-size:14px; border:1px solid var(--button-border); border-radius:6px; background:none; color:var(--text-color); cursor:pointer;">Logout</button>
     </div>
     <div style="text-align:center">
 	Proxy&nbsp;status
@@ -820,6 +822,27 @@
     profileSection.addEventListener('click', () => {
         //TODO: profile szekcióra kattintott
     });
+
+    // Show logged-in user and handle logout
+    fetch('check_session.php')
+        .then(r => r.text())
+        .then(data => {
+            const user = data.trim();
+            const userDisplay = document.getElementById('usernameDisplay');
+            const status = document.getElementById('loggedInStatus');
+            if (user && user !== 'NOAUTH' && user !== '') {
+                if (userDisplay) userDisplay.textContent = user;
+                if (status) status.style.display = 'block';
+            }
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    fetch('logout.php').then(() => {
+                        document.location = 'signin.html';
+                    });
+                });
+            }
+        });
 </script>
 
 <!-- Optional JavaScript -->

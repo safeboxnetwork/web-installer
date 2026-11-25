@@ -91,7 +91,6 @@
 		</select>
 		</div>
 	</div>
-	<div id="remote_auth_error" class="error" style="display:none;">Username and password are required when remote access is enabled.</div>
 </div>
 <div class="input-row">
 	<label for="vpn">Proxy enable?</label>
@@ -309,35 +308,35 @@ jQuery(document).ready(function(){
 	const pass1 = document.getElementById("auth_password");
 	const pass2 = document.getElementById("auth_password2");
 	const errorMsg = document.getElementById("pass_error");
-	const remoteErrorMsg = document.getElementById("remote_auth_error");
+	// remote error handled via yellow outline on mandatory fields
 	const submitBtn = document.getElementById("submit_btn");
 
 	function validateForm() {
+
 	    const remoteAccess = jQuery("#remote_access").val() === "yes";
-	    const username = document.getElementById("auth_username").value.trim();
+	    const usernameInput = document.getElementById("auth_username");
+	    const username = usernameInput.value.trim();
 	    const password = pass1.value;
 
 	    let valid = true;
 
-	    // Remote access requires username and password
+	    // Remote access requires username and password — highlight mandatory fields with yellow outline
 	    if (remoteAccess) {
 		if (username === "") {
 			valid = false;
-			document.getElementById("auth_username").classList.add("input-error");
+			usernameInput.classList.add("remote-required");
 		} else {
-			document.getElementById("auth_username").classList.remove("input-error");
+			usernameInput.classList.remove("remote-required");
 		}
 		if (password === "") {
 			valid = false;
-			pass1.classList.add("input-error");
+			pass1.classList.add("remote-required");
 		} else {
-			pass1.classList.remove("input-error");
+			pass1.classList.remove("remote-required");
 		}
-		remoteErrorMsg.style.display = valid ? "none" : "block";
 	} else {
-		document.getElementById("auth_username").classList.remove("input-error");
-		pass1.classList.remove("input-error");
-		remoteErrorMsg.style.display = "none";
+		usernameInput.classList.remove("remote-required");
+		pass1.classList.remove("remote-required");
 	}
 
 	    // Passwords must match (when a password is provided)
